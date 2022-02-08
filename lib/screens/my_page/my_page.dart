@@ -18,7 +18,7 @@ import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'dart:async';
 
-//import 'package:livq/screens/my_page/myId.dart';
+//import 'package:wegolego_v014/screens/my_page/myId.dart';
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
@@ -150,15 +150,15 @@ class _MyPageState extends State<MyPage> {
   }
 
   Widget myPageWidget(
-    BuildContext context,
-    // bool loading,
-    String name,
-    String email,
-    String photoURL,
-    int getHeart,
-    int helpCount,
-    int askCount,
-  ) {
+      BuildContext context,
+      // bool loading,
+      String name,
+      String email,
+      String photoURL,
+      int getHeart,
+      int helpCount,
+      int askCount,
+      ) {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -426,18 +426,7 @@ class _MyPageState extends State<MyPage> {
                         color: Color(0xffADB5BD),
                       ),
                       onTap: () {
-                        Timer(const Duration(seconds: 2), () {
-                          _ratingService.isSecondTimeOpen().then((secondOpen) {
-                            if (!secondOpen) {
-                              _ratingService.showRating();
-                              print("$secondOpen");
-                            }
-                          });
-                        });
-                        //Get.to(guidePage());
-                        // LaunchReview.launch(
-                        //     androidAppId: "com.anew.flutter_final_livq",
-                        //     iOSAppId: '33443434');
+                        Get.to(() => ThankyouLetters());
                       },
                     ),
                     Divider(
@@ -475,7 +464,18 @@ class _MyPageState extends State<MyPage> {
                         color: Color(0xffADB5BD),
                       ),
                       onTap: () {
-                        Get.to(() => RatingService());
+                        Timer(const Duration(seconds: 2), () {
+                          _ratingService.isSecondTimeOpen().then((secondOpen) {
+                            if (!secondOpen) {
+                              _ratingService.showRating();
+                              print("$secondOpen");
+                            }
+                          });
+                        });
+                        //Get.to(guidePage());
+                        // LaunchReview.launch(
+                        //     androidAppId: "com.anew.flutter_final_wegolego_v014",
+                        //     iOSAppId: '33443434');
                       },
                     ),
                     Divider(
@@ -563,12 +563,12 @@ Widget _buildListView(BuildContext context, int index) {
           ),
           trailing: index != 5
               ? Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18.sp,
-                  color: Color(0xffADB5BD),
-                )
+            Icons.arrow_forward_ios,
+            size: 18.sp,
+            color: Color(0xffADB5BD),
+          )
               : Text("0.2.4",
-                  style: TextStyle(color: Color(0xffADB5BD), fontSize: 14.sp)),
+              style: TextStyle(color: Color(0xffADB5BD), fontSize: 14.sp)),
 
           onTap: () async {
 // begin of all IF statements

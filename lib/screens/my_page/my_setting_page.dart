@@ -380,9 +380,9 @@ class _mySettingPageState extends State<mySettingPage> {
                     onTap: () {
                       Get.dialog(
                         AlertDialog(
-                          title: const Text("로그아웃 하시겠습니까?"),
+                          title: Center(child: const Text("로그아웃 하시겠습니까?")),
                           content:
-                              const Text("로그아웃시 회원님의 정보는 유지되고 다시 로그인이 필요합니다."),
+                              const Text("로그아웃시 회원님의 정보는 유지되며 다시 로그인이 필요합니다.",style: TextStyle(fontSize: 15),),
                           actions: [
                             TextButton(
                                 onPressed: () {
@@ -456,22 +456,26 @@ class _mySettingPageState extends State<mySettingPage> {
                       ),
                     ),
                     onTap: () {
-                      Get.defaultDialog(
-                        title: "LivQ를 탈퇴하시겠습니까?",
-                        middleText: "탈퇴 시 회원님의 정보가 삭제됩니다.",
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                _authController.deleteUser();
-                              },
-                              child: const Text("YES")),
-                          TextButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: const Text("NO"))
-                        ],
+                      Get.dialog(
+                        AlertDialog(
+                          title: const Text("LivQ를 탈퇴하시겠습니까?"),
+                          content:
+                          const Text("탈퇴 시 회원님의 정보가 삭제됩니다.",style: TextStyle(fontSize: 15),),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  _authController.deleteUser();
+                                },
+                                child: const Text("YES")),
+                            TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: const Text("NO"))
+                          ],
+                        ),
                       );
+
                     },
                   ),
                   Divider(

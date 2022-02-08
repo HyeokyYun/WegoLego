@@ -107,7 +107,7 @@ class _ChannelListState extends State<ChannelList> {
                                   child: Container(
                                     // height:
                                     //Config.screenHeight! * 0.103,
-                                    width: 350.w,
+                                    width: 340.w,
                                     //Config.screenWidth! * 0.322,
                                     child: Row(
                                         mainAxisAlignment:
@@ -116,7 +116,7 @@ class _ChannelListState extends State<ChannelList> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Container(
-                                            width: 210.w,
+                                            width: 200.w,
                                             child: Row(
                                               children: [
                                                 Container(
