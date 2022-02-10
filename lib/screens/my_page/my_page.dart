@@ -529,9 +529,14 @@ class _MyPageState extends State<MyPage> {
                         color: Color(0xffADB5BD),
                       ),
                       onTap: () {
-                        //수정
-                        //리뷰 쓰 가 넣ㅓ야함.
-                        Get.to(() => RatingService());
+                        Timer(const Duration(seconds: 2), () {
+                          _ratingService.isSecondTimeOpen().then((secondOpen) {
+                            if (!secondOpen) {
+                              _ratingService.showRating();
+                              // print("$secondOpen");
+                            }
+                          });
+                        });
                       },
                     ),
                     Divider(
