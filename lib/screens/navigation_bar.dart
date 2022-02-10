@@ -28,183 +28,128 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation>
     with SingleTickerProviderStateMixin {
   // final autoSizeGroup = AutoSizeGroup();
-  var _bottomNavIndex = 0; //default index of a first screen
+  int _bottomNavIndex = 1; //default index of a first screen
+  late var color =  Colors.grey[400] ;
+  late var color2 =  Colors.grey[400] ;
 
-  late AnimationController _animationController;
-  late Animation<double> animation;
-  late CurvedAnimation curve;
-
-  bool askIf = true;
-
-  final widgetList = <Widget>[
+  final List<Widget> widgetList = <Widget>[
     // ChannelList(),
     // ChannelList(),
     ChannelList(),
+    Home(),
     MyPage(),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    final systemTheme = SystemUiOverlayStyle.light.copyWith(
-      systemNavigationBarColor: Color(0xFF373A36),
-      systemNavigationBarIconBrightness: Brightness.light,
-    );
-    SystemChrome.setSystemUIOverlayStyle(systemTheme);
+  void _onTap(int index) {
+    setState(() {
+      _bottomNavIndex = index;
+      if(index == 0){
+        color = Colors.grey[700];
+        color2 = Colors.grey[400];
+      }else if(index == 1){
+        color= Colors.grey[400];
+        color2 = Colors.grey[400];
+      }
+      else if(index ==2){
+        color2 = Colors.grey[700];
+        color = Colors.grey[400];
+      }
 
-    _animationController = AnimationController(
-      duration: Duration(seconds: 1),
-      vsync: this,
-    );
-    curve = CurvedAnimation(
-      parent: _animationController,
-      curve: Interval(
-        // 0.5,
-        0.3,
-        1.0,
-        curve: Curves.fastOutSlowIn,
-      ),
-    );
-    animation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(curve);
-
-    Future.delayed(
-      Duration(milliseconds: 500),
-      () => _animationController.forward(),
-    );
+    });
   }
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> _videoCallStream =
-        FirebaseFirestore.instance.collection('videoCall').snapshots();
+    FirebaseFirestore.instance.collection('videoCall').snapshots();
 
-    return StreamBuilder<QuerySnapshot>(
-        stream: _videoCallStream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Container(color: Color(0xffffffff));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(color: Color(0xffffffff));
-          }
+    return Theme(
+      data: ThemeData.light(),
+      child: Scaffold(
+          extendBody: true,
+          //항목들
+          body: widgetList[_bottomNavIndex],
 
-          return Theme(
-            data: ThemeData.dark(),
-            child: Scaffold(
-              extendBody: true,
-              //항목들
-              body: askIf ? Home() : widgetList[_bottomNavIndex],
-              //가운데 버튼
-              floatingActionButton: ScaleTransition(
-                scale: animation,
-                child: FloatingActionButton(
-                  elevation: 3,
-                  backgroundColor: Colors.grey[50],
-                  child: Container(
-                    height: 36.h,
-                    child: SvgPicture.asset(
-                      "assets/liveQ_logo.svg",
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      if (this.mounted) {
-                        askIf = true;
-                        // Get.find<ButtonController>().changetrue();
-                      }
-                    });
-                    // _animationController.reset();
-                    // _animationController.forward();
-                  },
-                ),
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              //navigation bar
-              bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-                itemCount: widgetList.length,
-                tabBuilder: (int index, bool isActive) {
-                  final color = isActive ? Colors.grey[700] : Colors.grey[400];
-
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
+          //navigation bar
+          bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              onTap:_onTap,
+              currentIndex: _bottomNavIndex,
+              selectedItemColor:Colors.grey[700],
+              unselectedItemColor: Colors.grey[400],
+              items: [
+                BottomNavigationBarItem(
+                  icon:  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 28.h,
-                        width: 40.w,
-                        child: index == 0
-                            ? Stack(
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/app_bar/bottomIcon1.svg",
-                                    //      "assets/app_bar/bottomIcon2.svg",
-                                    color: color,
-                                  ),
-                                  snapshot.data!.docs.length > 0
-                                      ? Row(
-                                          children: [
-                                            SizedBox(width: 20.w),
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              child: Container(
-                                                width: 18.w,
-                                                height: 18.h,
-                                                color:
-                                                    AppColors.primaryColor[900],
-                                                child: Center(
-                                                  child: Text(
-                                                    "${snapshot.data!.docs.length}",
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Container(),
-                                ],
-                              )
-                            : SvgPicture.asset(
-                                // "assets/app_bar/bottomIcon1.svg"
-                                "assets/app_bar/bottomIcon2.svg",
-                                color: color,
-                              ),
+
+                      Stack(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/app_bar/bottomIcon1.svg",
+                            //      "assets/app_bar/bottomIcon2.svg",
+                            color: color,
+                          ),
+                          StreamBuilder<QuerySnapshot>(
+                              stream: _videoCallStream,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Container(color: Color(0xffffffff));
+                                }
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container(color: Color(0xffffffff));
+                                }
+                                return snapshot.data!.docs.length > 0
+                                    ? Row(
+                                  children: [
+                                    SizedBox(width: 20.w),
+                                    ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(50),
+                                      child: Container(
+                                        width: 18.w,
+                                        height: 18.h,
+                                        color: AppColors.primaryColor[900],
+                                        child: Center(
+                                          child: Text(
+                                            "${snapshot.data!.docs.length}",
+                                            style: TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                                    : Container();
+                              }),
+                        ],
+
                       ),
-                      // Icon(
-                      //   index == 0 ? Icons.ac_unit_rounded : Icons.person_outline,
-                      //   size: 28,
-                      //   color: color,
-                      // ),
                     ],
-                  );
-                },
-                backgroundColor: Colors.grey[50],
-                activeIndex: askIf ? 10 : _bottomNavIndex,
-                splashColor: Colors.grey[50],
-                notchAndCornersAnimation: animation,
-                splashSpeedInMilliseconds: 300,
-                notchSmoothness: NotchSmoothness.defaultEdge,
-                gapLocation: GapLocation.center,
-                leftCornerRadius: 32,
-                rightCornerRadius: 32,
-                onTap: (index) => setState(
-                  () {
-                    if (this.mounted) {
-                      askIf = false;
-                      _bottomNavIndex = index;
-                      // Get.find<ButtonController>().changetrue();
-                    }
-                  },
+                  ),
+                  title: Text('라이브 룸'),
                 ),
-              ),
-            ),
-          );
-        });
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home,size: 30.sp,),
+                  title: Text('홈'),
+                ),
+                BottomNavigationBarItem(
+                  icon:
+                  SvgPicture.asset(
+                      "assets/app_bar/bottomIcon2.svg",
+                      color: color2
+                  ),
+                  title: Text('마이 페이지'),
+                )
+              ])),
+    );
   }
 }

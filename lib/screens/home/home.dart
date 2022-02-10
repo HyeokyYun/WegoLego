@@ -13,7 +13,7 @@ import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/channels/channel_list.dart';
 import 'package:livq/screens/home/agora/pages/call_taker.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
-import 'package:livq/screens/home/guide_page.dart';
+import 'package:livq/screens/my_page/sub_pages/guide_page.dart';
 import 'package:livq/screens/home/sub_category.dart';
 import 'package:livq/screens/my_page/sub_pages/ranking.dart';
 import 'package:livq/screens/navigation_bar.dart';
@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   );
                                 } else {
-                                  return CircularProgressIndicator();
+                                  return Container();
                                 }
                               },
                             )
@@ -155,7 +155,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   );
                                 } else {
-                                  return CircularProgressIndicator();
+                                  return Container();
                                 }
                               },
                             )

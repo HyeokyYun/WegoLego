@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:livq/screens/my_page/sub_pages/guide_page.dart';
+import 'package:livq/screens/my_page/app_setting_page.dart';
 import 'package:livq/screens/my_page/my_setting_page.dart';
 import 'package:livq/screens/my_page/sub_pages/1:1_question.dart';
+import 'package:livq/screens/my_page/sub_pages/call_history.dart';
 import 'package:livq/screens/my_page/sub_pages/individual_information.dart';
 import 'package:livq/screens/my_page/sub_pages/instruction_manual.dart';
+import 'package:livq/screens/my_page/sub_pages/ranking.dart';
 import 'package:livq/screens/my_page/sub_pages/review.dart';
 import 'package:livq/screens/my_page/sub_pages/statechange.dart';
 import 'package:livq/screens/my_page/sub_pages/terms_and_conditions.dart';
@@ -18,7 +22,6 @@ import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'dart:async';
 
-//import 'package:wegolego_v014/screens/my_page/myId.dart';
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
@@ -33,132 +36,21 @@ class _MyPageState extends State<MyPage> {
 
   final TextEditingController _feedbackController = TextEditingController();
   final RatingService _ratingService = RatingService();
+  User? get userProfile => auth.currentUser;
 
   @override
   initState() {
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance
+
+
+    Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseUser!.uid)
+        .doc(userProfile!.uid)
         .snapshots();
 
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(firebaseUser!.uid)
-        .get()
-        .then((DocumentSnapshot ds) {
-      if (ds['ask'] >= 10) {
-        if (ds['feedback'] == false) {
-          Get.defaultDialog(
-            title: "라이큐 후기를 남겨주세요!",
-            content: Column(
-              children: [
-                Text(
-                  "라이큐에 대해 의견을 남겨주세요!\n위고레고 팀에게 큰 도움이 됩니다!",
-                  style: AppTextStyle.koBody2,
-                ),
-                TextField(
-                  controller: _feedbackController,
-                ),
-              ],
-            ),
-            onConfirm: () {
-              FirebaseFirestore.instance
-                  .collection("monitoring")
-                  .doc("feedback")
-                  .update({
-                'feedback': FieldValue.arrayUnion([_feedbackController.text])
-              });
-              FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(firebaseUser!.uid)
-                  .update({
-                'feedback': true,
-              });
-              Get.offAll(Navigation());
-              Get.snackbar("제출해주셔서 감사합니다.", "감사합니다.");
-            },
-            buttonColor: AppColors.primaryColor,
-            textConfirm: "제출",
-            confirmTextColor: AppColors.grey[50],
-          );
-        }
-      }
-    });
-
-    return StreamBuilder<DocumentSnapshot>(
-        stream: _usersStream,
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            Get.snackbar('Error occurred!', "Can't read your user data",
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: AppColors.primaryColor,
-                colorText: Colors.white);
-            Get.offAll(Root());
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          final getdata = snapshot.data;
-          Stream<DocumentSnapshot> _thankStream = FirebaseFirestore.instance
-              .collection('users')
-              .doc(firebaseUser!.uid)
-              .collection('thankLetter')
-              .doc(firebaseUser!.uid)
-              .snapshots();
-
-          return StreamBuilder<DocumentSnapshot>(
-            stream: _thankStream,
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> subsnapshot) {
-              final getsubdata = subsnapshot.data;
-              if (subsnapshot.hasError) {
-                Get.snackbar('Error occurred!', "Can't read your user data",
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: AppColors.primaryColor,
-                    colorText: Colors.white);
-                Get.offAll(Root());
-              }
-              if (subsnapshot.connectionState == ConnectionState.waiting) {
-                // return splashWidget();
-                return myPageWidget(
-                    context,
-                    "",
-                    "",
-                    "https://firebasestorage.googleapis.com/v0/b/wegolego-bf94b.appspot.com/o/liveQ_logo.jpg?alt=media&token=8b719a18-60db-4124-ae5e-01a5375d6a1c",
-                    0,
-                    0,
-                    0);
-              }
-
-              return myPageWidget(
-                  context,
-                  getdata!["name"],
-                  getdata["email"],
-                  getdata["photoURL"],
-                  getsubdata!['thankLetter'].length,
-                  getdata["help"],
-                  getdata["ask"]);
-            },
-          );
-        });
-  }
-
-  Widget myPageWidget(
-      BuildContext context,
-      // bool loading,
-      String name,
-      String email,
-      String photoURL,
-      int getHeart,
-      int helpCount,
-      int askCount,
-      ) {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -172,10 +64,7 @@ class _MyPageState extends State<MyPage> {
           actions: [
             IconButton(
               onPressed: () {
-                Get.to(mySettingPage(
-                  getName: name,
-                  getEmail: email,
-                ));
+                Get.to(appSettingPage());
               },
               icon: Icon(
                 Icons.settings_sharp,
@@ -186,7 +75,7 @@ class _MyPageState extends State<MyPage> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.fromLTRB(28, 0, 28, 0),
+            //  padding: EdgeInsets.fromLTRB(28, 0, 28, 0),
             alignment: Alignment.topCenter,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -194,20 +83,35 @@ class _MyPageState extends State<MyPage> {
                 SizedBox(
                   height: 50.h,
                 ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(57),
-                  child: Image.network(
-                    photoURL,
-                    height: 114.h,
-                    width: 114.w,
-                    fit: BoxFit.scaleDown,
+                Container(
+                  height: 120.h,
+                  width: 120.w,
+                  child: StreamBuilder<DocumentSnapshot>(
+                    stream: _userStream,
+                    builder: (context,
+                        AsyncSnapshot<DocumentSnapshot>
+                        snapshot) {
+                      final getdata = snapshot.data;
+                      if (snapshot.hasData) {
+                        print(
+                            "for test ${getdata?["photoURL"]}");
+                        return ClipRRect(
+                          borderRadius:
+                          BorderRadius.circular(57),
+                          child: Image.network(
+                            getdata?["photoURL"],
+                            height: 114.h,
+                            width: 114.w,
+                            fit: BoxFit.fill,
+                          ),
+                        );
+                      } else {
+                        return Container(
+
+                        );
+                      }
+                    },
                   ),
-                  // Image.network(
-                  //   "https://drive.google.com/uc?export=view&id=1YZyTxIshyloO3YvQhMH5g4fSiIXOfM4m",
-                  //   height: 114.h,
-                  //   width: 114.w,
-                  //   fit: BoxFit.fill,
-                  // ),
                 ),
                 SizedBox(
                   height: 13.h,
@@ -229,22 +133,27 @@ class _MyPageState extends State<MyPage> {
                     SizedBox(
                       width: 4,
                     ),
-                    Text(
-                      name,
-                      style: TextStyle(
-                        color: Colors.purple[800],
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      '님',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: _userStream,
+                      builder: (context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        final getdata = snapshot.data;
+                        if (snapshot.hasData) {
+                          return  Text(
+                            '${getdata?["name"]}',
+                            style: TextStyle(
+                              color: Colors.purple[800],
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )
+
+
                   ],
                 ),
                 Text(
@@ -298,13 +207,13 @@ class _MyPageState extends State<MyPage> {
                                 ),
                                 Column(
                                   children: [
-                                    Text(
-                                      "$getHeart",
-                                      style: TextStyle(
-                                        fontSize: 9.sp,
-                                        color: Color(0xFFF57F17),
-                                      ),
-                                    ),
+                                    // Text(
+                                    //   "$getHeart",
+                                    //   style: TextStyle(
+                                    //     fontSize: 9.sp,
+                                    //     color: Color(0xFFF57F17),
+                                    //   ),
+                                    // ),
                                     SizedBox(
                                       height: 5.h,
                                     ),
@@ -344,12 +253,24 @@ class _MyPageState extends State<MyPage> {
                                 ),
                                 Column(
                                   children: [
-                                    Text(
-                                      "$helpCount",
-                                      style: TextStyle(
-                                          fontSize: 9.sp,
-                                          color: Color(0xFFF57F17)),
+                                    StreamBuilder<DocumentSnapshot>(
+                                      stream: _userStream,
+                                      builder: (context,
+                                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                        final getdata = snapshot.data;
+                                        if (snapshot.hasData) {
+                                          return  Text(
+                                            '${getdata?["help"]}',
+                                            style: TextStyle(
+                                                fontSize: 9.sp,
+                                                color: Color(0xFFF57F17)),
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      },
                                     ),
+
                                     SizedBox(
                                       height: 5.h,
                                     ),
@@ -389,12 +310,24 @@ class _MyPageState extends State<MyPage> {
                                 ),
                                 Column(
                                   children: [
-                                    Text(
-                                      "$askCount",
-                                      style: TextStyle(
-                                          fontSize: 9.sp,
-                                          color: Color(0xFFF57F17)),
+                                    StreamBuilder<DocumentSnapshot>(
+                                      stream: _userStream,
+                                      builder: (context,
+                                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                        final getdata = snapshot.data;
+                                        if (snapshot.hasData) {
+                                          return  Text(
+                                            '${getdata?["ask"]}',
+                                            style: TextStyle(
+                                                fontSize: 9.sp,
+                                                color: Color(0xFFF57F17)),
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      },
                                     ),
+
                                     SizedBox(
                                       height: 5.h,
                                     ),
@@ -413,9 +346,11 @@ class _MyPageState extends State<MyPage> {
                 ),
                 Column(
                   children: [
+                SizedBox(height: 5.h,),
                     ListTile(
+
                       title: Text(
-                        '받은 감사 편지 보기',
+                        '회원정보 수정',
                         style: AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
@@ -426,15 +361,24 @@ class _MyPageState extends State<MyPage> {
                         color: Color(0xffADB5BD),
                       ),
                       onTap: () {
-                        Get.to(() => ThankyouLetters());
+                        // Get.to(mySettingPage(
+                        //   getName: name,
+                        //   getEmail: email,
+                        // )
+                        //
+                        // );
                       },
+
                     ),
+
+
                     Divider(
-                      color: AppColors.grey[400],
+                      thickness: 5,
+                      color: AppColors.grey[200],
                     ),
                     ListTile(
                       title: Text(
-                        '홍보영상',
+                        '통화기록',
                         style: AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
@@ -445,7 +389,7 @@ class _MyPageState extends State<MyPage> {
                         color: Color(0xffADB5BD),
                       ),
                       onTap: () {
-                        Get.to(() => Instruction());
+                        Get.to(() => callHistory());
                       },
                     ),
                     Divider(
@@ -453,7 +397,7 @@ class _MyPageState extends State<MyPage> {
                     ),
                     ListTile(
                       title: Text(
-                        '리뷰 쓰러가기',
+                        '받은 감사편지 ',
                         style: AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
@@ -472,10 +416,6 @@ class _MyPageState extends State<MyPage> {
                             }
                           });
                         });
-                        //Get.to(guidePage());
-                        // LaunchReview.launch(
-                        //     androidAppId: "com.anew.flutter_final_wegolego_v014",
-                        //     iOSAppId: '33443434');
                       },
                     ),
                     Divider(
@@ -483,24 +423,137 @@ class _MyPageState extends State<MyPage> {
                     ),
                     ListTile(
                       title: Text(
-                        '앱 버전 정보',
+                        '랭킹',
                         style: AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
-                      trailing: Text("1.0.0",
-                          style: TextStyle(
-                              color: Color(0xffADB5BD), fontSize: 14.sp)),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: Color(0xffADB5BD),
+                      ),
                       onTap: () {
-                        Get.snackbar('도움이 필요할땐 라이큐', "오늘도 이용해 주셔서 감사합니다.",
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: AppColors.primaryColor,
-                            colorText: Colors.white);
+                        Get.to(() => Ranking_Page());
+                      },
+                    ),
+                    Divider(
+                      thickness: 5,
+                      color: AppColors.grey[200],
+                    ),
+                    ListTile(
+                      title: Text(
+                        '공지사항',
+                        style: AppTextStyle.koBody2.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: Color(0xffADB5BD),
+                      ),
+                      onTap: () {
+                        // Get.to(() => Instruction());
                       },
                     ),
                     Divider(
                       color: AppColors.grey[400],
                     ),
+                    ListTile(
+                      title: Text(
+                        '1:1 문의',
+                        style: AppTextStyle.koBody2.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: Color(0xffADB5BD),
+                      ),
+                      onTap: () {
+                        Get.to(() => Question());
+                      },
+                    ),
+                    Divider(
+                      color: AppColors.grey[400],
+                    ),
+                    ListTile(
+                      title: Text(
+                        '사용설명서',
+                        style: AppTextStyle.koBody2.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: Color(0xffADB5BD),
+                      ),
+                      onTap: () {
+                        Get.to(() => guidePage());
+                      },
+                    ),
+                    Divider(
+                      color: AppColors.grey[400],
+                    ),
+                    ListTile(
+                      title: Text(
+                        '리뷰 쓰러가기',
+                        style: AppTextStyle.koBody2.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: Color(0xffADB5BD),
+                      ),
+                      onTap: () {
+                        Get.to(() => RatingService());
+                      },
+                    ),
+                    Divider(
+                      color: AppColors.grey[400],
+                    ),
+                    ListTile(
+                      title: Text(
+                        '라이큐 공유',
+                        style: AppTextStyle.koBody2.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: Color(0xffADB5BD),
+                      ),
+                      onTap: () {
+                        Get.to(() => Instruction());
+                      },
+                    ),
+                    Divider(
+                      thickness: 5,
+                      color: AppColors.grey[200],
+                    ),
+                    ListTile(
+                      title: Text(
+                        '앱 설정',
+                        style: AppTextStyle.koBody2.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: Color(0xffADB5BD),
+                      ),
+                      onTap: () {
+                        Get.to(() => appSettingPage());
+                      },
+                    ),
+
                     SizedBox(
                       height: 80.h,
                     ),
@@ -511,90 +564,4 @@ class _MyPageState extends State<MyPage> {
           ),
         ));
   }
-}
-
-/*
-child: ListView.builder(
-  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-  itemCount: 6,
-  itemBuilder: (BuildContext context, int index) {
-    return _buildListView(context, index);
-  },
-),
-*/
-
-/*
-Container(
-  height: ScreenUtil().setHeight(450),
-  child: ListView.builder(
-    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-    itemCount: 6,
-    itemBuilder: (BuildContext context, int index) {
-      return _buildListView(context, index);
-    },
-  ),
-),
-SizedBox(
-  height: 100.h,
-),
-
-*/
-
-Widget _buildListView(BuildContext context, int index) {
-  final List<String> _list = [
-    '계정 / 정보 관리',
-    '1:1 문의',
-    '내가 쓴 게시물 모아보기',
-    '활동 상태 변경하기',
-    '이용약관',
-    '앱버전 정보',
-  ];
-
-  return Container(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          // leading: Text(_list[index]),
-          title: Text(
-            _list[index],
-            style: TextStyle(color: AppColors.grey[900], fontSize: 14.sp),
-            //style: body14Style(),
-          ),
-          trailing: index != 5
-              ? Icon(
-            Icons.arrow_forward_ios,
-            size: 18.sp,
-            color: Color(0xffADB5BD),
-          )
-              : Text("0.2.4",
-              style: TextStyle(color: Color(0xffADB5BD), fontSize: 14.sp)),
-
-          onTap: () async {
-// begin of all IF statements
-            if (index == 0) {
-              await Get.to(() => StateChange());
-            }
-            if (index == 1) {
-              await Get.to(() => Question());
-            }
-            if (index == 2) {
-              await Get.to(() => Instruction());
-            }
-            if (index == 3) {
-              await Get.to(() => Information());
-            }
-            if (index == 4) {
-              await Get.to(() => Terms());
-            }
-            if (index == 5) {}
-// end of all If statements
-          },
-        ),
-        Divider(
-          color: AppColors.grey[400],
-        ),
-      ],
-    ),
-  );
 }
