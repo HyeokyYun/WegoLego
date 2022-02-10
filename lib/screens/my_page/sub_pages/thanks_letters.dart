@@ -69,6 +69,13 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
               elevation: 0.0,
               backgroundColor: Colors.white,
               centerTitle: true,
+              leading: IconButton(
+                color: AppColors.grey,
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
             ),
             body: Container(
               color: Colors.white,

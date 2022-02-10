@@ -107,7 +107,7 @@ class _ChannelListState extends State<ChannelList> {
                                   child: Container(
                                     // height:
                                     //Config.screenHeight! * 0.103,
-                                    width: 350.w,
+                                    width: 340.w,
                                     //Config.screenWidth! * 0.322,
                                     child: Row(
                                         mainAxisAlignment:
@@ -116,7 +116,7 @@ class _ChannelListState extends State<ChannelList> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Container(
-                                            width: 210.w,
+                                            width: 200.w,
                                             child: Row(
                                               children: [
                                                 Container(
@@ -196,6 +196,47 @@ class _ChannelListState extends State<ChannelList> {
                                                                   'helper':
                                                                       firebaseUser!
                                                                           .uid,
+                                                                });
+                                                                //taker의 리스트에 저장
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(data[
+                                                                        'uid'])
+                                                                    .collection(
+                                                                        'callHistory')
+                                                                    .add({
+                                                                  "isHelper":
+                                                                      false,
+                                                                  "name": firebaseUser!
+                                                                      .displayName,
+                                                                  "uid":
+                                                                      firebaseUser!
+                                                                          .uid,
+                                                                  "question": data[
+                                                                      'subcategory'],
+                                                                });
+                                                                //helper의 리스트에 저장
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(
+                                                                      firebaseUser!
+                                                                          .uid,
+                                                                    )
+                                                                    .collection(
+                                                                        'callHistory')
+                                                                    .add({
+                                                                  "isHelper":
+                                                                      true,
+                                                                  "name": data[
+                                                                      'name'],
+                                                                  "uid": data[
+                                                                      'uid'],
+                                                                  "question": data[
+                                                                      'subcategory'],
                                                                 });
                                                                 Get.snackbar(
                                                                     '화면을 터치하여 도움을 주세요',

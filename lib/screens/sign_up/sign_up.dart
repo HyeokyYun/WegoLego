@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:livq/controllers/auth_controller.dart';
+import 'package:livq/screens/welcome_page.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/rounded_elevated_button.dart';
@@ -32,314 +35,351 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     final _authController = Get.find<AuthController>();
-    return Scaffold(
-      appBar: AppBar(
-        // title: const Text('Sign Up',
-        //   textAlign: TextAlign.center,
-        //   style: TextStyle(color: Colors.black),
-        // ),
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-          color: Colors.black,
+    return (GetBuilder<AuthController>(builder: (_) {
+      return Scaffold(
+        appBar: AppBar(
+          // title: const Text('Sign Up',
+          //   textAlign: TextAlign.center,
+          //   style: TextStyle(color: Colors.black),
+          // ),
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+
+          leading: _.isEmailSignIn.value
+              ? IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () => Get.back(),
+                  color: Colors.black,
+                )
+              : Container(),
         ),
-      ),
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: Config.screenWidth! * 0.04),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: Config.screenHeight! * 0.07),
-                  Text(
-                    "회원가입 ",
-                    style: TextStyle(fontSize: Config.screenWidth! * 0.06),
-                  ),
-                  SizedBox(height: Config.screenHeight! * 0.05),
-                  buildTextFormFields(),
-                  SizedBox(height: Config.screenHeight! * 0.05),
-                  // RoundedElevatedButton(
-                  //   onPressed: () {
-                  //     if (_formKey.currentState!.validate()) {
-                  //       String name = _nameController.text.trim();
-                  //       String email = _emailController.text.trim();
-                  //       String password = _passwordController.text;
-                  //       _authController.signUp(name, email, password);
-                  //     }
-                  //   },
-                  //   title: '회원가입 ',
-                  //   padding: EdgeInsets.symmetric(
-                  //     horizontal: Config.screenWidth! * 0.38,
-                  //     vertical: Config.screenHeight! * 0.02,
-                  //   ),
-                  // ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(49),
-                    width: ScreenUtil().setWidth(287),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return StatefulBuilder(builder:
-                                    (BuildContext context,
-                                    StateSetter setState) {
-                                  return AlertDialog(
-                                    // context: context,
-                                      actions: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  '이용약관 ',
-                                                  style: TextStyle(
-                                                    fontSize:
-                                                    ScreenUtil().setSp(18),
-                                                  ),
-                                                )
-                                                // IconButton(onPressed: (){},
-                                                //     icon: Icon(Icons.done))
-                                              ],
-                                            ),
-                                            SizedBox(
-                                                height:
-                                                ScreenUtil().setHeight(50)),
-                                            Row(children: [
-                                              Checkbox(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(15),
-                                                ),
-                                                checkColor: Colors.white,
-                                                activeColor: Color(0xffFFAA00),
-                                                value: _checkBoxValue,
-                                                onChanged: (bool? value) {
-                                                  setState(() {
-                                                    _checkBoxValue = value!;
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: Config.screenWidth! * 0.04),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: Config.screenHeight! * 0.07),
+                    Text(
+                      "회원가입 ",
+                      style: TextStyle(fontSize: Config.screenWidth! * 0.06),
+                    ),
+                    SizedBox(height: Config.screenHeight! * 0.05),
+                    //이메일 로그인, ios 로그인에 따라 변경
+                    _.isEmailSignIn.value
+                        ? buildEmailTextFormFields()
+                        : buildNotEmailTextFormFields(),
+                    SizedBox(height: Config.screenHeight! * 0.05),
 
-                                                    if (_checkBoxValue ==
-                                                        true) {
-                                                      _checkBoxValue1 = true;
-                                                      _checkBoxValue2 = true;
-                                                      _checkBoxValue3 = true;
-
-                                                      isEnabled = true;
-                                                    }
-                                                    ;
-                                                    if (_checkBoxValue ==
-                                                        false) {
-                                                      _checkBoxValue1 = false;
-                                                      _checkBoxValue2 = false;
-                                                      _checkBoxValue3 = false;
-                                                      isEnabled = false;
-                                                    }
-                                                    ;
-                                                  });
-                                                },
+                    SizedBox(
+                      height: ScreenUtil().setHeight(49),
+                      width: ScreenUtil().setWidth(287),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter setState) {
+                                    return AlertDialog(
+                                        // context: context,
+                                        actions: [
+                                          Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    '이용약관 ',
+                                                    style: TextStyle(
+                                                      fontSize: ScreenUtil()
+                                                          .setSp(18),
+                                                    ),
+                                                  )
+                                                  // IconButton(onPressed: (){},
+                                                  //     icon: Icon(Icons.done))
+                                                ],
                                               ),
-                                              Text('약관 전체동의 '),
-                                            ]),
-                                            SizedBox(
-                                                height:
-                                                ScreenUtil().setHeight(4)),
-                                            Container(
-                                              height: 1,
-                                              width: double.maxFinite,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(
-                                                height:
-                                                ScreenUtil().setHeight(4)),
-                                            Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                                children: [
-                                                  // SizedBox(width: ScreenUtil().setWidth(15),),
-                                                  Row(children: [
-                                                    Checkbox(
-                                                      shape:
-                                                      RoundedRectangleBorder(
-                                                        borderRadius:
-                                                        BorderRadius
-                                                            .circular(15),
-                                                      ),
-                                                      checkColor: Colors.white,
-                                                      activeColor:
+                                              SizedBox(
+                                                  height: ScreenUtil()
+                                                      .setHeight(50)),
+                                              Row(children: [
+                                                Checkbox(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                  checkColor: Colors.white,
+                                                  activeColor:
                                                       Color(0xffFFAA00),
-                                                      value: _checkBoxValue1,
-                                                      onChanged: (bool? value) {
-                                                        setState(() {
-                                                          _checkBoxValue1 =
-                                                          value!;
+                                                  value: _checkBoxValue,
+                                                  onChanged: (bool? value) {
+                                                    setState(() {
+                                                      _checkBoxValue = value!;
 
-                                                          if (_checkBoxValue1 ==
-                                                              false) {
-                                                            _checkBoxValue =
-                                                            false;
-                                                            isEnabled = false;
-                                                          }
-                                                          ;
+                                                      if (_checkBoxValue ==
+                                                          true) {
+                                                        _checkBoxValue1 = true;
+                                                        _checkBoxValue2 = true;
+                                                        _checkBoxValue3 = true;
 
-                                                          if (_checkBoxValue1 == true &&
-                                                              _checkBoxValue2 ==
-                                                                  true &&
-                                                              _checkBoxValue3 ==
-                                                                  true) {
-                                                            _checkBoxValue =
-                                                            true;
-                                                            isEnabled = true;
-                                                          }
-                                                          ;
-                                                        });
-                                                      },
-                                                    ),
-                                                    Text('서비스 이용약관 동의 (필수)'),
-                                                  ]),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        termsOfUseDialog();
-                                                      },
-                                                      icon: Icon(Icons
-                                                          .arrow_forward_ios_rounded))
-                                                ]),
-                                            Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                                children: [
-                                                  Row(children: [
-                                                    Checkbox(
-                                                      shape:
-                                                      RoundedRectangleBorder(
-                                                        borderRadius:
-                                                        BorderRadius
-                                                            .circular(15),
+                                                        isEnabled = true;
+                                                      }
+                                                      ;
+                                                      if (_checkBoxValue ==
+                                                          false) {
+                                                        _checkBoxValue1 = false;
+                                                        _checkBoxValue2 = false;
+                                                        _checkBoxValue3 = false;
+                                                        isEnabled = false;
+                                                      }
+                                                      ;
+                                                    });
+                                                  },
+                                                ),
+                                                Text('약관 전체동의 '),
+                                              ]),
+                                              SizedBox(
+                                                  height: ScreenUtil()
+                                                      .setHeight(4)),
+                                              Container(
+                                                height: 1,
+                                                width: double.maxFinite,
+                                                color: Colors.grey,
+                                              ),
+                                              SizedBox(
+                                                  height: ScreenUtil()
+                                                      .setHeight(4)),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    // SizedBox(width: ScreenUtil().setWidth(15),),
+                                                    Row(children: [
+                                                      Checkbox(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                        ),
+                                                        checkColor:
+                                                            Colors.white,
+                                                        activeColor:
+                                                            Color(0xffFFAA00),
+                                                        value: _checkBoxValue1,
+                                                        onChanged:
+                                                            (bool? value) {
+                                                          setState(() {
+                                                            _checkBoxValue1 =
+                                                                value!;
+
+                                                            if (_checkBoxValue1 ==
+                                                                false) {
+                                                              _checkBoxValue =
+                                                                  false;
+                                                              isEnabled = false;
+                                                            }
+                                                            ;
+
+                                                            if (_checkBoxValue1 == true &&
+                                                                _checkBoxValue2 ==
+                                                                    true &&
+                                                                _checkBoxValue3 ==
+                                                                    true) {
+                                                              _checkBoxValue =
+                                                                  true;
+                                                              isEnabled = true;
+                                                            }
+                                                            ;
+                                                          });
+                                                        },
                                                       ),
-                                                      checkColor: Colors.white,
-                                                      activeColor:
-                                                      Color(0xffFFAA00),
-                                                      value: _checkBoxValue2,
-                                                      onChanged: (bool? value) {
-                                                        setState(() {
-                                                          _checkBoxValue2 =
-                                                          value!;
-
-                                                          if (_checkBoxValue2 ==
-                                                              false) {
-                                                            _checkBoxValue =
-                                                            false;
-                                                            isEnabled = false;
-                                                          }
-                                                          ;
-                                                          if (_checkBoxValue1 == true &&
-                                                              _checkBoxValue2 ==
-                                                                  true &&
-                                                              _checkBoxValue3 ==
-                                                                  true) {
-                                                            _checkBoxValue =
-                                                            true;
-                                                            isEnabled = true;
-                                                          }
-                                                          ;
-                                                        });
-                                                      },
-                                                    ),
-                                                    Text('개인정보 처리방침 (필수)'),
+                                                      Text('서비스 이용약관 동의 (필수)'),
+                                                    ]),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          termsOfUseDialog();
+                                                        },
+                                                        icon: Icon(Icons
+                                                            .arrow_forward_ios_rounded))
                                                   ]),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        privacyPolicyDialog();
-                                                      },
-                                                      icon: Icon(Icons
-                                                          .arrow_forward_ios_rounded))
-                                                ]),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(children: [
+                                                      Checkbox(
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                        ),
+                                                        checkColor:
+                                                            Colors.white,
+                                                        activeColor:
+                                                            Color(0xffFFAA00),
+                                                        value: _checkBoxValue2,
+                                                        onChanged:
+                                                            (bool? value) {
+                                                          setState(() {
+                                                            _checkBoxValue2 =
+                                                                value!;
 
-                                            Container(
-                                                height:
-                                                ScreenUtil().setHeight(55),
-                                                width:
-                                                ScreenUtil().setHeight(400),
-                                                child: ElevatedButton(
-                                                    onPressed: isEnabled
-                                                        ? () {
-                                                      String name =
-                                                      _nameController
-                                                          .text
-                                                          .trim();
-                                                      String email =
-                                                      _emailController
-                                                          .text
-                                                          .trim();
-                                                      String password =
-                                                          _passwordController
-                                                              .text;
-                                                      _authController
-                                                          .signUp(
-                                                          name,
-                                                          email,
-                                                          password);
-                                                    }
-                                                        : null,
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      primary: const Color(
-                                                          0xffFFAA00),
-                                                    ),
-                                                    child: Text('회원가입 완료')))
-                                          ],
-                                        )
-                                      ]);
+                                                            if (_checkBoxValue2 ==
+                                                                false) {
+                                                              _checkBoxValue =
+                                                                  false;
+                                                              isEnabled = false;
+                                                            }
+                                                            ;
+                                                            if (_checkBoxValue1 == true &&
+                                                                _checkBoxValue2 ==
+                                                                    true &&
+                                                                _checkBoxValue3 ==
+                                                                    true) {
+                                                              _checkBoxValue =
+                                                                  true;
+                                                              isEnabled = true;
+                                                            }
+                                                            ;
+                                                          });
+                                                        },
+                                                      ),
+                                                      Text('개인정보 처리방침 (필수)'),
+                                                    ]),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          privacyPolicyDialog();
+                                                        },
+                                                        icon: Icon(Icons
+                                                            .arrow_forward_ios_rounded))
+                                                  ]),
+                                              Container(
+                                                  height: ScreenUtil()
+                                                      .setHeight(55),
+                                                  width: ScreenUtil()
+                                                      .setHeight(400),
+                                                  child: ElevatedButton(
+                                                      onPressed: isEnabled
+                                                          ? () {
+                                                              if (_.isEmailSignIn
+                                                                      .value ==
+                                                                  true) {
+                                                                String name =
+                                                                    _nameController
+                                                                        .text
+                                                                        .trim();
+                                                                String email =
+                                                                    _emailController
+                                                                        .text
+                                                                        .trim();
+                                                                String
+                                                                    password =
+                                                                    _passwordController
+                                                                        .text;
+                                                                _authController
+                                                                    .signUp(
+                                                                        name,
+                                                                        email,
+                                                                        password);
+                                                              } else {
+                                                                FirebaseAuth
+                                                                    auth =
+                                                                    FirebaseAuth
+                                                                        .instance;
+
+                                                                FirebaseFirestore
+                                                                    .instance
+                                                                    .collection(
+                                                                        'users')
+                                                                    .doc(auth
+                                                                        .currentUser!
+                                                                        .uid)
+                                                                    .update({
+                                                                  'name':
+                                                                      _nameController
+                                                                          .text
+                                                                });
+
+                                                                _.displayName =
+                                                                    _nameController
+                                                                        .text;
+                                                                auth.currentUser!
+                                                                    .updateDisplayName(
+                                                                        _nameController
+                                                                            .text);
+
+                                                                Get.offAll(
+                                                                    WelcomePage());
+                                                              }
+                                                            }
+                                                          : null,
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        primary: const Color(
+                                                            0xffFFAA00),
+                                                      ),
+                                                      child: Text('회원가입 완료')))
+                                            ],
+                                          )
+                                        ]);
+                                  });
                                 });
-                              });
-                        }
-                      },
-                      child: Text(
-                        "회원가입 ",
-                        style: TextStyle(
-                          //color: Colors.white,
-                            fontSize: Config.screenWidth! * 0.04),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: AppColors.primaryColor[800],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          }
+                        },
+                        child: Text(
+                          _.isEmailSignIn.value ? "회원가입" : "회원가입 후 로그인",
+                          style: TextStyle(
+                              //color: Colors.white,
+                              fontSize: Config.screenWidth! * 0.04),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: AppColors.primaryColor[800],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('이미 계정이 있으신가요? '),
-                      TextButton(
-                        child: Text(
-                          '로그인 ',
-                          style: TextStyle(color: AppColors.primaryColor[800]),
-                        ),
-                        onPressed: () => Get.offAll(() => Root()),
-                      ),
-                    ],
-                  ),
-                ],
+
+                    _.isEmailSignIn.value
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('이미 계정이 있으신가요? '),
+                              TextButton(
+                                child: Text(
+                                  '로그인 ',
+                                  style: TextStyle(
+                                      color: AppColors.primaryColor[800]),
+                                ),
+                                onPressed: () => Get.offAll(() => Root()),
+                              ),
+                            ],
+                          )
+                        : Container(),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }));
   }
-
 
   void termsOfUseDialog() {
     showDialog(
@@ -354,20 +394,15 @@ class _SignUpState extends State<SignUp> {
             backgroundColor: AppColors.grey[700],
             title: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-
               children: [
                 Row(
-
                   children: [
-
-
                     Text(
                       "이용약관",
                       style: AppTextStyle.koBody1.copyWith(
                         color: Colors.white,
                       ),
                     ),
-
                     SizedBox(width: 50.w),
                     IconButton(
                       color: Colors.white,
@@ -381,7 +416,6 @@ class _SignUpState extends State<SignUp> {
               ],
             ),
 
-
             //
             content: SingleChildScrollView(
               child: Container(
@@ -392,7 +426,8 @@ class _SignUpState extends State<SignUp> {
                 //    color: AppColors.grey[200],
                 //    borderRadius: BorderRadius.circular(22),
                 //  ),
-                child: Text('''서비스 이용약관
+                child: Text(
+                  '''서비스 이용약관
 
 제 1장 총칙
 제 1조 (목적)
@@ -461,11 +496,9 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
-
           );
         });
   }
-
 
   void privacyPolicyDialog() {
     showDialog(
@@ -477,21 +510,17 @@ class _SignUpState extends State<SignUp> {
             // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
             backgroundColor: AppColors.grey[700],
             //Dialog Main Title
-            title:  Row(
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
-
                   children: [
-
-
                     Text(
                       "개인정보 처리방침",
                       style: AppTextStyle.koBody1.copyWith(
                         color: Colors.white,
                       ),
                     ),
-
                     SizedBox(width: 30.w),
                     IconButton(
                       color: Colors.white,
@@ -730,7 +759,8 @@ WegoLego 은(는) 정보주체의 이용정보를 저장하고 수시로 불러�
 예시 ) - 20XX. X. X ~ 20XX. X. X 적용 (클릭)
 
 예시 ) - 20XX. X. X ~ 20XX. X. X 적용 (클릭)''',
-                  style: TextStyle(color: Colors.white),// validator: validator,
+                  style:
+                      TextStyle(color: Colors.white), // validator: validator,
                 ),
               ),
             ),
@@ -762,9 +792,7 @@ WegoLego 은(는) 정보주체의 이용정보를 저장하고 수시로 불러�
         });
   }
 
-
-
-  Widget buildTextFormFields() {
+  Widget buildEmailTextFormFields() {
     return Column(
       children: [
         SizedBox(height: Config.screenHeight! * 0.02),
@@ -774,6 +802,8 @@ WegoLego 은(는) 정보주체의 이용정보를 저장하고 수시로 불러�
           validator: (value) {
             if (value.toString().length <= 2) {
               return '2자리 이상 입력해주세요. ';
+            } else if (value.toString().length >= 7) {
+              return '6글자 이하로 입력해주세요';
             }
             return null;
           },
@@ -784,7 +814,7 @@ WegoLego 은(는) 정보주체의 이용정보를 저장하고 수시로 불러�
           hintText: '이메일 ',
           validator: (value) {
             bool _isEmailValid = RegExp(
-                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                 .hasMatch(value!);
             if (!_isEmailValid) {
               return '유효하지 않은 이메일 양식입니다. ';
@@ -813,6 +843,26 @@ WegoLego 은(는) 정보주체의 이용정보를 저장하고 수시로 불러�
               return '비밀번호가 일치하지 않습니다. ';
             }
 
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildNotEmailTextFormFields() {
+    return Column(
+      children: [
+        SizedBox(height: Config.screenHeight! * 0.02),
+        RoundedTextFormField(
+          controller: _nameController,
+          hintText: '닉네임 ',
+          validator: (value) {
+            if (value.toString().length <= 2) {
+              return '2자리 이상 입력해주세요. ';
+            } else if (value.toString().length >= 7) {
+              return '6글자 이하로 입력해주세요';
+            }
             return null;
           },
         ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:livq/controllers/auth_controller.dart';
 import 'navigation_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
@@ -24,12 +25,12 @@ class welcomeController extends GetxController {
 }
 
 // ignore: camel_case_types
-class welcomePage extends StatefulWidget {
+class WelcomePage extends StatefulWidget {
   @override
-  State<welcomePage> createState() => _welcomePageState();
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _welcomePageState extends State<welcomePage> {
+class _WelcomePageState extends State<WelcomePage> {
   FirebaseAuth auth = FirebaseAuth.instance;
   User? get userProfile => auth.currentUser;
 
@@ -45,13 +46,6 @@ class _welcomePageState extends State<welcomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: Icon(Icons.arrow_back),
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //   },
-        //   color: Colors.black,
-        // ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -99,16 +93,12 @@ class _welcomePageState extends State<welcomePage> {
                               width: ScreenUtil().setHeight(400),
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(userProfile!.uid)
-                                      .update({"firstTime": true});
-                                  // Get.to(page)
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Navigation()),
-                                  );
+                                  final _authController =
+                                      Get.find<AuthController>();
+                                  _authController.isFirstSignIn.value = false;
+                                  _authController.update();
+
+                                  Get.offAll(Navigation());
                                 },
                                 child: Text(
                                   '시작하기',

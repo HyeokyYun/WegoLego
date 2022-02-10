@@ -18,7 +18,9 @@ class AuthController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
   var googleAcc = Rx<GoogleSignInAccount?>(null);
-  var isSignedIn = false.obs;
+  // var isSignedIn = false.obs;
+  var isFirstSignIn = false.obs;
+  var isEmailSignIn = true.obs;
 
   User? get userProfile => auth.currentUser;
   User? currentUser;
@@ -29,7 +31,7 @@ class AuthController extends GetxController {
 
   @override
   void onInit() {
-    print("AUTH: ${isSignedIn}");
+    // print("AUTH: ${isSignedIn}");
     // displayName = userProfile != null ? userProfile!.displayName! : '';
     messaging = FirebaseMessaging.instance;
     messaging.getToken().then((value) {
@@ -64,16 +66,20 @@ class AuthController extends GetxController {
         "timeRegister": DateTime.now().millisecondsSinceEpoch.toString(),
         "ask": 0,
         "help": 0,
-        "firstTime": false,
         "feedback": false,
+        //email 로그인에 한하여 이 데이터가 필요하다.
+        "firstTime": true,
       });
       FirebaseFirestore.instance
           .collection('users')
           .doc(firebaseUser.uid)
           .collection('thankLetter')
-          .doc(firebaseUser.uid)
-          .set({'thankLetter': FieldValue.arrayUnion([])});
-
+          .add({
+        'thankLetter': "가입해 주셔서 감사합니다.",
+        'name': "위고레고",
+        "timeRegister": DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+      isFirstSignIn.value = true;
       update();
       // print("token: $_token");
 
@@ -104,18 +110,42 @@ class AuthController extends GetxController {
   }
 
   void signIn(String email, String password) async {
+    //Google과 apple은 로그인과정이 동일하게 진행이 되는데 email로 로그인하게 되면 이 과정이 불가능함
+    //그래서 여기서 처음인지 분별하는 과정이 필요하다.
     try {
       await auth
           .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) => displayName = userProfile!.displayName!);
-      isSignedIn.value = true;
+          .then(
+        (value) {
+          displayName = userProfile!.displayName!;
+          //true인지 false인지 확인해서 가져오고 업데이트 시켜줌.
+          FirebaseFirestore.instance
+              .collection("users")
+              .doc(userProfile!.uid)
+              .get()
+              .then((DocumentSnapshot ds) {
+            if (ds['firstTime'] == true) {
+              isFirstSignIn.value = true;
+              FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userProfile!.uid)
+                  .update({
+                'firstTime': false,
+                // 'firstTime': true,
+              });
+            }
+          });
+        },
+      );
+      // isSignedIn.value = true;
+      isEmailSignIn.value = true;
       update();
       FirebaseFirestore.instance
           .collection('users')
           .doc(userProfile!.uid)
           .update({
         'token': _token,
-        'firstTime': true,
+        // 'firstTime': true,
       });
       print("token: $_token");
     } on FirebaseAuthException catch (e) {
@@ -164,7 +194,7 @@ class AuthController extends GetxController {
       if (user != null) {
         final QuerySnapshot addUser = await FirebaseFirestore.instance
             .collection('users')
-            .where('id', isEqualTo: user.uid)
+            .where('uid', isEqualTo: user.uid)
             .get();
 
         final List<DocumentSnapshot> userList = addUser.docs;
@@ -179,23 +209,27 @@ class AuthController extends GetxController {
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
             "ask": 0,
             "help": 0,
-            "firstTime": false,
+            // "firstTime": false,
             "feedback": false,
           });
           FirebaseFirestore.instance
               .collection('users')
               .doc(user.uid)
               .collection('thankLetter')
-              .doc(user.uid)
-              .set({'thankLetter': FieldValue.arrayUnion([])});
-
+              .add({
+            'thankLetter': "가입해 주셔서 감사합니다.",
+            'name': "위고레고",
+            "timeRegister": DateTime.now().millisecondsSinceEpoch.toString(),
+          });
+          isFirstSignIn.value = true;
           currentUser = user;
         } else {
           FirebaseFirestore.instance.collection('users').doc(user.uid).update({
             'token': _token,
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
-            'firstTime': true,
+            // 'firstTime': true,
           });
+          isFirstSignIn.value = false;
           currentUser = user;
         }
       }
@@ -206,7 +240,8 @@ class AuthController extends GetxController {
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         displayName = documentSnapshot.get('name');
-        isSignedIn.value = true; // <-- 로그인 완료 후, main으로 넘기기
+        // isSignedIn.value = true; // <-- 로그인 완료 후, main으로 넘기기
+        isEmailSignIn.value = false;
         update(); // <-- without this the is Signedin value is not updated.
       });
       //  await FirebaseFirestore.instance.collection('count').doc('counter').update({"count": FieldValue.increment(1)});
@@ -266,23 +301,28 @@ class AuthController extends GetxController {
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
             "ask": 0,
             "help": 0,
-            "firstTime": false,
+            // "firstTime": false,
             "feedback": false,
           });
           FirebaseFirestore.instance
               .collection('users')
               .doc(user.uid)
               .collection('thankLetter')
-              .doc(user.uid)
-              .set({'thankLetter': FieldValue.arrayUnion([])});
+              .add({
+            'thankLetter': "가입해 주셔서 감사합니다.",
+            'name': "위고레고",
+            "timeRegister": DateTime.now().millisecondsSinceEpoch.toString(),
+          });
+          isFirstSignIn.value = true;
         } else {
           FirebaseFirestore.instance.collection('users').doc(user.uid).update({
             'token': _token,
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
-            'firstTime': true,
+            // 'firstTime': true,
           });
         }
         currentUser = user;
+        isEmailSignIn.value = false;
       }
     } catch (e) {
       Get.snackbar('Error occurred!', e.toString(),
@@ -343,7 +383,7 @@ class AuthController extends GetxController {
       // await FirebaseFirestore.instance.collection('users').doc(userProfile!.uid).update(
       //        {'token' : FieldValue.delete()});
       displayName = '';
-      isSignedIn.value = false;
+      // isSignedIn.value = false;
       update();
       Get.offAll(() => Root());
     } catch (e) {
@@ -362,7 +402,7 @@ class AuthController extends GetxController {
           .update({'first time': false});
       signout();
       displayName = '';
-      isSignedIn.value = false;
+      // isSignedIn.value = false;
       update();
       Get.offAll(() => Root());
     } catch (e) {
@@ -387,7 +427,7 @@ class AuthController extends GetxController {
           .delete();
       await FirebaseAuth.instance.currentUser!.delete();
       displayName = '';
-      isSignedIn.value = false;
+      // isSignedIn.value = false;
       update();
       Get.offAll(() => Root());
     } on FirebaseAuthException catch (e) {
