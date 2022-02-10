@@ -29,8 +29,8 @@ class _NavigationState extends State<Navigation>
     with SingleTickerProviderStateMixin {
   // final autoSizeGroup = AutoSizeGroup();
   int _bottomNavIndex = 1; //default index of a first screen
-  late var color =  Colors.grey[400] ;
-  late var color2 =  Colors.grey[400] ;
+  late var color = Colors.grey[400];
+  late var color2 = Colors.grey[400];
 
   final List<Widget> widgetList = <Widget>[
     // ChannelList(),
@@ -43,30 +43,23 @@ class _NavigationState extends State<Navigation>
   void _onTap(int index) {
     setState(() {
       _bottomNavIndex = index;
-      if(index == 0){
+      if (index == 0) {
         color = Colors.grey[700];
         color2 = Colors.grey[400];
-      }else if(index == 1){
-        color= Colors.grey[400];
+      } else if (index == 1) {
+        color = Colors.grey[400];
         color2 = Colors.grey[400];
-      }
-      else if(index ==2){
+      } else if (index == 2) {
         color2 = Colors.grey[700];
         color = Colors.grey[400];
       }
-
     });
   }
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> _videoCallStream =
-    FirebaseFirestore.instance.collection('videoCall').snapshots();
+        FirebaseFirestore.instance.collection('videoCall').snapshots();
 
     return Theme(
       data: ThemeData.light(),
@@ -78,16 +71,15 @@ class _NavigationState extends State<Navigation>
           //navigation bar
           bottomNavigationBar: BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              onTap:_onTap,
+              onTap: _onTap,
               currentIndex: _bottomNavIndex,
-              selectedItemColor:Colors.grey[700],
+              selectedItemColor: Colors.grey[700],
               unselectedItemColor: Colors.grey[400],
               items: [
                 BottomNavigationBarItem(
-                  icon:  Row(
+                  icon: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-
                       Stack(
                         children: [
                           SvgPicture.asset(
@@ -108,46 +100,46 @@ class _NavigationState extends State<Navigation>
                                 }
                                 return snapshot.data!.docs.length > 0
                                     ? Row(
-                                  children: [
-                                    SizedBox(width: 20.w),
-                                    ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(50),
-                                      child: Container(
-                                        width: 18.w,
-                                        height: 18.h,
-                                        color: AppColors.primaryColor[900],
-                                        child: Center(
-                                          child: Text(
-                                            "${snapshot.data!.docs.length}",
-                                            style: TextStyle(
-                                                color: Colors.white),
+                                        children: [
+                                          SizedBox(width: 20.w),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Container(
+                                              width: 18.w,
+                                              height: 18.h,
+                                              color:
+                                                  AppColors.primaryColor[900],
+                                              child: Center(
+                                                child: Text(
+                                                  "${snapshot.data!.docs.length}",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                        ],
+                                      )
                                     : Container();
                               }),
                         ],
-
                       ),
                     ],
                   ),
-                  title: Text('라이브 룸'),
+                  label: '라이브 룸',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.home,size: 30.sp,),
-                  title: Text('홈'),
-                ),
-                BottomNavigationBarItem(
-                  icon:
-                  SvgPicture.asset(
-                      "assets/app_bar/bottomIcon2.svg",
-                      color: color2
+                  icon: Icon(
+                    Icons.home,
+                    size: 30.sp,
                   ),
-                  title: Text('마이 페이지'),
+                  label: '홈',
+                ),
+                BottomNavigationBarItem(
+                  icon: SvgPicture.asset("assets/app_bar/bottomIcon2.svg",
+                      color: color2),
+                  label: '마이 페이지',
                 )
               ])),
     );

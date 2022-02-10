@@ -1,6 +1,4 @@
 import 'package:livq/theme/text_style.dart';
-import 'package:livq/widgets/hero_image.dart';
-import 'package:livq/widgets/hero_title.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../config.dart';
