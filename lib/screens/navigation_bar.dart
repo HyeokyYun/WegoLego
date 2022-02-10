@@ -131,7 +131,7 @@ class _NavigationState extends State<Navigation>
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.home,
+                    Icons.home_filled,
                     size: 30.sp,
                   ),
                   label: '홈',
