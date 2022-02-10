@@ -2,10 +2,6 @@ import 'dart:async';
 
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-// import 'package:auto_size_text/auto_size_text.dart';
-// import 'package:circular_reveal_animation/circular_reveal_animation.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -148,7 +144,7 @@ class _NavigationState extends State<Navigation>
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.home,
+                    Icons.home_filled,
                     size: 30.sp,
                   ),
                   label: '홈',
