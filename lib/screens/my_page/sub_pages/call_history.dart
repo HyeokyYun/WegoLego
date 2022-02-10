@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:livq/screens/my_page/my_page.dart';
+import 'package:livq/screens/navigation_bar.dart';
 import 'package:livq/theme/colors.dart';
 
 class callHistory extends StatefulWidget {
@@ -18,6 +20,10 @@ class _callHistoryState extends State<callHistory> {
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Get.back();
+            // Get.off(
+            //   Navigation(),
+            //   transition: Transition.leftToRightWithFade,
+            // );
           },
         ),
         title: Text(

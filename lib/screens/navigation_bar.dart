@@ -96,32 +96,49 @@ class _NavigationState extends State<Navigation>
                                 }
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return Container(color: Color(0xffffffff));
-                                }
-                                return snapshot.data!.docs.length > 0
-                                    ? Row(
-                                        children: [
-                                          SizedBox(width: 20.w),
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: Container(
-                                              width: 18.w,
-                                              height: 18.h,
-                                              color:
-                                                  AppColors.primaryColor[900],
-                                              child: Center(
-                                                child: Text(
-                                                  "${snapshot.data!.docs.length}",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
+                                  return Row(
+                                    children: [
+                                      SizedBox(width: 20.w),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Container(
+                                          width: 18.w,
+                                          height: 18.h,
+                                          color: AppColors.primaryColor[900],
+                                          child: Center(
+                                            child: Text(
+                                              "0",
+                                              style: TextStyle(
+                                                  color: Colors.white),
                                             ),
                                           ),
-                                        ],
-                                      )
-                                    : Container();
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return Row(
+                                  children: [
+                                    SizedBox(width: 20.w),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Container(
+                                        width: 18.w,
+                                        height: 18.h,
+                                        color: AppColors.primaryColor[900],
+                                        child: Center(
+                                          child: Text(
+                                            snapshot.data!.docs.length > 0
+                                                ? "${snapshot.data!.docs.length}"
+                                                : "0",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
                               }),
                         ],
                       ),
