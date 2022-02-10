@@ -257,6 +257,10 @@ class _ThankYouPageState extends State<ThankYouPage> {
                         FirebaseFirestore.instance
                             .collection('users')
                             .doc(helperUid)
+                            .update({'getHeart': FieldValue.increment(1)});
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(helperUid)
                             .collection('thankLetter')
                             .add({
                           'thankLetter': _thankController.text,

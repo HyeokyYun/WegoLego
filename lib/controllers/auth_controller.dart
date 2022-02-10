@@ -66,6 +66,7 @@ class AuthController extends GetxController {
         "timeRegister": DateTime.now().millisecondsSinceEpoch.toString(),
         "ask": 0,
         "help": 0,
+        "getHeart": 0,
         "feedback": false,
         //email 로그인에 한하여 이 데이터가 필요하다.
         "firstTime": true,
@@ -209,6 +210,7 @@ class AuthController extends GetxController {
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
             "ask": 0,
             "help": 0,
+            "getHeart": 0,
             // "firstTime": false,
             "feedback": false,
           });
@@ -301,6 +303,7 @@ class AuthController extends GetxController {
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
             "ask": 0,
             "help": 0,
+            "getHeart": 0,
             // "firstTime": false,
             "feedback": false,
           });

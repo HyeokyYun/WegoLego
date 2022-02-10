@@ -91,7 +91,7 @@ class _MyPageState extends State<MyPage> {
                         (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                       final getdata = snapshot.data;
                       if (snapshot.hasData) {
-                        print("for test ${getdata?["photoURL"]}");
+                        print("my_page for test ${getdata?["photoURL"]}");
                         return ClipRRect(
                           borderRadius: BorderRadius.circular(57),
                           child: Image.network(
@@ -199,13 +199,24 @@ class _MyPageState extends State<MyPage> {
                                 ),
                                 Column(
                                   children: [
-                                    // Text(
-                                    //   "$getHeart",
-                                    //   style: TextStyle(
-                                    //     fontSize: 9.sp,
-                                    //     color: Color(0xFFF57F17),
-                                    //   ),
-                                    // ),
+                                    StreamBuilder<DocumentSnapshot>(
+                                      stream: _userStream,
+                                      builder: (context,
+                                          AsyncSnapshot<DocumentSnapshot>
+                                              snapshot) {
+                                        final getdata = snapshot.data;
+                                        if (snapshot.hasData) {
+                                          return Text(
+                                            '${getdata?["getHeart"]}',
+                                            style: TextStyle(
+                                                fontSize: 9.sp,
+                                                color: Color(0xFFF57F17)),
+                                          );
+                                        } else {
+                                          return Container();
+                                        }
+                                      },
+                                    ),
                                     SizedBox(
                                       height: 5.h,
                                     ),
@@ -341,25 +352,46 @@ class _MyPageState extends State<MyPage> {
                     SizedBox(
                       height: 5.h,
                     ),
-                    ListTile(
-                      title: Text(
-                        '회원정보 수정',
-                        style: AppTextStyle.koBody2.copyWith(
-                          color: AppColors.grey,
-                        ),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18.sp,
-                        color: Color(0xffADB5BD),
-                      ),
-                      onTap: () {
-                        // Get.to(mySettingPage(
-                        //   getName: name,
-                        //   getEmail: email,
-                        // )
-                        //
-                        // );
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: _userStream,
+                      builder:
+                          (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        final getdata = snapshot.data;
+                        if (snapshot.hasData) {
+                          return ListTile(
+                            title: Text(
+                              '회원정보 수정',
+                              style: AppTextStyle.koBody2.copyWith(
+                                color: AppColors.grey,
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 18.sp,
+                              color: Color(0xffADB5BD),
+                            ),
+                            onTap: () {
+                              Get.to(mySettingPage(
+                                getName: getdata?['name'],
+                                getEmail: getdata?['email'],
+                              ));
+                            },
+                          );
+                        }
+                        return ListTile(
+                          title: Text(
+                            '회원정보 수정',
+                            style: AppTextStyle.koBody2.copyWith(
+                              color: AppColors.grey,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 18.sp,
+                            color: Color(0xffADB5BD),
+                          ),
+                          onTap: () {},
+                        );
                       },
                     ),
                     Divider(
@@ -497,6 +529,8 @@ class _MyPageState extends State<MyPage> {
                         color: Color(0xffADB5BD),
                       ),
                       onTap: () {
+                        //수정
+                        //리뷰 쓰 가 넣ㅓ야함.
                         Get.to(() => RatingService());
                       },
                     ),
