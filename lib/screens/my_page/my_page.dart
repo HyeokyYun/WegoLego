@@ -426,15 +426,15 @@ class _MyPageState extends State<MyPage> {
                         color: Color(0xffADB5BD),
                       ),
                       onTap: () {
-                        Timer(const Duration(seconds: 2), () {
-                          _ratingService.isSecondTimeOpen().then((secondOpen) {
-                            if (!secondOpen) {
-                              _ratingService.showRating();
-                              print("$secondOpen");
-                            }
-                          });
-                        });
-                        //Get.to(guidePage());
+                        // Timer(const Duration(seconds: 2), () {
+                        //   _ratingService.isSecondTimeOpen().then((secondOpen) {
+                        //     if (!secondOpen) {
+                        //       _ratingService.showRating();
+                        //       print("$secondOpen");
+                        //     }
+                        //   });
+                        // });
+                        Get.to(ThankyouLetters());
                         // LaunchReview.launch(
                         //     androidAppId: "com.anew.flutter_final_livq",
                         //     iOSAppId: '33443434');
