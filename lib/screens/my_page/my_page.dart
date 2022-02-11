@@ -16,7 +16,6 @@ import 'package:livq/screens/my_page/sub_pages/review.dart';
 import 'package:livq/screens/my_page/sub_pages/statechange.dart';
 import 'package:livq/screens/my_page/sub_pages/terms_and_conditions.dart';
 import 'package:livq/screens/my_page/sub_pages/thanks_letters.dart';
-import 'package:livq/screens/navigation_bar.dart';
 import 'package:livq/screens/root.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';

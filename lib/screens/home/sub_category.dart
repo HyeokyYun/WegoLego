@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/agora/pages/call_taker.dart';
-import 'package:livq/screens/navigation_bar.dart';
+import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'package:permission_handler/permission_handler.dart';

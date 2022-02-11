@@ -5,7 +5,6 @@ import 'package:livq/controllers/noti_controller.dart';
 // import 'package:livq/screens/chennels/chennel_list.dart';
 import 'package:livq/screens/home/agora/pages/thank_you.dart';
 import 'package:livq/screens/home/home.dart';
-import 'package:livq/screens/navigation_bar.dart';
 import 'package:livq/screens/root.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

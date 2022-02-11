@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:livq/controllers/auth_controller.dart';
-import 'navigation_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:livq/screens/navigation/bottom_navigation.dart';
 
 class welcomeController extends GetxController {
   late bool startBut = false;

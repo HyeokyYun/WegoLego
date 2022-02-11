@@ -16,7 +16,6 @@ import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/my_page/sub_pages/guide_page.dart';
 import 'package:livq/screens/home/sub_category.dart';
 import 'package:livq/screens/my_page/sub_pages/ranking.dart';
-import 'package:livq/screens/navigation_bar.dart';
 import 'package:livq/screens/root.dart';
 import 'package:livq/screens/sign_in/sign_in.dart';
 import 'package:livq/theme/colors.dart';
@@ -269,7 +268,6 @@ class _HomeState extends State<Home> {
         context: context,
         //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
         barrierDismissible: true,
-
         builder: (BuildContext context) {
           return AlertDialog(
             // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절

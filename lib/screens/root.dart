@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:livq/controllers/auth_controller.dart';
-import 'package:livq/screens/navigation_bar.dart';
+import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/screens/sign_up/sign_up.dart';
 import 'package:livq/screens/welcome_page.dart';
 import '../screens/sign_in/sign_in.dart';

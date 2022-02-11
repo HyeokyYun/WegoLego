@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:livq/screens/my_page/my_page.dart';
-import 'package:livq/screens/navigation_bar.dart';
 import 'package:livq/theme/colors.dart';
 
 class callHistory extends StatefulWidget {

@@ -8,7 +8,7 @@ import 'package:livq/screens/home/agora/utils/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
-import 'package:livq/screens/navigation_bar.dart';
+import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
 import '../../../../config.dart';
 import 'pie_chart.dart';

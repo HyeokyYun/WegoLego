@@ -7,10 +7,10 @@ class HeartAnim extends StatelessWidget {
   final double opacity;
 
   HeartAnim(
-      this.top,
-      //this.left,
-      this.opacity,
-      );
+    this.top,
+    //this.left,
+    this.opacity,
+  );
 
   //
 
