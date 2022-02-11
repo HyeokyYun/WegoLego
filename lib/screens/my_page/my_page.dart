@@ -53,7 +53,7 @@ class _MyPageState extends State<MyPage> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             "마이 페이지",
             style: TextStyle(color: Colors.black),
           ),
@@ -65,7 +65,7 @@ class _MyPageState extends State<MyPage> {
               onPressed: () {
                 Get.to(appSettingPage());
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.settings_sharp,
                 color: Colors.black,
               ),
@@ -82,7 +82,7 @@ class _MyPageState extends State<MyPage> {
                 SizedBox(
                   height: 50.h,
                 ),
-                Container(
+                SizedBox(
                   height: 120.h,
                   width: 120.w,
                   child: StreamBuilder<DocumentSnapshot>(
@@ -117,15 +117,15 @@ class _MyPageState extends State<MyPage> {
                     Container(
                       width: 8.w,
                       height: 8.h,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFBC02D),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryColor,
                         borderRadius: BorderRadius.all(
                           Radius.circular(4.0),
                         ),
                       ),
                     ),
                     SizedBox(
-                      width: 4,
+                      width: 4.h,
                     ),
                     StreamBuilder<DocumentSnapshot>(
                       stream: _userStream,
@@ -136,7 +136,7 @@ class _MyPageState extends State<MyPage> {
                           return Text(
                             '${getdata?["name"]}',
                             style: TextStyle(
-                              color: Colors.purple[800],
+                              color: AppColors.secondaryColor[800],
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                             ),
@@ -161,7 +161,7 @@ class _MyPageState extends State<MyPage> {
                 ),
                 Container(
                   height: 74.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     // color: AppColors.grey[50],
                     borderRadius: BorderRadius.all(
                       Radius.circular(12),
@@ -170,12 +170,12 @@ class _MyPageState extends State<MyPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                         width: 100.w,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
+                            SizedBox(
                               height: 17.h,
                               child: SvgPicture.asset(
                                 "assets/my_page/heartIcon.svg",
@@ -206,12 +206,11 @@ class _MyPageState extends State<MyPage> {
                                               snapshot) {
                                         final getdata = snapshot.data;
                                         if (snapshot.hasData) {
-                                          return Text(
-                                            '${getdata?["getHeart"]}',
-                                            style: TextStyle(
+                                          return Text('${getdata?["getHeart"]}',
+                                              style: TextStyle(
                                                 fontSize: 9.sp,
-                                                color: Color(0xFFF57F17)),
-                                          );
+                                                color: AppColors.primaryColor,
+                                              ));
                                         } else {
                                           return Container();
                                         }
@@ -227,12 +226,12 @@ class _MyPageState extends State<MyPage> {
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 100.w,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
+                            SizedBox(
                               height: 19.h,
                               child: Image.asset(
                                 "assets/my_page/yellow_i.png",
@@ -248,7 +247,7 @@ class _MyPageState extends State<MyPage> {
                                   "응답 횟수",
                                   style: TextStyle(
                                     fontSize: 12.sp,
-                                    color: Colors.grey[700],
+                                    color: AppColors.grey[700],
                                   ),
                                 ),
                                 SizedBox(
@@ -267,7 +266,7 @@ class _MyPageState extends State<MyPage> {
                                             '${getdata?["help"]}',
                                             style: TextStyle(
                                                 fontSize: 9.sp,
-                                                color: Color(0xFFF57F17)),
+                                                color: AppColors.primaryColor),
                                           );
                                         } else {
                                           return Container();
@@ -284,12 +283,12 @@ class _MyPageState extends State<MyPage> {
                           ],
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 100.w,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Container(
+                            SizedBox(
                               height: 18.h,
                               child: Image.asset(
                                 "assets/my_page/star_icon.png",
@@ -305,7 +304,7 @@ class _MyPageState extends State<MyPage> {
                                   "질문 횟수",
                                   style: TextStyle(
                                     fontSize: 12.sp,
-                                    color: Colors.grey[700],
+                                    color: AppColors.grey[700],
                                   ),
                                 ),
                                 SizedBox(
@@ -324,7 +323,7 @@ class _MyPageState extends State<MyPage> {
                                             '${getdata?["ask"]}',
                                             style: TextStyle(
                                                 fontSize: 9.sp,
-                                                color: Color(0xFFF57F17)),
+                                                color: AppColors.primaryColor),
                                           );
                                         } else {
                                           return Container();
@@ -368,7 +367,7 @@ class _MyPageState extends State<MyPage> {
                             trailing: Icon(
                               Icons.arrow_forward_ios,
                               size: 18.sp,
-                              color: Color(0xffADB5BD),
+                              color: AppColors.grey[500],
                             ),
                             onTap: () {
                               Get.to(mySettingPage(
@@ -388,7 +387,7 @@ class _MyPageState extends State<MyPage> {
                           trailing: Icon(
                             Icons.arrow_forward_ios,
                             size: 18.sp,
-                            color: Color(0xffADB5BD),
+                            color: AppColors.grey[500],
                           ),
                           onTap: () {},
                         );
@@ -408,7 +407,7 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
                         Get.to(
@@ -430,10 +429,10 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
-                        Get.to(ThankyouLetters());
+                        Get.to(const ThankyouLetters());
                       },
                     ),
                     Divider(
@@ -449,10 +448,10 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
-                        Get.to(() => Ranking_Page());
+                        Get.to(() => const Ranking_Page());
                       },
                     ),
                     Divider(
@@ -469,7 +468,7 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
                         // Get.to(() => Instruction());
@@ -488,7 +487,7 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
                         Get.to(() => Question());
@@ -507,10 +506,10 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
-                        Get.to(() => guidePage());
+                        Get.to(() => const guidePage());
                       },
                     ),
                     Divider(
@@ -526,7 +525,7 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
                         Timer(const Duration(seconds: 2), () {
@@ -552,7 +551,7 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
                         Get.to(() => Instruction());
@@ -572,7 +571,7 @@ class _MyPageState extends State<MyPage> {
                       trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 18.sp,
-                        color: Color(0xffADB5BD),
+                        color: AppColors.grey[500],
                       ),
                       onTap: () {
                         Get.to(() => appSettingPage());
