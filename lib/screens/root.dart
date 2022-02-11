@@ -54,7 +54,7 @@ class _RootState extends State<Root> {
                 ? _.isEmailSignIn.value
                     ? WelcomePage()
                     : SignUp()
-                : Navigation()
+                : BottomNavigation()
             : Scaffold(
                 body: SafeArea(
                   child: Padding(

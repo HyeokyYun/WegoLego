@@ -104,7 +104,7 @@ class WaitingPage extends StatelessWidget {
                                   snackPosition: SnackPosition.BOTTOM,
                                   backgroundColor: AppColors.primaryColor,
                                   colorText: Colors.white);
-                              Get.offAll(Navigation());
+                              Get.offAll(BottomNavigation());
                             },
                           ),
                         ),

@@ -191,7 +191,7 @@ class AppTextStyle {
 //       color: color ?? primary);
 // }
 
-// // navigation text
+// // BottomNavigation text
 // TextStyle naviStyle() {
 //   return GoogleFonts.notoSans(
 //     fontSize: 12,

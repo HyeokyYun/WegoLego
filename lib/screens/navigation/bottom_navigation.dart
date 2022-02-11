@@ -15,7 +15,7 @@ import 'package:livq/screens/navigation/bottom_navigation_controller.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/splash.dart';
 
-class Navigation extends StatelessWidget {
+class BottomNavigation extends StatelessWidget {
   final Stream<QuerySnapshot> _videoCallStream =
       FirebaseFirestore.instance.collection('videoCall').snapshots();
 
@@ -26,6 +26,8 @@ class Navigation extends StatelessWidget {
 
   final TextStyle selectedLabelStyle = TextStyle(
       color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12.sp);
+
+  BottomNavigation({Key? key}) : super(key: key);
 
   buildBottomNavigationMenu(context, landingPageController) {
     return Obx(() => MediaQuery(
@@ -38,7 +40,7 @@ class Navigation extends StatelessWidget {
             onTap: landingPageController.changeTabIndex,
             currentIndex: landingPageController.tabIndex.value,
             unselectedItemColor: Colors.grey[400],
-            selectedItemColor: Colors.grey[700],
+            selectedItemColor: AppColors.primaryColor[800],
             unselectedLabelStyle: unselectedLabelStyle,
             selectedLabelStyle: selectedLabelStyle,
             items: [

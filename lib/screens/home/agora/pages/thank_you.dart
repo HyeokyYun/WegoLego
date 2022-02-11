@@ -217,7 +217,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
                             .collection('videoCall')
                             .doc(firebaseUser!.uid)
                             .delete();
-                        Get.offAll(Navigation());
+                        Get.offAll(BottomNavigation());
                       });
                       //그냥 메인 페이지로 넘어갈 수 있게 하기
                     },
@@ -273,7 +273,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
                               .doc(firebaseUser!.uid)
                               .delete();
                           Get.find<ButtonController>().changetrue();
-                          Get.offAll(Navigation());
+                          Get.offAll(BottomNavigation());
                         });
                       });
                       setState(() {
@@ -340,7 +340,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
                     .collection('videoCall')
                     .doc(firebaseUser!.uid)
                     .delete();
-                Get.offAll(Navigation());
+                Get.offAll(BottomNavigation());
               },
               child: Text(
                 "확인",

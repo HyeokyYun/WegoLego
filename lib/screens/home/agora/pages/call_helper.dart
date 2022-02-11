@@ -161,7 +161,7 @@ class _CallPageState extends State<CallPage_helper> {
               .collection('users')
               .doc(firebaseUser!.uid)
               .update({'help': FieldValue.increment(1)});
-          Get.offAll(() => Navigation());
+          Get.offAll(() => BottomNavigation());
           // Navigator.pop(context);
         } else if (coordinates.compareTo('onoffVideo') == 0) {
           setState(() {
@@ -171,7 +171,7 @@ class _CallPageState extends State<CallPage_helper> {
           // popUp();
         } else if (coordinates.compareTo(uid_check) == 0) {
           if (pass_check) {
-            Get.offAll(() => Navigation());
+            Get.offAll(() => BottomNavigation());
 
             //Navigator.pop(context);
           }
@@ -379,7 +379,7 @@ class _CallPageState extends State<CallPage_helper> {
         .collection('users')
         .doc(firebaseUser!.uid)
         .update({'help': FieldValue.increment(1)});
-    Get.offAll(() => Navigation());
+    Get.offAll(() => BottomNavigation());
     //Navigator.pop(context);
   }
 

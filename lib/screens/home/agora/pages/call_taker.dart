@@ -598,7 +598,7 @@ class _CallPageState extends State<CallPage_taker> {
                               backgroundColor: AppColors.primaryColor,
                               colorText: Colors.white);
                           Get.find<ButtonController>().changetrue();
-                          Get.offAll(Navigation());
+                          Get.offAll(BottomNavigation());
                         },
                       ),
                     ],
@@ -678,7 +678,7 @@ class _CallPageState extends State<CallPage_taker> {
                             .doc(firebaseUser!.uid)
                             .delete();
                         Get.find<ButtonController>().changetrue();
-                        Get.offAll(Navigation());
+                        Get.offAll(BottomNavigation());
                       },
                       child: Text(
                         '매칭 취소하기',

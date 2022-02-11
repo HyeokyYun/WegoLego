@@ -118,7 +118,7 @@ class _SubCategoryState extends State<SubCategory> {
                   onPressed: () {
                     setState(() {
                       Get.find<ButtonController>().changetrue();
-                      Get.offAll(Navigation());
+                      Get.offAll(BottomNavigation());
                     });
                     //그냥 메인 페이지로 넘어갈 수 있게 하기
                   },

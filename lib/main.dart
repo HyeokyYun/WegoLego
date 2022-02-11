@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
                     future: c.initialize(),
                     builder: (context, AsyncSnapshot snapshot) {
                       return Root();
-                      // return Navigation();
+                      // return BottomNavigation();
                     }),
               ),
             ));

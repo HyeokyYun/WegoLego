@@ -95,7 +95,7 @@ class _WelcomePageState extends State<WelcomePage> {
                                   _authController.isFirstSignIn.value = false;
                                   _authController.update();
 
-                                  Get.offAll(Navigation());
+                                  Get.offAll(BottomNavigation());
                                 },
                                 child: Text(
                                   '시작하기',
