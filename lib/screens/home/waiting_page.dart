@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:livq/screens/navigation_bar.dart';
+import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 
@@ -109,18 +109,6 @@ class WaitingPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Text(
-                      //   '남은 매칭시간',
-                      //   style: TextStyle(
-                      //       fontSize: ScreenUtil().setSp(14),
-                      //       color: Color(0xFFF9A825)),
-                      // ),
-                      // Text(
-                      //   '1:35',
-                      //   style: TextStyle(
-                      //       fontSize: ScreenUtil().setSp(14),
-                      //       color: Color(0xFFF9A825)),
-                      // ),
                     ],
                   ),
                   SizedBox(width: ScreenUtil().setWidth(173)),
