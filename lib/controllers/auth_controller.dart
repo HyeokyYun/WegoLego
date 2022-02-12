@@ -326,6 +326,7 @@ class AuthController extends GetxController {
         }
         currentUser = user;
         isEmailSignIn.value = false;
+        update();
       }
     } catch (e) {
       Get.snackbar('Error occurred!', e.toString(),

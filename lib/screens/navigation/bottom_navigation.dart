@@ -118,18 +118,17 @@ class BottomNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     final BottomNavigationController landingPageController =
         Get.put(BottomNavigationController(), permanent: false);
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       bottomNavigationBar:
-          buildBottomNavigationMenu(context, landingPageController),
+      buildBottomNavigationMenu(context, landingPageController),
       body: Obx(() => IndexedStack(
-            index: landingPageController.tabIndex.value,
-            children: [
-              ChannelList(),
-              Home(),
-              MyPage(),
-            ],
-          )),
-    ));
+        index: landingPageController.tabIndex.value,
+        children: [
+          ChannelList(),
+          Home(),
+          MyPage(),
+        ],
+      )),
+    );
   }
 }
