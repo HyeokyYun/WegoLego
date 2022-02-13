@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:livq/screens/my_page/sub_pages/call_history.dart';
 import 'package:livq/screens/my_page/sub_pages/logout_page.dart';
 import 'package:livq/screens/my_page/sub_pages/notification_setting/notification_setting.dart';
 import 'package:livq/theme/colors.dart';
@@ -76,7 +77,11 @@ class _appSettingPageState extends State<appSettingPage> {
                       color: Color(0xffADB5BD),
                     ),
                     onTap: () {
-                      Get.to(() => appSettingPage());
+                      // Get.to(() => appSettingPage());
+                      Get.snackbar("카테고리 준비중입니다.", "더 나은 질문과 해결을 위해 준비중입니다.",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: AppColors.primaryColor,
+                          colorText: Colors.white);
                     },
                   ),
                   Divider(
@@ -95,7 +100,7 @@ class _appSettingPageState extends State<appSettingPage> {
                       color: Color(0xffADB5BD),
                     ),
                     onTap: () {
-                      Get.to(() => appSettingPage());
+                      Get.to(() => CallHistory());
                     },
                   ),
                   Divider(

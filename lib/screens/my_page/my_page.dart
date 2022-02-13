@@ -410,7 +410,7 @@ class _MyPageState extends State<MyPage> {
                       ),
                       onTap: () {
                         Get.to(
-                          callHistory(),
+                          CallHistory(),
                           transition: Transition.rightToLeft,
                         );
                       },
@@ -470,6 +470,10 @@ class _MyPageState extends State<MyPage> {
                         color: AppColors.grey[500],
                       ),
                       onTap: () {
+                        Get.snackbar("공지사항 준비중입니다.", "원활한 소통을 위해 준비중입니다.",
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: AppColors.primaryColor,
+                            colorText: Colors.white);
                         // Get.to(() => Instruction());
                       },
                     ),

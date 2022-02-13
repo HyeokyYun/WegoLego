@@ -58,30 +58,30 @@ class _Ranking_PageState extends State<Ranking_Page> {
                   SizedBox(
                     width: 74.w,
                   ),
-                  DropdownButton(
-                    value: dropdownvalue,
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.grey[700],
-                    ),
-                    items: items.map((String items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(
-                          items,
-                          style: AppTextStyle.koBody2.copyWith(
-                            color: AppColors.grey[700],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownvalue = newValue!;
-                        dropdown = !dropdown;
-                      });
-                    },
-                  ),
+                  // DropdownButton(
+                  //   value: dropdownvalue,
+                  //   icon: Icon(
+                  //     Icons.keyboard_arrow_down,
+                  //     color: AppColors.grey[700],
+                  //   ),
+                  //   items: items.map((String items) {
+                  //     return DropdownMenuItem(
+                  //       value: items,
+                  //       child: Text(
+                  //         items,
+                  //         style: AppTextStyle.koBody2.copyWith(
+                  //           color: AppColors.grey[700],
+                  //         ),
+                  //       ),
+                  //     );
+                  //   }).toList(),
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       dropdownvalue = newValue!;
+                  //       dropdown = !dropdown;
+                  //     });
+                  //   },
+                  // ),
                 ],
               ),
               SizedBox(
@@ -90,69 +90,84 @@ class _Ranking_PageState extends State<Ranking_Page> {
               Container(
                 width: 340.w,
                 height: 600.h,
-                // decoration: BoxDecoration(
-                //   color: AppColors.grey[50],
-                //   borderRadius: BorderRadius.circular(22.w),
-                //   boxShadow: [
-                //     BoxShadow(
-                //       color: AppColors.grey.withOpacity(0.1),
-                //       // spreadRadius: 5,
-                //       blurRadius: 20,
-                //       offset: Offset(0, 5), // changes position of shadow
-                //     ),
-                //   ],
-                // ),
-                child: (dropdown)
-                    ? StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('users')
-                            .orderBy('help', descending: true)
-                            .limit(10)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                          final documents = snapshot.data!.docs;
-                          return Container(
-                            height: 200.h,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                    child: ListView(
-                                        children: documents
-                                            .map((doc) => _buildItemWidget(doc))
-                                            .toList())),
-                              ],
-                            ),
-                          );
-                        })
-                    : StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('users')
-                            .orderBy('ask', descending: true)
-                            .limit(10)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          final documents = snapshot.data!.docs;
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                          return Container(
-                            height: 200.h,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                    child: ListView(
-                                        children: documents
-                                            .map((doc) => _buildItemWidget(doc))
-                                            .toList())),
-                              ],
-                            ),
-                          );
-                        }),
+                child:
+                    // (dropdown)
+                    // ? FutureBuilder(builder: (context, snapshot) async {
+                    //     future:
+                    //         await  FirebaseFirestore.instance
+                    //               .collection('users')
+                    //               .orderBy('ask', descending: true)
+                    //               .limit(10)
+                    //               .get();
+                    //       if (!snapshot.hasData) {
+                    //         return Center(child: CircularProgressIndicator());
+                    //       }
+                    //       return ListView.builder(
+                    //         itemBuilder: (context, index) {
+
+                    //           DocumentSnapshot document =
+                    //               snapshot.data.;
+                    //           itemCount:
+                    //           snapshot.data.docs.length;
+                    //           return ListTile();
+                    //         },
+                    //       );
+                    //   })
+                    dropdown
+                        ? StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .orderBy('help', descending: true)
+                                .limit(10)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              final documents = snapshot.data!.docs;
+                              return Container(
+                                height: 200.h,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                        child: ListView(
+                                            children: documents
+                                                .map((doc) =>
+                                                    _buildItemWidget(doc))
+                                                .toList())),
+                                  ],
+                                ),
+                              );
+                            })
+                        : StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .orderBy('ask', descending: true)
+                                .limit(10)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              final documents = snapshot.data!.docs;
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              return Container(
+                                height: 200.h,
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                        child: ListView(
+                                            children: documents
+                                                .map((doc) =>
+                                                    _buildItemWidget(doc))
+                                                .toList())),
+                                  ],
+                                ),
+                              );
+                            }),
               ),
               SizedBox(
                 height: 44.h,
@@ -165,73 +180,106 @@ class _Ranking_PageState extends State<Ranking_Page> {
   }
 }
 
+// Widget getGroupsWidget() {
+//   return FutureBuilder(
+//     future: loadGroups(),
+//     builder: (context, snapshot) {
+//       if (!snapshot.hasData) {
+//         return Center(child: CircularProgressIndicator());
+//       }
+//       return ListView.builder(
+//         itemBuilder: (context, index) {
+//           DocumentSnapshot document = snapshot.data.docs[index];
+
+//           return ListTile(
+//               contentPadding:
+//                   EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+//               leading: const Icon(Icons.group),
+//               title: Text(document.data()["name"]),
+//               subtitle: Text(""),
+//               onTap: () {
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) =>
+//                         ChatScreen(groupId: document.data()["id"]),
+//                   ),
+//                 );
+//               });
+//         },
+//         itemCount: snapshot.data.docs.length,
+//       );
+//     },
+
+//   );
+// }
+
 Widget _buildItemWidget(DocumentSnapshot doc) {
-  final rank = Rank(doc['help'], doc['ask'], doc['name'],doc['photoURL']);
+  final rank = Rank(doc['help'], doc['ask'], doc['name'], doc['photoURL']);
 
   return ListTile(
       title: Container(
-        //color: AppColors.grey[50],
-        height: 60.h,
-        child: Card(
-          shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(11)
-          ),
-        color: Color(0xffFFF9EA),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 200.w,
-                  child: Row(children: [
-                    //Text("$num[index]"),
+    //color: AppColors.grey[50],
+    height: 60.h,
+    child: Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
+      color: Color(0xffFFF9EA),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Container(
+              width: 200.w,
+              child: Row(children: [
+                //Text("$num[index]"),
+                SizedBox(
+                  width: 10.w,
+                ),
 
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(57),
-                      child: Image.network(
-                        rank.photo,
-                        height: 30.h,
-                        width: 30.w,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Container(
-                      width: 130.w,
-                      child: Text(
-                        rank.name,
-                        style: TextStyle(fontSize: 15.w),
-                      ),
-                    ),
-                  ]),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(57),
+                  child: Image.network(
+                    rank.photo,
+                    height: 30.h,
+                    width: 30.w,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                SizedBox(
+                  width: 10.w,
                 ),
                 Container(
-                    height: 15,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                            width: 65.w,
-                            child: Row(children: [
-                              SvgPicture.asset("assets/my_page/heartIcon.svg"),
-                              Text(
-                                "${rank.ask}",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ])),
-                        Image.asset("assets/my_page/yellow_i.png"),
-                        SizedBox(width: 7.w),
-                        Text(
-                          "${rank.help}",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    )),
+                  width: 130.w,
+                  child: Text(
+                    rank.name,
+                    style: TextStyle(fontSize: 15.w),
+                  ),
+                ),
               ]),
-
+            ),
+            Container(
+                height: 15,
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: 65.w,
+                        child: Row(children: [
+                          SvgPicture.asset("assets/my_page/heartIcon.svg"),
+                          Text(
+                            "${rank.ask}",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ])),
+                    Image.asset("assets/my_page/yellow_i.png"),
+                    SizedBox(width: 7.w),
+                    Text(
+                      "${rank.help}",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                )),
+          ]),
         ],
       ),
     ),
@@ -245,7 +293,4 @@ class Rank {
   String photo;
 
   Rank(this.help, this.ask, this.name, this.photo);
-
-
-
 }
