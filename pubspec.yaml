@@ -61,6 +61,7 @@ dependencies:
   in_app_review: ^2.0.4
 
   flutter_speed_dial: ^5.0.0+1
+  flutter_switch: ^0.3.2
 
 
 dev_dependencies:

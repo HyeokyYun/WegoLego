@@ -89,7 +89,7 @@ class _mySettingPageState extends State<mySettingPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.fromLTRB(28, 0, 28, 0),
+          padding: EdgeInsets.fromLTRB(28.w, 0, 28.w, 0),
           alignment: Alignment.topCenter,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -148,15 +148,116 @@ class _mySettingPageState extends State<mySettingPage> {
                                     ),
                                   ),
                             Positioned(
-                                child: InkWell(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          context: context,
-                                          builder: ((builder) =>
-                                              bottomSheet()));
-                                    },
-                                    child: Icon(Icons.camera_alt,
-                                        color: Colors.black45, size: 40)))
+                                bottom: 1.h,
+                                right: 1.w,
+                                child: CircleAvatar(
+                                  backgroundColor: AppColors.grey[700],
+                                  radius: 15.w,
+                                  child: InkWell(
+                                      onTap: () {
+                                        print("OnTap");
+                                        Get.bottomSheet(
+                                          Wrap(children: [
+                                            Card(
+                                              color: Colors.grey[200],
+                                              margin: EdgeInsets.fromLTRB(
+                                                  7.w, 0.0, 7.w, 0.0),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Wrap(
+                                                children: [
+                                                  ListTile(
+                                                    onTap: getImageFromCam,
+                                                    dense: true,
+                                                    visualDensity:
+                                                        VisualDensity(
+                                                            horizontal: 0,
+                                                            vertical: -2),
+                                                    title: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            '사진 찍기',
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    14.sp),
+                                                          )
+                                                        ]),
+                                                  ),
+                                                  Divider(
+                                                    thickness: 1,
+                                                  ),
+                                                  ListTile(
+                                                    onTap: getImageFromGallery,
+                                                    dense: true,
+                                                    visualDensity:
+                                                        VisualDensity(
+                                                            horizontal: 0,
+                                                            vertical: -2),
+                                                    title: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            '앨범에서 사진 선택',
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    14.sp),
+                                                          )
+                                                        ]),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Card(
+                                              color: AppColors.grey[100],
+                                              margin: EdgeInsets.all(7.w),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Wrap(
+                                                children: [
+                                                  ListTile(
+                                                    onTap: () {
+                                                      Get.back();
+                                                    },
+                                                    dense: true,
+                                                    visualDensity:
+                                                        VisualDensity(
+                                                            horizontal: 0,
+                                                            vertical: -2),
+                                                    title: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            '닫기',
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    14.sp),
+                                                          )
+                                                        ]),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ]),
+                                        );
+                                        // showModalBottomSheet(
+                                        //     context: context,
+                                        //     builder: ((builder) =>
+                                        //         bottomSheet()));
+                                      },
+                                      child: Icon(Icons.camera_alt,
+                                          color: Colors.white, size: 16.w)),
+                                ))
                           ],
                         ),
                         ifChangeName
@@ -315,33 +416,47 @@ class _mySettingPageState extends State<mySettingPage> {
 
   Widget bottomSheet() {
     return Container(
-        height: 100,
+        height: 100.h,
         width: MediaQuery.of(context).size.width,
         margin: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
+          horizontal: 20.w,
+          vertical: 20.h,
         ),
         child: Column(
-          children: <Widget>[
+          children: [
             Text(
               'Choose profile photo',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 18.sp),
             ),
             SizedBox(
-              height: 20,
+              height: 10.h,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                FloatingActionButton(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FloatingActionButton.extended(
+                  backgroundColor: AppColors.grey[300],
                   onPressed: getImageFromCam,
-                  tooltip: 'Pick Image',
-                  child: Icon(Icons.add_a_photo),
+                  icon: Icon(
+                    Icons.add_a_photo,
+                    color: Colors.black,
+                  ),
+                  label: Text(
+                    "사진 찍기",
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
-                FloatingActionButton(
+                FloatingActionButton.extended(
+                  backgroundColor: AppColors.grey[300],
                   onPressed: getImageFromGallery,
-                  tooltip: 'Pick Image',
-                  child: Icon(Icons.wallpaper),
+                  icon: Icon(
+                    Icons.wallpaper,
+                    color: Colors.black,
+                  ),
+                  label: Text(
+                    "앨범에서 선택",
+                    style: TextStyle(color: Colors.black),
+                  ),
                 )
               ],
             )

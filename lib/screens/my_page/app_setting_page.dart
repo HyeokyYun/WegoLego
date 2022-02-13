@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:livq/screens/my_page/sub_pages/logout_page.dart';
+import 'package:livq/screens/my_page/sub_pages/notification_setting/notification_setting.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 
@@ -33,7 +34,7 @@ class _appSettingPageState extends State<appSettingPage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-         // padding: EdgeInsets.fromLTRB(28, 0, 28, 0),
+          // padding: EdgeInsets.fromLTRB(28, 0, 28, 0),
           alignment: Alignment.topCenter,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,7 +57,7 @@ class _appSettingPageState extends State<appSettingPage> {
                       color: Color(0xffADB5BD),
                     ),
                     onTap: () {
-                      Get.to(() => appSettingPage());
+                      Get.to(() => NotificationSetting());
                     },
                   ),
                   Divider(
