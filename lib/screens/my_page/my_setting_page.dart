@@ -294,8 +294,11 @@ class _mySettingPageState extends State<mySettingPage> {
                                   validator: (String? value) {
                                     if (value!.isEmpty)
                                       return 'Please enter some text';
-                                    else if (value.length < 3)
-                                      return 'Please enter more than 2';
+                                    else if (value.length <= 2) {
+                                      return '2자리 이상 입력해주세요. ';
+                                    } else if (value.length >= 7) {
+                                      return '6글자 이하로 입력해주세요';
+                                    }
                                     return null;
                                   },
                                 ),

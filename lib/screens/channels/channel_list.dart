@@ -216,6 +216,12 @@ class _ChannelListState extends State<ChannelList> {
                                                                           .uid,
                                                                   "question": data[
                                                                       'subcategory'],
+                                                                  "timeRegister": DateTime
+                                                                          .now()
+                                                                      .millisecondsSinceEpoch
+                                                                      .toString(),
+                                                                  "report":
+                                                                      false,
                                                                 });
                                                                 //helper의 리스트에 저장
                                                                 FirebaseFirestore
@@ -237,6 +243,12 @@ class _ChannelListState extends State<ChannelList> {
                                                                       'uid'],
                                                                   "question": data[
                                                                       'subcategory'],
+                                                                  "timeRegister": DateTime
+                                                                          .now()
+                                                                      .millisecondsSinceEpoch
+                                                                      .toString(),
+                                                                  "report":
+                                                                      false,
                                                                 });
                                                                 Get.snackbar(
                                                                     '화면을 터치하여 도움을 주세요',

@@ -96,7 +96,9 @@ class BottomNavigation extends StatelessWidget {
                 label: '라이브 룸',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
+                icon:
+
+                  Icon(
                   Icons.home,
                   size: 30.sp,
                 ),

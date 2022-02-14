@@ -2,6 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:livq/theme/colors.dart';
+import 'package:livq/theme/text_style.dart';
 
 import '/screens/home/agora/pages/call_helper.dart';
 import 'package:livq/screens/home/home.dart';
@@ -98,7 +99,7 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
                                       new BorderRadius.circular(10.0)),
                               elevation: 10.0,
                               shadowColor: AppColors.grey[100],
-                              color: Color(0xffF1F3F5),
+                              color: AppColors.primaryColor[50],
                               child: Container(
                                 child: Padding(
                                   padding:
@@ -108,39 +109,37 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
                                     //Config.screenHeight! * 0.103,
                                     width: 350.w,
                                     //Config.screenWidth! * 0.322,
+
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Container(
-                                          width: 210.w,
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 150.w,
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      data['name'] + "님의 감사편지",
-                                                      style: TextStyle(
-                                                          fontSize: 11.sp),
-                                                    ),
-                                                    Container(
-                                                        child: Text(
-                                                      data['thankLetter'],
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 12.sp),
-                                                    )),
-                                                  ],
-                                                ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              width: 260.w,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 10.h,
+                                                  ),
+                                                  Text(
+                                                    data['name'] + "님의 감사편지",
+                                                    style: AppTextStyle.koBody2,
+                                                  ),
+                                                  Container(
+                                                      child: Text(
+                                                    data['thankLetter'],
+                                                    style: AppTextStyle.koBody1,
+                                                  )),
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
