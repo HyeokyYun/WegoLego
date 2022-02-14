@@ -16,6 +16,7 @@ import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/my_page/sub_pages/guide_page.dart';
 import 'package:livq/screens/home/sub_category.dart';
 import 'package:livq/screens/my_page/sub_pages/ranking.dart';
+import 'package:livq/screens/my_page/sub_pages/thanks_letters.dart';
 import 'package:livq/screens/root.dart';
 import 'package:livq/screens/sign_in/sign_in.dart';
 import 'package:livq/theme/colors.dart';
@@ -184,10 +185,11 @@ class _HomeState extends State<Home> {
                         width: 151.w,
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.to(guidePage());
+                           //Get.to(guidePage());
+                            Get.to(const ThankyouLetters());
                           },
                           child: Text(
-                            "사용설명서",
+                            "받은 감사편지 ",
                             style: AppTextStyle.koBody2
                                 .copyWith(color: AppColors.grey[800]),
                           ),
