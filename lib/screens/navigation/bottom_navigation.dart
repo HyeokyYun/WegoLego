@@ -96,9 +96,7 @@ class BottomNavigation extends StatelessWidget {
                 label: '라이브 룸',
               ),
               BottomNavigationBarItem(
-                icon:
-
-                  Icon(
+                icon: Icon(
                   Icons.home,
                   size: 30.sp,
                 ),
@@ -122,15 +120,15 @@ class BottomNavigation extends StatelessWidget {
         Get.put(BottomNavigationController(), permanent: false);
     return Scaffold(
       bottomNavigationBar:
-      buildBottomNavigationMenu(context, landingPageController),
+          buildBottomNavigationMenu(context, landingPageController),
       body: Obx(() => IndexedStack(
-        index: landingPageController.tabIndex.value,
-        children: [
-          ChannelList(),
-          Home(),
-          MyPage(),
-        ],
-      )),
+            index: landingPageController.tabIndex.value,
+            children: [
+              ChannelList(),
+              Home(),
+              MyPage(),
+            ],
+          )),
     );
   }
 }

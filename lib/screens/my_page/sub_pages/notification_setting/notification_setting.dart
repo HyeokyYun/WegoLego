@@ -25,13 +25,23 @@ class _NotificationSetting extends State<NotificationSetting> {
   User? get userProfile => auth.currentUser;
   User? currentUser;
 
-  bool status = true;
+  late bool status;
 
   @override
   void initState() {
     messaging = FirebaseMessaging.instance;
     messaging.getToken().then((value) {
       _token = value;
+    });
+    // _getUser();
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(userProfile!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      setState(() {
+        status = documentSnapshot['notificationOn'];
+      });
     });
     super.initState();
   }
@@ -83,29 +93,31 @@ class _NotificationSetting extends State<NotificationSetting> {
                         builder: (context,
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
                           final getdata = snapshot.data;
-                          status = getdata?['notificationOn'];
                           return FlutterSwitch(
                             width: 48.w,
                             height: 30.w,
+                            activeColor: AppColors.primaryColor,
                             onToggle: (val) {
                               setState(() {
                                 status = val;
-                                print(status);
+                                print("toggle status changed $status");
                               });
                               FirebaseFirestore.instance
                                   .collection('users')
                                   .doc(userProfile!.uid)
-                                  .update({'notificationOn': status});
-                              status
-                                  ? FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(userProfile!.uid)
-                                      .update({'token': _token})
-                                  : FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(userProfile!.uid)
-                                      .update(
-                                          {'token': "Notification Turn Off"});
+                                  .update({'notificationOn': val}).then(
+                                      (value) {
+                                status
+                                    ? FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(userProfile!.uid)
+                                        .update({'token': _token})
+                                    : FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(userProfile!.uid)
+                                        .update(
+                                            {'token': "Notification Turn Off"});
+                              });
                             },
                             value: status,
                           );
