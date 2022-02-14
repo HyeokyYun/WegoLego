@@ -44,7 +44,7 @@ class _Ranking_PageState extends State<Ranking_Page> {
       body: SingleChildScrollView(
         //scrollDirection: Axis.vertical,
         child: Container(
-          padding: EdgeInsets.fromLTRB(18.w, 0, 18.w, 0),
+          padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 0),
           child: Column(
             children: [
               Row(
@@ -221,6 +221,7 @@ Widget _buildItemWidget(DocumentSnapshot doc) {
       title: Container(
     //color: AppColors.grey[50],
     height: 60.h,
+    width: 325.w,
     child: Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),
       color: Color(0xffFFF9EA),
@@ -231,6 +232,7 @@ Widget _buildItemWidget(DocumentSnapshot doc) {
           Row(children: [
             Container(
               width: 200.w,
+height:34.h ,
               child: Row(children: [
                 //Text("$num[index]"),
                 SizedBox(
@@ -250,32 +252,36 @@ Widget _buildItemWidget(DocumentSnapshot doc) {
                   width: 10.w,
                 ),
                 Container(
-                  width: 130.w,
+
+                  width: 140.w,
                   child: Text(
                     rank.name,
-                    style: TextStyle(fontSize: 15.w),
+                    style: AppTextStyle.koBody2.copyWith(fontSize: 14.sp,height: 1.2.h),
                   ),
                 ),
               ]),
             ),
             Container(
-                height: 15,
+                height: 15.h,
                 child: Row(
                   children: [
                     SizedBox(
-                        width: 65.w,
+                        width: 55.w,
                         child: Row(children: [
-                          SvgPicture.asset("assets/my_page/heartIcon.svg"),
+                          SvgPicture.asset("assets/my_page/heartIcon.svg",),
                           Text(
                             "${rank.ask}",
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 14),
                           ),
                         ])),
                     Image.asset("assets/my_page/yellow_i.png"),
-                    SizedBox(width: 7.w),
+                    SizedBox(width: 8.w),
                     Text(
                       "${rank.help}",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(
+                      width: 5.w,
                     ),
                   ],
                 )),
