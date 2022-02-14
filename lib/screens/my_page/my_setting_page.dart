@@ -161,7 +161,7 @@ class _mySettingPageState extends State<mySettingPage> {
                                             Card(
                                               color: Colors.grey[200],
                                               margin: EdgeInsets.fromLTRB(
-                                                  7.w, 0.0, 7.w, 0.0),
+                                                  10.w, 0.0, 10.w, 0.0),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
@@ -216,7 +216,11 @@ class _mySettingPageState extends State<mySettingPage> {
                                             ),
                                             Card(
                                               color: AppColors.grey[100],
-                                              margin: EdgeInsets.all(7.w),
+                                              margin: EdgeInsets.fromLTRB(
+                                                  10.0.w,
+                                                  7.0.w,
+                                                  10.0.w,
+                                                  15.0.w),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(

@@ -70,6 +70,7 @@ class AuthController extends GetxController {
         "feedback": false,
         //email 로그인에 한하여 이 데이터가 필요하다.
         "firstTime": true,
+        "notificationOn": true,
       });
       FirebaseFirestore.instance
           .collection('users')
@@ -213,6 +214,7 @@ class AuthController extends GetxController {
             "getHeart": 0,
             // "firstTime": false,
             "feedback": false,
+            "notificationOn": true,
           });
           FirebaseFirestore.instance
               .collection('users')
@@ -306,6 +308,7 @@ class AuthController extends GetxController {
             "getHeart": 0,
             // "firstTime": false,
             "feedback": false,
+            "notificationOn": true,
           });
           FirebaseFirestore.instance
               .collection('users')

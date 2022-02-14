@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -15,22 +18,30 @@ class NotificationSetting extends StatefulWidget {
 }
 
 class _NotificationSetting extends State<NotificationSetting> {
-  late bool status;
+  String? _token;
+  late FirebaseMessaging messaging;
 
   FirebaseAuth auth = FirebaseAuth.instance;
   User? get userProfile => auth.currentUser;
   User? currentUser;
 
+  bool status = true;
+
   @override
   void initState() {
-    final userData =
-        FirebaseFirestore.instance.collection('users').doc(currentUser!.uid);
-    userData.get().then((value) => {status = value['NotificationOn']});
+    messaging = FirebaseMessaging.instance;
+    messaging.getToken().then((value) {
+      _token = value;
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance
+        .collection('user')
+        .doc(userProfile!.uid)
+        .snapshots();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -67,20 +78,38 @@ class _NotificationSetting extends State<NotificationSetting> {
                       "알림 수신",
                       style: AppTextStyle.koBody1,
                     ),
-                    FlutterSwitch(
-                      width: 48.w,
-                      height: 30.w,
-                      onToggle: (val) {
-                        setState(() {
-                          status = val;
-                          FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(userProfile!.uid)
-                              .update({'NotificationOn': status});
-                        });
-                      },
-                      value: status,
-                    ),
+                    StreamBuilder<DocumentSnapshot>(
+                        stream: _usersStream,
+                        builder: (context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          final getdata = snapshot.data;
+                          status = getdata?['notificationOn'];
+                          return FlutterSwitch(
+                            width: 48.w,
+                            height: 30.w,
+                            onToggle: (val) {
+                              setState(() {
+                                status = val;
+                                print(status);
+                              });
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(userProfile!.uid)
+                                  .update({'notificationOn': status});
+                              status
+                                  ? FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(userProfile!.uid)
+                                      .update({'token': _token})
+                                  : FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(userProfile!.uid)
+                                      .update(
+                                          {'token': "Notification Turn Off"});
+                            },
+                            value: status,
+                          );
+                        }),
                   ],
                 ),
               ),
