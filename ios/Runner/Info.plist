@@ -20,10 +20,34 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.414758807086-kqhoflbq4drek1vm2ar0oc7gmf2rdkcf</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Help someone or get a help with your camera! Camera will have you get or give help much better!</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Help someone or get a help with your voice! Voice will have you get or give help much better!</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Change your profile photo with your library. The photo that you will upload will be only saved on our database</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -46,29 +70,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.414758807086-kqhoflbq4drek1vm2ar0oc7gmf2rdkcf</string>
-			</array>
-		</dict>
-	</array>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Help someone or get a help with your camera! Camera will have you get or give help much better!</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Help someone or get a help with your voice! Voice will have you get or give help much better!</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Change your profile photo with your library. The photo that you will upload will be only saved on our database</string>
 </dict>
 </plist>

@@ -580,9 +580,9 @@ class _MyPageState extends State<MyPage> {
                         Get.to(() => appSettingPage());
                       },
                     ),
-                    SizedBox(
-                      height: 80.h,
-                    ),
+                    // SizedBox(
+                    //   height: 80.h,
+                    // ),
                   ],
                 ),
               ],

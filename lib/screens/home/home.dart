@@ -185,7 +185,7 @@ class _HomeState extends State<Home> {
                         width: 151.w,
                         child: ElevatedButton(
                           onPressed: () {
-                           //Get.to(guidePage());
+                            //Get.to(guidePage());
                             Get.to(const ThankyouLetters());
                           },
                           child: Text(
@@ -333,6 +333,15 @@ class _HomeState extends State<Home> {
                           "uid": firebaseUser!.uid,
                           "name": firebaseUser!.displayName,
                           "subcategory": _categoryController.text
+                        });
+
+                        //monitoring
+                        FirebaseFirestore.instance
+                            .collection("monitoring")
+                            .doc("category")
+                            .update({
+                          "category":
+                              FieldValue.arrayUnion([_categoryController.text]),
                         });
 
                         FirebaseFirestore.instance
