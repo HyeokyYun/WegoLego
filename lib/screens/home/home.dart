@@ -252,10 +252,31 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       onPressed: () async {
-                        FlutterDialog();
+                        FlutterDialog("");
                       },
                     ),
-                  )
+                  ),
+                  SizedBox(height: 30.h),
+                  Container(
+                    width: 350.w,
+                    height: 200.h,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: _friendsWidget(),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -265,7 +286,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void FlutterDialog() {
+  void FlutterDialog(String friendUid) {
     showDialog(
         context: context,
         //barrierDismissible - Dialog를 제외한 다른 화면 터치 x
@@ -350,11 +371,13 @@ class _HomeState extends State<Home> {
                             .update({"count": FieldValue.increment(1)});
 
                         await NotificationService.sendNotification(
-                            "${firebaseUser!.displayName} Need Your Help!",
-                            // _categoryController.text == ""
-                            //     ? ""
-                            //     :
-                            "${_categoryController.text}");
+                          "${firebaseUser!.displayName} Need Your Help!",
+                          // _categoryController.text == ""
+                          //     ? ""
+                          //     :
+                          "${_categoryController.text}",
+                          friendUid,
+                        );
                         await _handleCameraAndMic(Permission.camera);
                         await _handleCameraAndMic(Permission.microphone);
                         // push video page with given channel name
@@ -392,5 +415,59 @@ class _HomeState extends State<Home> {
   Future<void> _handleCameraAndMic(Permission permission) async {
     final status = await permission.request();
     print(status);
+  }
+
+  Widget _friendsWidget() {
+    return FutureBuilder(
+        future: FirebaseFirestore.instance.collection('users').get(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                itemExtent: 80,
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 8,
+                        ),
+                        ListTile(
+                          //Icon(Icons.person,color: Colors.black54,),
+                          title: Row(
+                            children: [
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Text(
+                                snapshot.data!.docs[index]['name'],
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.call),
+                            onPressed: () {
+                              //해당 유저로 알람이 갈 수 있게
+                              print(snapshot.data!.docs[index]['name']);
+                              FlutterDialog(snapshot.data!.docs[index]['uid']);
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Divider(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  );
+                });
+          } else {
+            return Container();
+          }
+        });
   }
 }
