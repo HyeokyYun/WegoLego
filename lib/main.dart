@@ -18,6 +18,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 
+# 라우트 설정 다시 해야함
+  
 Future<void> _backMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('background message ${message.notification}');
