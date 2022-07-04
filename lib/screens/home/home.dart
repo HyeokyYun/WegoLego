@@ -21,6 +21,7 @@ import 'package:livq/screens/root.dart';
 import 'package:livq/screens/sign_in/sign_in.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/rounded_elevated_button.dart';
 import 'package:livq/widgets/rounded_text_formfield.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -177,55 +178,55 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     height: 30.h,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 59.h,
-                        width: 151.w,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            //Get.to(guidePage());
-                            Get.to(const ThankyouLetters());
-                          },
-                          child: Text(
-                            "받은 감사편지 ",
-                            style: AppTextStyle.koBody2
-                                .copyWith(color: AppColors.grey[800]),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Color(0xffFFFFFF),
-                            //padding: EdgeInsets.all(20),
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 15.w),
-                      Container(
-                        height: 59.h,
-                        width: 151.w,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.to(Ranking_Page());
-                          },
-                          child: Text(
-                            "랭킹",
-                            style: AppTextStyle.koBody2
-                                .copyWith(color: AppColors.grey[800]),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Color(0xffFFFFFF),
-                            // padding: EdgeInsets.all(20),
-                            shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     Container(
+                  //       height: 59.h,
+                  //       width: 151.w,
+                  //       child: ElevatedButton(
+                  //         onPressed: () {
+                  //           //Get.to(guidePage());
+                  //           Get.to(const ThankyouLetters());
+                  //         },
+                  //         child: Text(
+                  //           "받은 감사편지 ",
+                  //           style: AppTextStyle.koBody2
+                  //               .copyWith(color: AppColors.grey[800]),
+                  //         ),
+                  //         style: ElevatedButton.styleFrom(
+                  //           primary: Color(0xffFFFFFF),
+                  //           //padding: EdgeInsets.all(20),
+                  //           shape: new RoundedRectangleBorder(
+                  //             borderRadius: new BorderRadius.circular(20.0),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: 15.w),
+                  //     Container(
+                  //       height: 59.h,
+                  //       width: 151.w,
+                  //       child: ElevatedButton(
+                  //         onPressed: () {
+                  //           Get.to(Ranking_Page());
+                  //         },
+                  //         child: Text(
+                  //           "랭킹",
+                  //           style: AppTextStyle.koBody2
+                  //               .copyWith(color: AppColors.grey[800]),
+                  //         ),
+                  //         style: ElevatedButton.styleFrom(
+                  //           primary: Color(0xffFFFFFF),
+                  //           // padding: EdgeInsets.all(20),
+                  //           shape: new RoundedRectangleBorder(
+                  //             borderRadius: new BorderRadius.circular(20.0),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
             ),
@@ -237,29 +238,29 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     height: 180.h,
                   ),
-                  Container(
-                    height: 200.h,
-                    width: 200.w,
-                    child: FloatingActionButton(
-                      child: CircleAvatar(
-                        radius: 100.w,
-                        child: ClipOval(
-                          child: SvgPicture.asset(
-                            "assets/home/icon1.svg",
-                            height: 200.h,
-                            width: 200.w,
-                          ),
-                        ),
-                      ),
-                      onPressed: () async {
-                        FlutterDialog("");
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
+                  // Container(
+                  //   height: 200.h,
+                  //   width: 200.w,
+                  //   child: FloatingActionButton(
+                  //     child: CircleAvatar(
+                  //       radius: 100.w,
+                  //       child: ClipOval(
+                  //         child: SvgPicture.asset(
+                  //           "assets/home/icon1.svg",
+                  //           height: 200.h,
+                  //           width: 200.w,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     onPressed: () async {
+                  //       FlutterDialog("");
+                  //     },
+                  //   ),
+                  // ),
+                  // SizedBox(height: 30.h),
                   Container(
                     width: 350.w,
-                    height: 200.h,
+                    height: 350.h,
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: _friendsWidget(),
@@ -276,6 +277,13 @@ class _HomeState extends State<Home> {
                         ),
                       ],
                     ),
+                  ),
+                  SizedBox(height: 30.h),
+                  RoundedElevatedButton(
+                    title: "전문가 연결",
+                    onPressed: () {
+                      FlutterDialog("");
+                    },
                   ),
                 ],
               ),
@@ -311,7 +319,7 @@ class _HomeState extends State<Home> {
             //
             content: Container(
               height: 100.h, //88
-              width: 300.w, //254
+              width: 400.w, //254
               padding: EdgeInsets.fromLTRB(15.w, 10.h, 15.w, 10.h),
               decoration: BoxDecoration(
                 color: Color(0xffC4C4C4),
@@ -448,6 +456,7 @@ class _HomeState extends State<Home> {
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.call),
+                            color: Colors.green,
                             onPressed: () {
                               //해당 유저로 알람이 갈 수 있게
                               print(snapshot.data!.docs[index]['name']);
