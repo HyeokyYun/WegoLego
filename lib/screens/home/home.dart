@@ -278,7 +278,7 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 30.h) ,
                   RoundedElevatedButton(
                     title: "전문가 연결",
                     onPressed: () {
