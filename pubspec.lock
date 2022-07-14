@@ -7,7 +7,7 @@ packages:
       name: agora_rtc_engine
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "5.2.0"
   animated_bottom_navigation_bar:
     dependency: "direct main"
     description:
@@ -239,6 +239,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.7"
+  firestore_search:
+    dependency: "direct main"
+    description:
+      name: firestore_search
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.9"
   flutter:
     dependency: "direct main"
     description: flutter

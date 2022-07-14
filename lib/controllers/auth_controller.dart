@@ -61,7 +61,7 @@ class AuthController extends GetxController {
         "email": firebaseUser.email,
         "uid": firebaseUser.uid,
         "photoURL":
-            "https://firebasestorage.googleapis.com/v0/b/wegolego-bf94b.appspot.com/o/liveQ_logo.jpg?alt=media&token=8b719a18-60db-4124-ae5e-01a5375d6a1c",
+        "https://firebasestorage.googleapis.com/v0/b/wegolego-bf94b.appspot.com/o/liveQ_logo.jpg?alt=media&token=8b719a18-60db-4124-ae5e-01a5375d6a1c",
         "token": _token,
         "timeRegister": DateTime.now().millisecondsSinceEpoch.toString(),
         "ask": 0,
@@ -71,6 +71,7 @@ class AuthController extends GetxController {
         //email 로그인에 한하여 이 데이터가 필요하다.
         "firstTime": true,
         "notificationOn": true,
+        "frienduid":[],
       });
       FirebaseFirestore.instance
           .collection('users')
@@ -118,7 +119,7 @@ class AuthController extends GetxController {
       await auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then(
-        (value) {
+            (value) {
           displayName = userProfile!.displayName!;
           //true인지 false인지 확인해서 가져오고 업데이트 시켜줌.
           FirebaseFirestore.instance
@@ -159,7 +160,7 @@ class AuthController extends GetxController {
         message = 'Invalid Password. Please try again!';
       } else if (e.code == 'user-not-found') {
         message =
-            ('The account does not exists for $email. Create your account by signing up.');
+        ('The account does not exists for $email. Create your account by signing up.');
       } else {
         message = e.message.toString();
       }
@@ -187,7 +188,7 @@ class AuthController extends GetxController {
       GoogleSignInAccount? googleLogin = await _googleSignIn.signIn();
 
       GoogleSignInAuthentication? googleAuth =
-          await googleLogin?.authentication;
+      await googleLogin?.authentication;
       final OAuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
 
@@ -215,6 +216,7 @@ class AuthController extends GetxController {
             // "firstTime": false,
             "feedback": false,
             "notificationOn": true,
+            "frienduid":[],
           });
           FirebaseFirestore.instance
               .collection('users')
@@ -274,14 +276,14 @@ class AuthController extends GetxController {
       );
 
       final authResult =
-          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
       User? user = authResult.user;
       if (appleCredential.givenName != null) {
         user!.updateDisplayName(
             "${appleCredential.givenName} ${appleCredential.familyName}");
         displayName =
-            "${appleCredential.givenName} ${appleCredential.familyName}";
+        "${appleCredential.givenName} ${appleCredential.familyName}";
       } else {
         user!.updateDisplayName("apple user");
         displayName = "apple user";
@@ -300,7 +302,7 @@ class AuthController extends GetxController {
             'email': user.email,
             'uid': user.uid,
             'photoURL':
-                "https://firebasestorage.googleapis.com/v0/b/wegolego-bf94b.appspot.com/o/liveQ_logo.jpg?alt=media&token=8b719a18-60db-4124-ae5e-01a5375d6a1c",
+            "https://firebasestorage.googleapis.com/v0/b/wegolego-bf94b.appspot.com/o/liveQ_logo.jpg?alt=media&token=8b719a18-60db-4124-ae5e-01a5375d6a1c",
             'token': _token,
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
             "ask": 0,
@@ -350,7 +352,7 @@ class AuthController extends GetxController {
 
       if (e.code == 'user-not-found') {
         message =
-            ('The account does not exists for $email. Create your account by signing up.');
+        ('The account does not exists for $email. Create your account by signing up.');
       } else {
         message = e.message.toString();
       }

@@ -39,7 +39,7 @@ dependencies:
   flutter_svg: ^1.0.0
   firebase_messaging:
   http:
-  agora_rtc_engine: ^4.0.7
+  agora_rtc_engine: ^5.2.0
   permission_handler:
   favorite_button:
   flutter_local_notifications:
@@ -52,6 +52,7 @@ dependencies:
   flutter_swiper_null_safety:
   animated_bottom_navigation_bar: ^0.3.2
   circular_countdown_timer:
+  firestore_search: ^0.1.9
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -102,6 +103,7 @@ flutter:
     - assets/home/icons.png
     - assets/home/thank_check.svg
     - assets/home/Vector.png
+    - assets/home/speaker.png
     - assets/login/google.svg
     - assets/my_page/heartIcon.svg
     - assets/my_page/answerIcon.svg
