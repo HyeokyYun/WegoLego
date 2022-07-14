@@ -9,6 +9,7 @@ import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:livq/widgets/rounded_elevated_button.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -19,12 +20,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  FirebaseAuth auth = FirebaseAuth.instance;
+  AuthClass _auth = AuthClass();
 
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
-
-  var firebaseUser = FirebaseAuth.instance.currentUser;
   final _channelController = TextEditingController();
 
   final TextEditingController _categoryController = TextEditingController();
@@ -260,6 +257,7 @@ class _HomeState extends State<Home> {
             ]),
           ),
         ),
+
       ),
     );
   }
@@ -326,13 +324,13 @@ class _HomeState extends State<Home> {
 
                         FirebaseFirestore.instance
                             .collection("videoCall")
-                            .doc(firebaseUser!.uid)
+                            .doc(_auth.uid)
                             .set({
                           "count": 1,
                           "timeRegister":
                               DateTime.now().millisecondsSinceEpoch.toString(),
-                          "uid": firebaseUser!.uid,
-                          "name": firebaseUser!.displayName,
+                          "uid": _auth.uid,
+                          "name": _auth.name,
                           "subcategory": _categoryController.text
                         });
 
@@ -351,7 +349,7 @@ class _HomeState extends State<Home> {
                             .update({"count": FieldValue.increment(1)});
 
                         await NotificationService.sendNotification(
-                          "${firebaseUser!.displayName} Need Your Help!",
+                          "${_auth.name} Need Your Help!",
                           // _categoryController.text == ""
                           //     ? ""
                           //     :

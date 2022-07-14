@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 
 class NotificationSetting extends StatefulWidget {
   const NotificationSetting({Key? key}) : super(key: key);
@@ -21,9 +22,7 @@ class _NotificationSetting extends State<NotificationSetting> {
   String? _token;
   late FirebaseMessaging messaging;
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
+  AuthClass _auth = AuthClass();
 
   late bool status;
 
@@ -36,7 +35,7 @@ class _NotificationSetting extends State<NotificationSetting> {
     // _getUser();
     FirebaseFirestore.instance
         .collection("users")
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       setState(() {
@@ -50,7 +49,7 @@ class _NotificationSetting extends State<NotificationSetting> {
   Widget build(BuildContext context) {
     final Stream<DocumentSnapshot> _usersStream = FirebaseFirestore.instance
         .collection('user')
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .snapshots();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -104,17 +103,17 @@ class _NotificationSetting extends State<NotificationSetting> {
                               });
                               FirebaseFirestore.instance
                                   .collection('users')
-                                  .doc(userProfile!.uid)
+                                  .doc(_auth.uid)
                                   .update({'notificationOn': val}).then(
                                       (value) {
                                 status
                                     ? FirebaseFirestore.instance
                                         .collection('users')
-                                        .doc(userProfile!.uid)
+                                        .doc(_auth.uid)
                                         .update({'token': _token})
                                     : FirebaseFirestore.instance
                                         .collection('users')
-                                        .doc(userProfile!.uid)
+                                        .doc(_auth.uid)
                                         .update(
                                             {'token': "Notification Turn Off"});
                               });

@@ -8,6 +8,7 @@ import 'package:livq/screens/home/agora/widgets/call_common.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 import '../../../../config.dart';
 import '../widgets/pie_chart.dart';
 import '../widgets/heart.dart';
@@ -29,27 +30,14 @@ class CallPage_helper extends StatefulWidget {
 }
 
 class _CallPageState extends State<CallPage_helper> {
-  // final _users = <int>[];
-  // final _infoStrings = <String>[];
-  // bool muted = false;
-  // bool videoOnOff = false;
-  // late RtcEngine _engine;
-  // int? streamId;
-  // late Offset change;
-  // bool heart = false;
   Call_common _common = Call_common();
+  AuthClass _auth = AuthClass();
 
   int helper_one = 0;
   late String uid_check;
   int count = 1;
   bool get_uid = true;
   bool pass_check = true;
-
-  //원 그리기 변수
-//   late Timer timer;
-//   bool _isPlaying = false;
-//   var value = 0;
-// late double subtract;
 
   Offset? location;
   late String getdetails;
@@ -108,11 +96,6 @@ class _CallPageState extends State<CallPage_helper> {
     //await _engine.setClientRole(ClientRole.Broadcaster);
   }
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
-
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
     _common.engine.setEventHandler(RtcEngineEventHandler(
@@ -163,7 +146,7 @@ class _CallPageState extends State<CallPage_helper> {
         if (coordinates.compareTo('end') == 0) {
           FirebaseFirestore.instance
               .collection('users')
-              .doc(firebaseUser!.uid)
+              .doc(_auth.uid)
               .update({'help': FieldValue.increment(1)});
           Get.offAll(() => BottomNavigation());
           // Navigator.pop(context);
@@ -238,26 +221,68 @@ class _CallPageState extends State<CallPage_helper> {
     return Container();
   }
 
-  /*
-// Video layout wrapper
-  Widget _viewRows() {
-    final views = _getRenderViews();
-    switch (views.length) {
-      case 1:
-        return Container();
-      case 2:
-        const CircularProgressIndicator();
-        return Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-          ],
-        );
-      default:
-    }
-    return Container();
+  Widget _changeCholor() {
+    return SpeedDial(
+      icon: Icons.color_lens,
+      activeIcon: Icons.color_lens_outlined,
+      foregroundColor: sendColor,
+      backgroundColor: AppColors.grey,
+      activeForegroundColor: sendColor,
+      activeBackgroundColor: AppColors.grey,
+      spacing: 3,
+      spaceBetweenChildren: 4,
+      buttonSize: Size(73.h, 73.h),
+      childrenButtonSize: Size(37.w, 37.h),
+      renderOverlay: false,
+      elevation: 0.0,
+      children: [
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: AppColors.grey[50],
+          onTap: () {
+            setState(() {
+              sendColor = AppColors.grey[50]!;
+            });
+            _common.engine.sendStreamMessage(_common.streamId!, "grey");
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: AppColors.primaryColor,
+          onTap: () {
+            setState(() {
+              sendColor = AppColors.primaryColor;
+            });
+            _common.engine.sendStreamMessage(_common.streamId!, "primary");
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: AppColors.secondaryColor,
+          onTap: () {
+            setState(() {
+              sendColor = AppColors.secondaryColor;
+            });
+            _common.engine.sendStreamMessage(_common.streamId!, "secondary");
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: Colors.red,
+          onTap: () {
+            setState(() {
+              sendColor = Colors.red;
+            });
+            _common.engine.sendStreamMessage(_common.streamId!, "red");
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+      ],
+    );
   }
-
-  */
 
   /// Toolbar layout
   Widget _toolbar() {
@@ -267,82 +292,8 @@ class _CallPageState extends State<CallPage_helper> {
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          // RawMaterialButton(
-          //     onPressed: _onSwitchCamera,
-          //     child: Icon(
-          //       videoOnOff ? Icons.videocam_off : Icons.videocam,
-          //       color: videoOnOff ? Colors.white : AppColors.primaryColor,
-          //       size: 45.h,
-          //     ),
-          //     shape: const CircleBorder(),
-          //     elevation: 4.0,
-          //     fillColor: videoOnOff ? AppColors.grey[700] : Colors.white,
-          //     padding: const EdgeInsets.all(12.0),
-          //   ),
-
-          SpeedDial(
-            icon: Icons.color_lens,
-            activeIcon: Icons.color_lens_outlined,
-            foregroundColor: sendColor,
-            backgroundColor: AppColors.grey,
-            activeForegroundColor: sendColor,
-            activeBackgroundColor: AppColors.grey,
-            spacing: 3,
-            spaceBetweenChildren: 4,
-            buttonSize: Size(73.h, 73.h),
-            childrenButtonSize: Size(37.w, 37.h),
-            renderOverlay: false,
-            elevation: 0.0,
-            children: [
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: AppColors.grey[50],
-                onTap: () {
-                  setState(() {
-                    sendColor = AppColors.grey[50]!;
-                  });
-                  _common.engine.sendStreamMessage(_common.streamId!, "grey");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: AppColors.primaryColor,
-                onTap: () {
-                  setState(() {
-                    sendColor = AppColors.primaryColor;
-                  });
-                  _common.engine
-                      .sendStreamMessage(_common.streamId!, "primary");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: AppColors.secondaryColor,
-                onTap: () {
-                  setState(() {
-                    sendColor = AppColors.secondaryColor;
-                  });
-                  _common.engine
-                      .sendStreamMessage(_common.streamId!, "secondary");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: Colors.red,
-                onTap: () {
-                  setState(() {
-                    sendColor = Colors.red;
-                  });
-                  _common.engine.sendStreamMessage(_common.streamId!, "red");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-            ],
-          ),
+        children: [
+          _changeCholor(),
           SizedBox(
             width: 33.w,
           ),
@@ -383,7 +334,7 @@ class _CallPageState extends State<CallPage_helper> {
     // Get.back();
     FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseUser!.uid)
+        .doc(_auth.uid)
         .update({'help': FieldValue.increment(1)});
     Get.offAll(() => BottomNavigation());
     //Navigator.pop(context);
