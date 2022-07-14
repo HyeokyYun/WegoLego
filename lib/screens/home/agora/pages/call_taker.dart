@@ -11,6 +11,7 @@ import 'package:livq/screens/home/agora/widgets/call_common.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 import '../../../../config.dart';
 import '../widgets/pie_chart.dart';
 import '../widgets/heart.dart';
@@ -34,15 +35,10 @@ class CallPage_taker extends StatefulWidget {
 }
 
 class _CallPageState extends State<CallPage_taker> {
-  bool _helperIn = false;
-
   Call_common _common = Call_common();
+  AuthClass _auth = AuthClass();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
-
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  bool _helperIn = false;
 
   //bool isLoading = false;
 
@@ -140,11 +136,6 @@ class _CallPageState extends State<CallPage_taker> {
 
           _helperIn = true;
         });
-        // if (check) {
-        //   check = false;
-        // } else {
-        //   _engine.sendStreamMessage(streamId!, is_user);
-        // }
       },
       userOffline: (uid, elapsed) {
         setState(() {
@@ -167,10 +158,6 @@ class _CallPageState extends State<CallPage_taker> {
         late double d2;
 
         if (_coordinates.compareTo('end') == 0) {
-          // FirebaseFirestore.instance
-          //     .collection('videoCall')
-          //     .doc(firebaseUser!.uid)
-          //     .delete();
           Get.offAll(() => ThankYouPage());
         } else if (_coordinates.compareTo('grey') == 0) {
           setState(() {
@@ -628,7 +615,7 @@ class _CallPageState extends State<CallPage_taker> {
                         _controller.resume();
                         FirebaseFirestore.instance
                             .collection('videoCall')
-                            .doc(firebaseUser!.uid)
+                            .doc(_auth.firebaseUser!.uid)
                             .delete();
                         Get.find<ButtonController>().changetrue();
                         Get.offAll(BottomNavigation());

@@ -21,6 +21,8 @@ import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'dart:async';
 
+import 'package:livq/widgets/firebaseAuth.dart';
+
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
@@ -29,13 +31,10 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
 
   final TextEditingController _feedbackController = TextEditingController();
   final RatingService _ratingService = RatingService();
-  User? get userProfile => auth.currentUser;
 
   @override
   initState() {
@@ -46,7 +45,7 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
         .collection('users')
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .snapshots();
 
     return Scaffold(

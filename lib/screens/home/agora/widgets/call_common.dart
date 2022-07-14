@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Call_common {
+  //firebase
+
   //for agora variable
   final users = <int>[];
   final infoStrings = <String>[];
@@ -20,4 +23,6 @@ class Call_common {
   var value = 0;
   Offset? location;
   late double subtract;
+
+  
 }
