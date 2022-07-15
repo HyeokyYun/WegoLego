@@ -182,10 +182,10 @@ class _SubCategoryState extends State<SubCategory> {
                     await _handleCameraAndMic(Permission.microphone);
                     // push video page with given channel name
                     String channel = FirebaseAuth.instance.currentUser!.uid;
-                    // await Get.offAll(() => CallPage_taker(
-                    //       channelName: channel,
-                    //       // getTitle: widget.getTitle,
-                    //     ));
+                    await Get.offAll(() => CallPage_taker(
+                          channelName: channel,
+                          // getTitle: widget.getTitle,
+                        ));
                   },
                   child: Text(
                     "연결하기",

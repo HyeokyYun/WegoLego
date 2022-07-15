@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:livq/controllers/auth_controller.dart';
 import 'package:livq/push_notification/push_notification.dart';
+import 'package:livq/screens/home/agora/pages/call_taker.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
@@ -49,7 +50,7 @@ class _HomeState extends State<Home> {
     });
 
     Stream<QuerySnapshot> _usersStream =
-    FirebaseFirestore.instance.collection('users').snapshots();
+        FirebaseFirestore.instance.collection('users').snapshots();
 
     Stream<DocumentSnapshot> _askCountStream = FirebaseFirestore.instance
         .collection('askCount')
@@ -176,7 +177,6 @@ class _HomeState extends State<Home> {
                   SizedBox(
                     height: 180.h,
                   ),
-
                   Container(
                     width: 350.w,
                     height: 350.h,
@@ -277,7 +277,7 @@ class _HomeState extends State<Home> {
                             .set({
                           "count": 1,
                           "timeRegister":
-                          DateTime.now().millisecondsSinceEpoch.toString(),
+                              DateTime.now().millisecondsSinceEpoch.toString(),
                           "uid": firebaseUser!.uid,
                           "name": firebaseUser!.displayName,
                           "subcategory": _categoryController.text
@@ -289,7 +289,7 @@ class _HomeState extends State<Home> {
                             .doc("category")
                             .update({
                           "category":
-                          FieldValue.arrayUnion([_categoryController.text]),
+                              FieldValue.arrayUnion([_categoryController.text]),
                         });
 
                         FirebaseFirestore.instance
@@ -309,10 +309,10 @@ class _HomeState extends State<Home> {
                         await _handleCameraAndMic(Permission.microphone);
                         // push video page with given channel name
                         String channel = FirebaseAuth.instance.currentUser!.uid;
-                        // await Get.offAll(() => CallPage_taker(
-                        //   channelName: channel,
-                        //   // getTitle: widget.getTitle,
-                        // ));
+                        await Get.offAll(() => CallPage_taker(
+                              channelName: channel,
+                              // getTitle: widget.getTitle,
+                            ));
                       },
                       child: Text(
                         "연결",
@@ -344,7 +344,7 @@ class _HomeState extends State<Home> {
     print(status);
   }
 
-  Widget friendNameWidget(String uid){
+  Widget friendNameWidget(String uid) {
     return FutureBuilder(
         future: FirebaseFirestore.instance.collection('users').doc(uid).get(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -352,10 +352,10 @@ class _HomeState extends State<Home> {
             return Text(snapshot.data!.data()['name']);
           }
           return Text("return");
-        }
-    );
+        });
   }
-  Widget friendPhotoWidget(String uid){
+
+  Widget friendPhotoWidget(String uid) {
     return FutureBuilder(
         future: FirebaseFirestore.instance.collection('users').doc(uid).get(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -371,18 +371,20 @@ class _HomeState extends State<Home> {
             );
           }
           return Text("return");
-        }
-    );
+        });
   }
 
   Widget _friendsWidget() {
     CollectionReference name = FirebaseFirestore.instance.collection('users');
     return FutureBuilder(
-      //future: FirebaseFirestore.instance.collection('users').get(),
-        future: FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid).get(),
+        //future: FirebaseFirestore.instance.collection('users').get(),
+        future: FirebaseFirestore.instance
+            .collection('users')
+            .doc(firebaseUser!.uid)
+            .get(),
         builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData
-              && snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData &&
+              snapshot.connectionState == ConnectionState.done) {
             var data = snapshot.data.data();
             var friend = data['frienduid'];
 
@@ -391,7 +393,6 @@ class _HomeState extends State<Home> {
                 //itemCount: snapshot.data.docs.length,
                 itemCount: friend.length,
                 itemBuilder: (context, index) {
-
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     child: Column(

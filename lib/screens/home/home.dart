@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import 'package:livq/push_notification/push_notification.dart';
+import 'package:livq/screens/home/agora/pages/call_taker.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
@@ -103,8 +104,23 @@ class _HomeState extends State<Home> {
                     _textWidget("해결할 곳 없을 때,\n바로바로 물어보세요",
                         TextStyle(fontSize: 23.sp, color: Colors.black)),
                     _sizedBoxWidget(0, 16),
-                    _textWidget("친구 23명",
-                        TextStyle(fontSize: 16.sp, color: Colors.black)),
+                    FutureBuilder(
+                      future: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(_auth.uid)
+                          .get(),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData &&
+                            snapshot.connectionState == ConnectionState.done) {
+                          var data = snapshot.data.data();
+                          var friend = data['frienduid'];
+                          return _textWidget("친구 ${friend.length.toString()}명",
+                              TextStyle(fontSize: 16.sp, color: Colors.black));
+                        }
+                        return Container();
+                      },
+                    ),
+
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.center,
                     //   children: [
@@ -356,11 +372,10 @@ class _HomeState extends State<Home> {
                         await _handleCameraAndMic(Permission.microphone);
                         // push video page with given channel name
                         String channel = FirebaseAuth.instance.currentUser!.uid;
-                        // await Get.offAll(() => CallPage_taker(
-                        //       channelName: channel,
-                        //       // getTitle: widget.getTitle,
-                        //     )
-                        // );
+                        await Get.offAll(() => CallPage_taker(
+                              channelName: channel,
+                              // getTitle: widget.getTitle,
+                            ));
                       },
                       child: Text(
                         "연결",
@@ -447,8 +462,7 @@ class _HomeState extends State<Home> {
                         ),
                         trailing: ElevatedButton(
                           onPressed: () {
-                            print(snapshot.data!.docs[index]['name']);
-                            FlutterDialog(snapshot.data!.docs[index]['uid']);
+                            FlutterDialog(friend[index].toString());
                           },
                           child: Text(
                             "연결하기",
@@ -459,7 +473,7 @@ class _HomeState extends State<Home> {
                             //  padding: EdgeInsets.all(10.sp),
                             elevation: 0,
                             primary: Color(0xffFFA300),
-                            fixedSize: Size(73.w, 27.h),
+                            fixedSize: Size(80.w, 27.h),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),

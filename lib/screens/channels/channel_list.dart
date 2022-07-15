@@ -258,12 +258,12 @@ class _ChannelListState extends State<ChannelList> {
                                                                     colorText:
                                                                         Colors
                                                                             .white);
-                                                                // Get.offAll(() =>
-                                                                //     CallPage_helper(
-                                                                //       channelName:
-                                                                //           data[
-                                                                //               'uid'],
-                                                                //     ));
+                                                                Get.offAll(() =>
+                                                                    CallPage_helper(
+                                                                      channelName:
+                                                                          data[
+                                                                              'uid'],
+                                                                    ));
                                                               }
                                                             })
                                                           : Get.snackbar(
