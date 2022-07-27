@@ -49,22 +49,9 @@ class _mySettingPageState extends State<mySettingPage> {
   @override
   Widget build(BuildContext context) {
     final _authController = Get.find<AuthController>();
-
     _nameController.text = userName;
-    String title = "";
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(_auth.uid)
-        .get()
-        .then((DocumentSnapshot ds) {
-      photoURL = ds["photoURL"];
-      print(photoURL);
-    });
+    Stream<DocumentSnapshot> _photoURLStream = _auth.UserStream();
 
-    Stream<DocumentSnapshot> _photoURLStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(_auth.uid)
-        .snapshots();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

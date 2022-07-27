@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,19 +9,16 @@ import 'package:livq/screens/my_page/app_setting_page.dart';
 import 'package:livq/screens/my_page/my_setting_page.dart';
 import 'package:livq/screens/my_page/sub_pages/1:1_question.dart';
 import 'package:livq/screens/my_page/sub_pages/call_history.dart';
-import 'package:livq/screens/my_page/sub_pages/individual_information.dart';
 import 'package:livq/screens/my_page/sub_pages/instruction_manual.dart';
 import 'package:livq/screens/my_page/sub_pages/ranking.dart';
 import 'package:livq/screens/my_page/sub_pages/review.dart';
-import 'package:livq/screens/my_page/sub_pages/statechange.dart';
-import 'package:livq/screens/my_page/sub_pages/terms_and_conditions.dart';
 import 'package:livq/screens/my_page/sub_pages/thanks_letters.dart';
-import 'package:livq/screens/root.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'dart:async';
 
 import 'package:livq/widgets/firebaseAuth.dart';
+import 'package:livq/widgets/common_widget.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -32,11 +28,10 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  AuthClass _auth = AuthClass();
 
-  final TextEditingController _feedbackController = TextEditingController();
   final RatingService _ratingService = RatingService();
 
+  AuthClass _auth = AuthClass();
   @override
   initState() {
     super.initState();
@@ -44,18 +39,13 @@ class _MyPageState extends State<MyPage> {
 
   @override
   Widget build(BuildContext context) {
-    Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
-        .collection('users')
-        .doc(_auth.uid)
-        .snapshots();
+
+    Stream<DocumentSnapshot> _userStream = _auth.UserStream();
 
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text(
-            "마이 페이지",
-            style: TextStyle(color: Colors.black),
-          ),
+          title: textWidget("마이 페이지", TextStyle(color: Colors.black)),
           elevation: 0.0,
           backgroundColor: Colors.white,
           centerTitle: true,
@@ -78,13 +68,21 @@ class _MyPageState extends State<MyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 50.h,
-                ),
-                SizedBox(
-                  height: 120.h,
-                  width: 120.w,
-                  child: StreamBuilder<DocumentSnapshot>(
+                sizedBoxWidget(0, 50),
+                sizedBoxWithChild(
+                  120, 120,
+                  // ClipRRect(
+                  //           borderRadius: BorderRadius.circular(57),
+                  //           child: Image.network(
+                  //
+                  //             "${_auth.UserStreamBuilder("photoURL")}",
+                  //             height: 114.h,
+                  //             width: 114.w,
+                  //             fit: BoxFit.fill,
+                  //           ),
+                  //         ),
+
+                  StreamBuilder<DocumentSnapshot>(
                     stream: _userStream,
                     builder:
                         (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -106,9 +104,7 @@ class _MyPageState extends State<MyPage> {
                     },
                   ),
                 ),
-                SizedBox(
-                  height: 13.h,
-                ),
+                sizedBoxWidget(0, 13),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   // crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,9 +119,10 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 4.h,
-                    ),
+                    sizedBoxWidget(4, 0),
+
+
+
                     StreamBuilder<DocumentSnapshot>(
                       stream: _userStream,
                       builder:
@@ -147,17 +144,15 @@ class _MyPageState extends State<MyPage> {
                     )
                   ],
                 ),
-                Text(
+                textWidget(
                   '오늘도 행복하세요!',
-                  style: TextStyle(
+                  TextStyle(
                     color: Colors.black,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(
-                  height: 40.h,
-                ),
+                sizedBoxWidget(0, 40),
                 Container(
                   height: 74.h,
                   decoration: const BoxDecoration(
@@ -174,28 +169,25 @@ class _MyPageState extends State<MyPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+
                             SizedBox(
                               height: 17.h,
                               child: SvgPicture.asset(
                                 "assets/my_page/heartIcon.svg",
                               ),
                             ),
-                            SizedBox(
-                              height: 13.h,
-                            ),
+                            sizedBoxWidget(0, 13),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
+                                textWidget(
                                   "받은 하트",
-                                  style: TextStyle(
+                                  TextStyle(
                                     fontSize: 12.sp,
                                     color: Colors.grey[700],
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 2.w,
-                                ),
+                                sizedBoxWidget(2, 0),
                                 Column(
                                   children: [
                                     StreamBuilder<DocumentSnapshot>(
@@ -205,8 +197,9 @@ class _MyPageState extends State<MyPage> {
                                               snapshot) {
                                         final getdata = snapshot.data;
                                         if (snapshot.hasData) {
-                                          return Text('${getdata?["getHeart"]}',
-                                              style: TextStyle(
+                                          return textWidget(
+                                              '${getdata?["getHeart"]}',
+                                              TextStyle(
                                                 fontSize: 9.sp,
                                                 color: AppColors.primaryColor,
                                               ));
@@ -215,9 +208,7 @@ class _MyPageState extends State<MyPage> {
                                         }
                                       },
                                     ),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
+                                    sizedBoxWidget(0, 5),
                                   ],
                                 ),
                               ],
@@ -230,28 +221,25 @@ class _MyPageState extends State<MyPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+
                             SizedBox(
                               height: 19.h,
                               child: Image.asset(
                                 "assets/my_page/yellow_i.png",
                               ),
                             ),
-                            SizedBox(
-                              height: 13.h,
-                            ),
+                            sizedBoxWidget(0, 13),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
+                                textWidget(
                                   "응답 횟수",
-                                  style: TextStyle(
+                                  TextStyle(
                                     fontSize: 12.sp,
                                     color: AppColors.grey[700],
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 2.w,
-                                ),
+                                sizedBoxWidget(2, 0),
                                 Column(
                                   children: [
                                     StreamBuilder<DocumentSnapshot>(
@@ -272,9 +260,7 @@ class _MyPageState extends State<MyPage> {
                                         }
                                       },
                                     ),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
+                                    sizedBoxWidget(0, 5),
                                   ],
                                 ),
                               ],
@@ -293,22 +279,18 @@ class _MyPageState extends State<MyPage> {
                                 "assets/my_page/star_icon.png",
                               ),
                             ),
-                            SizedBox(
-                              height: 13.h,
-                            ),
+                            sizedBoxWidget(0, 13),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
+                                textWidget(
                                   "질문 횟수",
-                                  style: TextStyle(
+                                  TextStyle(
                                     fontSize: 12.sp,
                                     color: AppColors.grey[700],
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 2.w,
-                                ),
+                                sizedBoxWidget(2, 0),
                                 Column(
                                   children: [
                                     StreamBuilder<DocumentSnapshot>(
@@ -318,9 +300,9 @@ class _MyPageState extends State<MyPage> {
                                               snapshot) {
                                         final getdata = snapshot.data;
                                         if (snapshot.hasData) {
-                                          return Text(
+                                          return textWidget(
                                             '${getdata?["ask"]}',
-                                            style: TextStyle(
+                                            TextStyle(
                                                 fontSize: 9.sp,
                                                 color: AppColors.primaryColor),
                                           );
@@ -329,9 +311,7 @@ class _MyPageState extends State<MyPage> {
                                         }
                                       },
                                     ),
-                                    SizedBox(
-                                      height: 5.h,
-                                    ),
+                                    sizedBoxWidget(0, 5),
                                   ],
                                 ),
                               ],
@@ -342,18 +322,14 @@ class _MyPageState extends State<MyPage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 10.h,
-                ),
+                sizedBoxWidget(0, 10),
                 Column(
                   children: [
-                    SizedBox(
-                      height: 5.h,
-                    ),
+                    sizedBoxWidget(0, 5),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '친구 추가하기 ',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -376,9 +352,9 @@ class _MyPageState extends State<MyPage> {
                         final getdata = snapshot.data;
                         if (snapshot.hasData) {
                           return ListTile(
-                            title: Text(
+                            title: textWidget(
                               '회원정보 수정',
-                              style: AppTextStyle.koBody2.copyWith(
+                              AppTextStyle.koBody2.copyWith(
                                 color: AppColors.grey,
                               ),
                             ),
@@ -396,9 +372,9 @@ class _MyPageState extends State<MyPage> {
                           );
                         }
                         return ListTile(
-                          title: Text(
+                          title: textWidget(
                             '회원정보 수정',
-                            style: AppTextStyle.koBody2.copyWith(
+                            AppTextStyle.koBody2.copyWith(
                               color: AppColors.grey,
                             ),
                           ),
@@ -417,9 +393,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[200],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '통화기록',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -439,9 +415,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[400],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '받은 감사편지 ',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -458,9 +434,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[400],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '랭킹',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -478,9 +454,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[200],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '공지사항',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -501,9 +477,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[400],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '1:1 문의',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -520,9 +496,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[400],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '사용설명서',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -539,9 +515,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[400],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '리뷰 쓰러가기',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -565,9 +541,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[400],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '라이큐 공유',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),
@@ -585,9 +561,9 @@ class _MyPageState extends State<MyPage> {
                       color: AppColors.grey[200],
                     ),
                     ListTile(
-                      title: Text(
+                      title: textWidget(
                         '앱 설정',
-                        style: AppTextStyle.koBody2.copyWith(
+                        AppTextStyle.koBody2.copyWith(
                           color: AppColors.grey,
                         ),
                       ),

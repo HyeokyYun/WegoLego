@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
 import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/agora/pages/call_taker.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
-import 'package:livq/widgets/rounded_elevated_button.dart';
+import 'package:livq/widgets/common_widget.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -22,11 +21,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   AuthClass _auth = AuthClass();
-
   final _channelController = TextEditingController();
-
   final TextEditingController _categoryController = TextEditingController();
-  late int askCount;
+
 
   @override
   void dispose() {
@@ -37,22 +34,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Get.put(ButtonController());
-    FirebaseFirestore.instance
-        .collection("askCount")
-        .doc("askCount")
-        .get()
-        .then((DocumentSnapshot ds) {
-      askCount = ds["count"];
-      print(askCount);
-    });
 
-    Stream<QuerySnapshot> _usersStream =
-        FirebaseFirestore.instance.collection('users').snapshots();
-
-    Stream<DocumentSnapshot> _askCountStream = FirebaseFirestore.instance
-        .collection('askCount')
-        .doc('askCount')
-        .snapshots();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -65,171 +47,46 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _sizedBoxWidget(0, 20),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/liveQ_logo.svg",
-                          width: 30.w,
-                          height: 39.h,
-                        ),
-                      ],
-                    ),
-                    _sizedBoxWidget(0, 17),
+                    sizedBoxWidget(0, 20),
+                    _liveQLogo(),
+                    sizedBoxWidget(0, 17),
                     Stack(
                       children: [
                         Column(
                           children: [
-                            _sizedBoxWidget(0, 36),
-                            Opacity(
-                              opacity: 0.3,
-                              child: Container(
-                                height: 8.h,
-                                width: 64.w,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Color(0xffFFA300),
-                                ),
-                              ),
-                            ),
+                            sizedBoxWidget(0, 36),
+                            _highlight(64, 8, 0.3),
                           ],
                         ),
-                        _textWidget(
+                        textWidget(
                             "안녕하세요 큐님 \n궁금증 해결이 필요한 상태군요!",
                             TextStyle(
                                 fontSize: 13.sp, color: Color(0xff4D4D4D))),
                       ],
                     ),
-                    _sizedBoxWidget(0, 28),
-                    _textWidget("해결할 곳 없을 때,\n바로바로 물어보세요",
+                    sizedBoxWidget(0, 28),
+                    textWidget("해결할 곳 없을 때,\n바로바로 물어보세요",
                         TextStyle(fontSize: 23.sp, color: Colors.black)),
-                    _sizedBoxWidget(0, 16),
-                    FutureBuilder(
-                      future: FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(_auth.uid)
-                          .get(),
-                      builder: (context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData &&
-                            snapshot.connectionState == ConnectionState.done) {
-                          var data = snapshot.data.data();
-                          var friend = data['frienduid'];
-                          return _textWidget("친구 ${friend.length.toString()}명",
-                              TextStyle(fontSize: 16.sp, color: Colors.black));
-                        }
-                        return Container();
-                      },
-                    ),
-
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Row(
-                    //       children: [
-                    //         Column(
-                    //           children: [
-                    //             _textWidget( "참여 중인 답변자", AppTextStyle.koBody2
-                    //                 .copyWith(color: Colors.black)),
-                    //             StreamBuilder<QuerySnapshot>(
-                    //               stream: _usersStream,
-                    //               builder: (context, snapshot) {
-                    //                 if (snapshot.hasData) {
-                    //                   return Text(
-                    //                     "${snapshot.data?.docs.length}명",
-                    //                     style: TextStyle(
-                    //                       fontSize: 22.sp,
-                    //                       // fontWeight: FontWeight.bold,
-                    //                       color: Color(0xffF57F17),
-                    //                     ),
-                    //                   );
-                    //                 } else {
-                    //                   return Container();
-                    //                 }
-                    //               },
-                    //             )
-                    //           ],
-                    //         ),
-                    //
-                    //         Column(
-                    //           children: [
-                    //             Text(
-                    //               "진행 중인 질의응답",
-                    //               style: AppTextStyle.koBody2
-                    //                   .copyWith(color: Colors.black),
-                    //             ),
-                    //             StreamBuilder<DocumentSnapshot>(
-                    //               stream: _askCountStream,
-                    //               builder: (context,
-                    //                   AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    //                 final getdata = snapshot.data;
-                    //                 if (snapshot.hasData) {
-                    //                   return Text(
-                    //                     '${getdata?["count"]}건',
-                    //                     style: TextStyle(
-                    //                       fontSize: 22.sp,
-                    //                       // fontWeight: FontWeight.bold,
-                    //                       color: AppColors.secondaryColor[500],
-                    //                     ),
-                    //                   );
-                    //                 } else {
-                    //                   return Container();
-                    //                 }
-                    //               },
-                    //             )
-                    //           ],
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
-
+                    sizedBoxWidget(0, 16),
+                    _countFriends(),
                     Center(
                       child: Column(
                         children: [
-                          Container(
-                            width: 329.w,
-                            height: 336.h,
-                            child: _friendsWidget(),
-                          ),
-                          _sizedBoxWidget(0, 17),
+                          sizedBoxWithChild(329, 336, _friendsWidget()),
+                          sizedBoxWidget(0, 17),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              _textWidget(
+                              textWidget(
                                   "친구들에게 연결이 안되는 상황이라면?",
                                   TextStyle(
                                       fontSize: 12.sp,
                                       color: Color(0xffFFA300))),
                             ],
                           ),
-                          _sizedBoxWidget(0, 8),
-                          SizedBox(
-                            width: 330.w,
-                            height: 56.h,
-                            child: ElevatedButton(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "전문가 도움요청하기",
-                                    style: TextStyle(fontSize: 18.sp),
-                                  ),
-                                  Icon(Icons.arrow_forward_ios),
-                                ],
-                              ),
-                              onPressed: () {
-                                FlutterDialog("");
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: Color(0xffFFA300),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
-                            ),
-                          ),
-                          _sizedBoxWidget(0, 8),
+                          sizedBoxWidget(0, 8),
+                          sizedBoxWithChild(330, 56, _helpButton()),
+                          sizedBoxWidget(0, 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -244,17 +101,17 @@ class _HomeState extends State<Home> {
                                       shape: BoxShape.circle,
                                     ),
                                   ),
-                                  Container(
-                                    height: 15.h,
-                                    width: 15.w,
-                                    child: Image.asset(
+                                  sizedBoxWithChild(
+                                    15,
+                                    15,
+                                    Image.asset(
                                       "assets/home/speaker.png",
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
-                              _sizedBoxWidget(2, 0),
-                              _textWidget(
+                              sizedBoxWidget(2, 0),
+                              textWidget(
                                   "일주일 동안 무료로 전문가에게 질문해 보세요!",
                                   TextStyle(
                                       fontSize: 12.sp,
@@ -288,9 +145,9 @@ class _HomeState extends State<Home> {
             //Dialog Main Title
             title: Column(
               children: <Widget>[
-                Text(
+                textWidget(
                   "구체적인 도움을 적어주세요:)",
-                  style: AppTextStyle.koBody1.copyWith(
+                  AppTextStyle.koBody1.copyWith(
                     color: Colors.white,
                   ),
                 ),
@@ -332,8 +189,6 @@ class _HomeState extends State<Home> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        String? helperUid;
-
                         FirebaseFirestore.instance
                             .collection("videoCall")
                             .doc(_auth.uid)
@@ -377,10 +232,9 @@ class _HomeState extends State<Home> {
                               // getTitle: widget.getTitle,
                             ));
                       },
-                      child: Text(
+                      child: textWidget(
                         "연결",
-                        style: AppTextStyle.koBody2
-                            .copyWith(color: AppColors.grey),
+                        AppTextStyle.koBody2.copyWith(color: AppColors.grey),
                       ),
                       style: ElevatedButton.styleFrom(
                         //  padding: EdgeInsets.all(10.sp),
@@ -391,7 +245,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
-                    _sizedBoxWidget(0, 15),
+                    sizedBoxWidget(0, 15),
                   ],
                 ),
               ),
@@ -456,7 +310,7 @@ class _HomeState extends State<Home> {
                         title: Row(
                           children: [
                             friendPhotoWidget(friend[index].toString()),
-                            _sizedBoxWidget(5, 0),
+                            sizedBoxWidget(5, 0),
                             friendNameWidget(friend[index].toString()),
                           ],
                         ),
@@ -488,24 +342,68 @@ class _HomeState extends State<Home> {
           }
         });
   }
+
+  Widget _helpButton() {
+    return ElevatedButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          textWidget(
+            "전문가 도움요청하기",
+            TextStyle(fontSize: 18.sp),
+          ),
+          Icon(Icons.arrow_forward_ios),
+        ],
+      ),
+      onPressed: () {
+        FlutterDialog("");
+      },
+      style: ElevatedButton.styleFrom(
+        primary: Color(0xffFFA300),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    );
+  }
+
+  Widget _countFriends() {
+    return FutureBuilder(
+      future:
+          FirebaseFirestore.instance.collection('users').doc(_auth.uid).get(),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData &&
+            snapshot.connectionState == ConnectionState.done) {
+          var data = snapshot.data.data();
+          var friend = data['frienduid'];
+          return textWidget("친구 ${friend.length.toString()}명",
+              TextStyle(fontSize: 16.sp, color: Colors.black));
+        }
+        return Container();
+      },
+    );
+  }
 }
 
-Widget _textWidget(String string, TextStyle style) {
-  return Text(
-    string,
-    style: style,
+Widget _liveQLogo() {
+  return SvgPicture.asset(
+    "assets/liveQ_logo.svg",
+    width: 30.w,
+    height: 39.h,
   );
 }
 
-Widget _sizedBoxWidget(int width, int height) {
-  return SizedBox(
-    width: width.w,
-    height: height.h,
-  );
-}
 
-Widget _dividerWidget(int height) {
-  return Divider(
-    height: height.h,
+Widget _highlight(int width, int height, double opacity) {
+  return Opacity(
+    opacity: opacity,
+    child: Container(
+      width: width.w,
+      height: height.h,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Color(0xffFFA300),
+      ),
+    ),
   );
 }
