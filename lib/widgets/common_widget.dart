@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:livq/theme/colors.dart';
 
 
 
@@ -24,4 +25,18 @@ Widget sizedBoxWithChild(int width, int height, Widget child) {
     height: height.h,
     child: child,
   );
+}
+
+Widget dividerWidget(double thickness){
+  if(thickness>1){
+    return Divider(
+      thickness: thickness,
+      color:AppColors.grey[200],
+    );
+  } else {
+    return Divider(
+      thickness: thickness,
+      color:AppColors.grey[400],
+    );
+  }
 }

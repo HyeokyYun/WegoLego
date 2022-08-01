@@ -1,23 +1,20 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:livq/controllers/auth_controller.dart';
-import 'package:livq/screens/my_page/sub_pages/individual_information.dart';
-import 'package:livq/screens/my_page/sub_pages/terms_and_conditions.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/common_widget.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:livq/widgets/listTile_widget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class mySettingPage extends StatefulWidget {
   const mySettingPage({Key? key, required this.getName, required this.getEmail})
       : super(key: key);
-
   final String getName;
   final String getEmail;
 
@@ -32,25 +29,19 @@ class _mySettingPageState extends State<mySettingPage> {
   late String userName;
 
   AuthClass _auth = AuthClass();
-
   PickedFile? _image;
-
   late String photoURL;
-
   String? downloadURL;
 
   @override
   void initState() {
     userName = widget.getName;
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _authController = Get.find<AuthController>();
     _nameController.text = userName;
-    Stream<DocumentSnapshot> _photoURLStream = _auth.UserStream();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -62,10 +53,7 @@ class _mySettingPageState extends State<mySettingPage> {
             Get.back();
           },
         ),
-        title: Text(
-          "계정 / 정보 관리",
-          style: TextStyle(color: Colors.black),
-        ),
+        title: textWidget("계정 / 정보 관리",TextStyle(color: Colors.black)),
         elevation: 0.0,
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -75,331 +63,135 @@ class _mySettingPageState extends State<mySettingPage> {
           padding: EdgeInsets.fromLTRB(28.w, 0, 28.w, 0),
           alignment: Alignment.topCenter,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 10.h,
-              ),
-              Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ListTile(
-                    title: Text(
-                      '계정 정보',
-                      style: AppTextStyle.koBody2.copyWith(
-                        color: AppColors.grey,
-                      ),
-                    ),
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            _image == null
-                                ? StreamBuilder<DocumentSnapshot>(
-                                    stream: _photoURLStream,
-                                    builder: (context,
-                                        AsyncSnapshot<DocumentSnapshot>
-                                            snapshot) {
-                                      final getdata = snapshot.data;
-                                      if (snapshot.hasData) {
-                                        print(
-                                            "for test ${getdata?["photoURL"]}");
-                                        return ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(57),
-                                          child: Image.network(
-                                            getdata?["photoURL"],
-                                            height: 114.h,
-                                            width: 114.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        );
-                                      } else {
-                                        return CircularProgressIndicator();
-                                      }
-                                    },
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(57),
-                                    child: Image.file(
-                                      File(_image!.path),
-                                      height: 114.h,
-                                      width: 114.w,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                            Positioned(
-                                bottom: 1.h,
-                                right: 1.w,
-                                child: CircleAvatar(
-                                  backgroundColor: AppColors.grey[700],
-                                  radius: 15.w,
-                                  child: InkWell(
-                                      onTap: () {
-                                        print("OnTap");
-                                        Get.bottomSheet(
-                                          Wrap(children: [
-                                            Card(
-                                              color: Colors.grey[200],
-                                              margin: EdgeInsets.fromLTRB(
-                                                  10.w, 0.0, 10.w, 0.0),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Wrap(
-                                                children: [
-                                                  ListTile(
-                                                    onTap: getImageFromCam,
-                                                    dense: true,
-                                                    visualDensity:
-                                                        VisualDensity(
-                                                            horizontal: 0,
-                                                            vertical: -2),
-                                                    title: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            '사진 찍기',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    14.sp),
-                                                          )
-                                                        ]),
-                                                  ),
-                                                  Divider(
-                                                    thickness: 1,
-                                                  ),
-                                                  ListTile(
-                                                    onTap: getImageFromGallery,
-                                                    dense: true,
-                                                    visualDensity:
-                                                        VisualDensity(
-                                                            horizontal: 0,
-                                                            vertical: -2),
-                                                    title: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            '앨범에서 사진 선택',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    14.sp),
-                                                          )
-                                                        ]),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Card(
-                                              color: AppColors.grey[100],
-                                              margin: EdgeInsets.fromLTRB(
-                                                  10.0.w,
-                                                  7.0.w,
-                                                  10.0.w,
-                                                  15.0.w),
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Wrap(
-                                                children: [
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Get.back();
-                                                    },
-                                                    dense: true,
-                                                    visualDensity:
-                                                        VisualDensity(
-                                                            horizontal: 0,
-                                                            vertical: -2),
-                                                    title: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            '닫기',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    14.sp),
-                                                          )
-                                                        ]),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ]),
-                                        );
-                                        // showModalBottomSheet(
-                                        //     context: context,
-                                        //     builder: ((builder) =>
-                                        //         bottomSheet()));
-                                      },
-                                      child: Icon(Icons.camera_alt,
-                                          color: Colors.white, size: 16.w)),
-                                ))
-                          ],
-                        ),
-                        ifChangeName
-                            ? ListTile(
-                                title: Text(
-                                  '이름 변경',
-                                  style: AppTextStyle.koBody2.copyWith(
-                                    color: AppColors.grey,
-                                  ),
-                                ),
-                                subtitle: TextFormField(
-                                  controller: _nameController,
-                                  decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                      onPressed: _nameController.clear,
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        color: AppColors.grey[300],
-                                      ),
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: AppColors.grey[300]!),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: AppColors.grey[300]!),
-                                    ),
-                                  ),
-                                  validator: (String? value) {
-                                    if (value!.isEmpty)
-                                      return 'Please enter some text';
-                                    else if (value.length <= 2) {
-                                      return '2자리 이상 입력해주세요. ';
-                                    } else if (value.length >= 7) {
-                                      return '6글자 이하로 입력해주세요';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                trailing: IconButton(
-                                  onPressed: () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      FirebaseFirestore.instance
-                                          .collection('users')
-                                          .doc(_auth.uid)
-                                          .update(
-                                              {'name': _nameController.text});
-
-                                      setState(() {
-                                        setState(() {
-                                          _authController.displayName =
-                                              _nameController.text;
-                                          _auth.firebaseUser?.updateDisplayName(
-                                              _nameController.text);
-                                          userName = _nameController.text;
-
-                                          ifChangeName = false;
-                                        });
-                                      });
-                                    }
-                                  },
-                                  icon: Icon(
-                                    Icons.check,
-                                    color: AppColors.grey[500],
-                                  ),
-                                ))
-                            : ListTile(
-                                title: Text(
-                                  '이름',
-                                  style: AppTextStyle.koBody2.copyWith(
-                                    color: AppColors.grey,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  userName,
-                                ),
-                                trailing: TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      ifChangeName = true;
-                                    });
-                                  },
-                                  child: Text(
-                                    "변경",
-                                    style: AppTextStyle.koBody2
-                                        .copyWith(color: Color(0xffFF5B5B)),
-                                  ),
-                                ),
-                              ),
-                        ListTile(
-                          title: Text(
-                            '이메일',
-                            style: AppTextStyle.koBody2.copyWith(
-                              color: AppColors.grey,
-                            ),
-                          ),
-                          subtitle: Text(
-                            widget.getEmail,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    color: AppColors.grey[400],
-                  ),
-                  ListTile(
-                    title: Text(
-                      '개인정보 처리방침',
-                      style: AppTextStyle.koBody2.copyWith(
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18.sp,
-                      color: Color(0xffADB5BD),
-                    ),
-                    onTap: () async {
-                      //웹페이지로 넘어갈 수 있도록 변경
-                      Get.to(() => Information());
-                      //https://wegolego.tistory.com/1
-                      // if (!await launch("https://wegolego.tistory.com/1"))
-                      //   throw 'Could not launch the website';
-                    },
-                  ),
-                  Divider(
-                    color: AppColors.grey[400],
-                  ),
-                  ListTile(
-                    title: Text(
-                      '이용 약관',
-                      style: AppTextStyle.koBody2.copyWith(
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18.sp,
-                      color: Color(0xffADB5BD),
-                    ),
-                    onTap: () async {
-                      //웹페이지로 넘어갈 수 있도록 변경
-                      Get.to(() => Terms());
-                      //https://wegolego.tistory.com/1
-                      // if (!await launch("https://wegolego.tistory.com/2"))
-                      //   throw 'Could not launch the website';
-                    },
-                  ),
+                  sizedBoxWidget(0, 10),
+                  textWidget('   계정 정보', AppTextStyle.koBody2.copyWith(color: AppColors.grey),),
+                  _editProfile(),
+                  dividerWidget(0),
+                  listTileWidget('개인정보 처리방침'),
+                  dividerWidget(0),
+                  listTileWidget('이용 약관'),
                 ],
               ),
+
+
+        ),
+      ),
+    );
+  }
+
+  Widget _editProfile() {
+    final _authController = Get.find<AuthController>();
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              _image == null
+                  ? UserStreamBuilder(data: 'photoURL', textStyle: TextStyle())
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(57),
+                      child: Image.file(
+                        File(_image!.path),
+                        height: 114.h,
+                        width: 114.w,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+              Positioned(
+                bottom: 1.h,
+                right: 1.w,
+                child: _editImage(),
+              )
             ],
           ),
-        ),
+          ifChangeName
+              ? ListTile(
+                  title: textWidget(
+                    '이름 변경', AppTextStyle.koBody2.copyWith(
+                      color: AppColors.grey,
+                    ),
+                  ),
+                  subtitle: TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: _nameController.clear,
+                        icon: Icon(
+                          Icons.cancel,
+                          color: AppColors.grey[300],
+                        ),
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.grey[300]!),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.grey[300]!),
+                      ),
+                    ),
+                    validator: (String? value) {
+                      if (value!.isEmpty)
+                        return 'Please enter some text';
+                      else if (value.length <= 2) {
+                        return '2자리 이상 입력해주세요. ';
+                      } else if (value.length >= 7) {
+                        return '6글자 이하로 입력해주세요';
+                      }
+                      return null;
+                    },
+                  ),
+                  trailing: IconButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(_auth.uid)
+                            .update({'name': _nameController.text});
+
+                        setState(() {
+                          setState(() {
+                            _authController.displayName = _nameController.text;
+                            _auth.firebaseUser
+                                ?.updateDisplayName(_nameController.text);
+                            userName = _nameController.text;
+
+                            ifChangeName = false;
+                          });
+                        });
+                      }
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      color: AppColors.grey[500],
+                    ),
+                  ))
+              : ListTile(
+                  title: textWidget(
+                    '이름', AppTextStyle.koBody2.copyWith(
+                      color: AppColors.grey,
+                    ),
+                  ),
+                  subtitle: Text(
+                    userName,
+                  ),
+                  trailing: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        ifChangeName = true;
+                      });
+                    },
+                    child: textWidget("변경",AppTextStyle.koBody2.copyWith(color: Color(0xffFF5B5B)),),
+                  ),
+                ),
+          ListTile(
+            title: textWidget('이메일', AppTextStyle.koBody2.copyWith(color: AppColors.grey)),
+            subtitle: Text(
+              widget.getEmail,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -414,13 +206,8 @@ class _mySettingPageState extends State<mySettingPage> {
         ),
         child: Column(
           children: [
-            Text(
-              'Choose profile photo',
-              style: TextStyle(fontSize: 18.sp),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
+            textWidget('Choose profile photo', TextStyle(fontSize: 18.sp)),
+            sizedBoxWidget(0, 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -431,10 +218,7 @@ class _mySettingPageState extends State<mySettingPage> {
                     Icons.add_a_photo,
                     color: Colors.black,
                   ),
-                  label: Text(
-                    "사진 찍기",
-                    style: TextStyle(color: Colors.black),
-                  ),
+                  label: textWidget("사진 찍기", TextStyle(color: Colors.black),),
                 ),
                 FloatingActionButton.extended(
                   backgroundColor: AppColors.grey[300],
@@ -443,10 +227,7 @@ class _mySettingPageState extends State<mySettingPage> {
                     Icons.wallpaper,
                     color: Colors.black,
                   ),
-                  label: Text(
-                    "앨범에서 선택",
-                    style: TextStyle(color: Colors.black),
-                  ),
+                  label: textWidget("앨범에서 선택", TextStyle(color: Colors.black),),
                 )
               ],
             )
@@ -496,5 +277,77 @@ class _mySettingPageState extends State<mySettingPage> {
         .collection('users')
         .doc(_auth.uid)
         .update({'photoURL': uploadURL});
+  }
+
+  Widget _editImage() {
+    return CircleAvatar(
+      backgroundColor: AppColors.grey[700],
+      radius: 15.w,
+      child: InkWell(
+          onTap: () {
+            print("OnTap");
+            Get.bottomSheet(
+              Wrap(children: [
+                Card(
+                  color: Colors.grey[200],
+                  margin: EdgeInsets.fromLTRB(10.w, 0.0, 10.w, 0.0),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Wrap(
+                    children: [
+                      ListTile(
+                        onTap: getImageFromCam,
+                        dense: true,
+                        visualDensity:
+                            VisualDensity(horizontal: 0, vertical: -2),
+                        title: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              textWidget('사진 찍기',TextStyle(fontSize: 14.sp),)
+                            ]),
+                      ),
+                      dividerWidget(1),
+                      ListTile(
+                        onTap: getImageFromGallery,
+                        dense: true,
+                        visualDensity:
+                            VisualDensity(horizontal: 0, vertical: -2),
+                        title: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              textWidget('앨범에서 사진 선택',TextStyle(fontSize: 14.sp))
+                            ]),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  color: AppColors.grey[100],
+                  margin: EdgeInsets.fromLTRB(10.0.w, 7.0.w, 10.0.w, 15.0.w),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Wrap(
+                    children: [
+                      ListTile(
+                        onTap: () {
+                          Get.back();
+                        },
+                        dense: true,
+                        visualDensity:
+                            VisualDensity(horizontal: 0, vertical: -2),
+                        title: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              textWidget('닫기',TextStyle(fontSize: 14.sp))
+                            ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ]),
+            );
+          },
+          child: Icon(Icons.camera_alt, color: Colors.white, size: 16.w)),
+    );
   }
 }

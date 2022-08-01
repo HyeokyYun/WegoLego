@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/agora/pages/call_taker.dart';
@@ -11,6 +10,7 @@ import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:livq/widgets/common_widget.dart';
+import 'package:livq/widgets/image_widget.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     sizedBoxWidget(0, 20),
-                    _liveQLogo(),
+                    liveQLogo(),
                     sizedBoxWidget(0, 17),
                     Stack(
                       children: [
@@ -73,6 +73,7 @@ class _HomeState extends State<Home> {
                       child: Column(
                         children: [
                           sizedBoxWithChild(329, 336, _friendsWidget()),
+                          // _friendsWidget(),
                           sizedBoxWidget(0, 17),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -127,6 +128,7 @@ class _HomeState extends State<Home> {
             ]),
           ),
         ),
+
       ),
     );
   }
@@ -318,11 +320,8 @@ class _HomeState extends State<Home> {
                           onPressed: () {
                             FlutterDialog(friend[index].toString());
                           },
-                          child: Text(
-                            "연결하기",
-                            style:
-                                TextStyle(fontSize: 12.sp, color: Colors.white),
-                          ),
+                          child:textWidget(
+                            "연결하기", TextStyle(fontSize: 12.sp, color: Colors.white)),
                           style: ElevatedButton.styleFrom(
                             //  padding: EdgeInsets.all(10.sp),
                             elevation: 0,
@@ -348,9 +347,7 @@ class _HomeState extends State<Home> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          textWidget(
-            "전문가 도움요청하기",
-            TextStyle(fontSize: 18.sp),
+          textWidget("전문가 도움요청하기",TextStyle(fontSize: 18.sp),
           ),
           Icon(Icons.arrow_forward_ios),
         ],
@@ -385,13 +382,6 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget _liveQLogo() {
-  return SvgPicture.asset(
-    "assets/liveQ_logo.svg",
-    width: 30.w,
-    height: 39.h,
-  );
-}
 
 
 Widget _highlight(int width, int height, double opacity) {
@@ -407,3 +397,6 @@ Widget _highlight(int width, int height, double opacity) {
     ),
   );
 }
+
+
+

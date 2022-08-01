@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 class Information extends StatelessWidget {
@@ -21,13 +22,14 @@ class Information extends StatelessWidget {
           backgroundColor: Colors.white,
         ),
         body: Center(
-            child: Container(
-              width: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '''< WegoLego >('https://wegolego.tistory.com/1'이하 '안드로이드 App')은(는) 「개인정보 보호법」 제30조에 따라 정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.
+          child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(32.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '''< WegoLego >('https://wegolego.tistory.com/1'이하 '안드로이드 App')은(는) 「개인정보 보호법」 제30조에 따라 정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.
 
 ○ 이 개인정보처리방침은 2021년 11월 10부터 적용됩니다.
 
@@ -241,10 +243,11 @@ WegoLego 은(는) 정보주체의 이용정보를 저장하고 수시로 불러�
 예시 ) - 20XX. X. X ~ 20XX. X. X 적용 (클릭)
 
 예시 ) - 20XX. X. X ~ 20XX. X. X 적용 (클릭)''',
-                    style: TextStyle(color: Colors.white), // validator: validator,
-                  ),
-                ],
-              ),
-            )));
+                      style: TextStyle(color: Colors.white), // validator: validator,
+                    ),
+                  ],
+                ),
+              )),
+        ));
   }
 }
