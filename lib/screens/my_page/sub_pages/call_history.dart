@@ -7,6 +7,7 @@ import 'package:livq/screens/my_page/my_page.dart';
 import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 
 class CallHistory extends StatefulWidget {
   @override
@@ -14,9 +15,8 @@ class CallHistory extends StatefulWidget {
 }
 
 class _CallHistoryState extends State<CallHistory> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
+
   /*
  
    */
@@ -25,7 +25,7 @@ class _CallHistoryState extends State<CallHistory> {
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseUser!.uid)
+        .doc(_auth.uid)
         .collection('callHistory')
         .orderBy("timeRegister", descending: true)
         .snapshots();
@@ -312,7 +312,7 @@ class _CallHistoryState extends State<CallHistory> {
                                                                             onPressed:
                                                                                 () async {
                                                                               //report false로 바꾸고
-                                                                              FirebaseFirestore.instance.collection('users').doc(firebaseUser!.uid).collection("callHistory").doc(docId).update({
+                                                                              FirebaseFirestore.instance.collection('users').doc(_auth.uid).collection("callHistory").doc(docId).update({
                                                                                 "report": true,
                                                                               });
 

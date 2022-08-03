@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 
 import '/screens/home/agora/pages/call_helper.dart';
 import 'package:livq/screens/home/home.dart';
@@ -20,15 +21,13 @@ class ThankyouLetters extends StatefulWidget {
 }
 
 class _ThankyouLettersState extends State<ThankyouLetters> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
 
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseUser!.uid)
+        .doc(_auth.uid)
         .collection('thankLetter')
         .orderBy("timeRegister", descending: true)
         .snapshots();
