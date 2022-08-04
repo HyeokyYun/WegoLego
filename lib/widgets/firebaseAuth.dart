@@ -14,6 +14,14 @@ class AuthClass {
   Stream<DocumentSnapshot> UserStream() {
     return FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> CallHistoryStream() {
+    return  FirebaseFirestore.instance.collection('users')
+        .doc(uid)
+        .collection('callHistory')
+        .orderBy("timeRegister", descending: true)
+        .snapshots();
+  }
 }
 
 class UserStreamBuilder extends StatefulWidget {

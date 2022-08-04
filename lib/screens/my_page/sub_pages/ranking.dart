@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/common_widget.dart';
 
 class Ranking_Page extends StatefulWidget {
   const Ranking_Page({Key? key}) : super(key: key);
@@ -49,70 +50,16 @@ class _Ranking_PageState extends State<Ranking_Page> {
             children: [
               Row(
                 children: [
-                  Text(
-                    "도움으로 세상을 밝혀준 랭킹",
-                    style: AppTextStyle.koBody2.copyWith(
-                      color: AppColors.grey,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 74.w,
-                  ),
-                  // DropdownButton(
-                  //   value: dropdownvalue,
-                  //   icon: Icon(
-                  //     Icons.keyboard_arrow_down,
-                  //     color: AppColors.grey[700],
-                  //   ),
-                  //   items: items.map((String items) {
-                  //     return DropdownMenuItem(
-                  //       value: items,
-                  //       child: Text(
-                  //         items,
-                  //         style: AppTextStyle.koBody2.copyWith(
-                  //           color: AppColors.grey[700],
-                  //         ),
-                  //       ),
-                  //     );
-                  //   }).toList(),
-                  //   onChanged: (String? newValue) {
-                  //     setState(() {
-                  //       dropdownvalue = newValue!;
-                  //       dropdown = !dropdown;
-                  //     });
-                  //   },
-                  // ),
+                  textWidget(
+                    "도움으로 세상을 밝혀준 랭킹",AppTextStyle.koBody2.copyWith(color: AppColors.grey)),
+                 sizedBoxWidget(74, 0)
                 ],
               ),
-              SizedBox(
-                height: 16.h,
-              ),
+              sizedBoxWidget(0, 16),
               Container(
                 width: 340.w,
                 height: 600.h,
                 child:
-                    // (dropdown)
-                    // ? FutureBuilder(builder: (context, snapshot) async {
-                    //     future:
-                    //         await  FirebaseFirestore.instance
-                    //               .collection('users')
-                    //               .orderBy('ask', descending: true)
-                    //               .limit(10)
-                    //               .get();
-                    //       if (!snapshot.hasData) {
-                    //         return Center(child: CircularProgressIndicator());
-                    //       }
-                    //       return ListView.builder(
-                    //         itemBuilder: (context, index) {
-
-                    //           DocumentSnapshot document =
-                    //               snapshot.data.;
-                    //           itemCount:
-                    //           snapshot.data.docs.length;
-                    //           return ListTile();
-                    //         },
-                    //       );
-                    //   })
                     dropdown
                         ? StreamBuilder<QuerySnapshot>(
                             stream: FirebaseFirestore.instance
@@ -169,9 +116,7 @@ class _Ranking_PageState extends State<Ranking_Page> {
                               );
                             }),
               ),
-              SizedBox(
-                height: 44.h,
-              ),
+             sizedBoxWidget(0, 44)
             ],
           ),
         ),
@@ -180,46 +125,11 @@ class _Ranking_PageState extends State<Ranking_Page> {
   }
 }
 
-// Widget getGroupsWidget() {
-//   return FutureBuilder(
-//     future: loadGroups(),
-//     builder: (context, snapshot) {
-//       if (!snapshot.hasData) {
-//         return Center(child: CircularProgressIndicator());
-//       }
-//       return ListView.builder(
-//         itemBuilder: (context, index) {
-//           DocumentSnapshot document = snapshot.data.docs[index];
-
-//           return ListTile(
-//               contentPadding:
-//                   EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-//               leading: const Icon(Icons.group),
-//               title: Text(document.data()["name"]),
-//               subtitle: Text(""),
-//               onTap: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) =>
-//                         ChatScreen(groupId: document.data()["id"]),
-//                   ),
-//                 );
-//               });
-//         },
-//         itemCount: snapshot.data.docs.length,
-//       );
-//     },
-
-//   );
-// }
-
 Widget _buildItemWidget(DocumentSnapshot doc) {
   final rank = Rank(doc['help'], doc['ask'], doc['name'], doc['photoURL']);
 
   return ListTile(
       title: Container(
-    //color: AppColors.grey[50],
     height: 60.h,
     width: 325.w,
     child: Card(
@@ -232,13 +142,9 @@ Widget _buildItemWidget(DocumentSnapshot doc) {
           Row(children: [
             Container(
               width: 200.w,
-height:34.h ,
+              height:34.h ,
               child: Row(children: [
-                //Text("$num[index]"),
-                SizedBox(
-                  width: 10.w,
-                ),
-
+                sizedBoxWidget(10, 0),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(57),
                   child: Image.network(
@@ -248,11 +154,8 @@ height:34.h ,
                     fit: BoxFit.fill,
                   ),
                 ),
-                SizedBox(
-                  width: 10.w,
-                ),
+                sizedBoxWidget(10, 0),
                 Container(
-
                   width: 140.w,
                   child: Text(
                     rank.name,
@@ -269,20 +172,13 @@ height:34.h ,
                         width: 55.w,
                         child: Row(children: [
                           SvgPicture.asset("assets/my_page/heartIcon.svg",),
-                          Text(
-                            "${rank.ask}",
-                            style: TextStyle(fontSize: 14),
+                          textWidget("${rank.ask}", TextStyle(fontSize: 14),
                           ),
                         ])),
                     Image.asset("assets/my_page/yellow_i.png"),
-                    SizedBox(width: 8.w),
-                    Text(
-                      "${rank.help}",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    SizedBox(
-                      width: 5.w,
-                    ),
+                    sizedBoxWidget(8, 0),
+                    textWidget("${rank.help}", TextStyle(fontSize: 14)),
+                    sizedBoxWidget(5, 0),
                   ],
                 )),
           ]),

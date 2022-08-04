@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:livq/widgets/common_widget.dart';
 
 class Terms extends StatelessWidget {
-  // const Question({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class Terms extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                textWidget(
                   '''서비스 이용약관
             
             제 1장 총칙
@@ -93,8 +93,7 @@ class Terms extends StatelessWidget {
             ① 서비스 이용과 관련하여 회사와 고객 사이에 분쟁이 발생한 경우, 회사와 고객은 분쟁의 해결을 위해 성실히 협의합니다.
             ② 제1항의 협의에서도 분쟁이 해결되지 않을 경우 양 당사자는 정보통신망 이용촉진 및 정보보호 등에 관한 법률 제33조의 규정에 의한 개인정보분쟁조정위원회에 분쟁조정을 신청할 수 있습니다. '''
                   // validator: validator,
-                  ,
-                  style: TextStyle(color: Colors.black),
+                  , TextStyle(color: Colors.black),
                 ),
               ],
             ),

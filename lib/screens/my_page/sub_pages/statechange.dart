@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:livq/widgets/common_widget.dart';
 
 class StateChange extends StatelessWidget {
-  // const Question({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +36,8 @@ class StateChange extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
-              Text(
-                "준비중입니다!! 다음 버전에서 만나뵙겠습니다!",
-                //   style: body14Style(),
-              )
+              sizedBoxWidget(0, 10),
+              textWidget("준비중입니다!! 다음 버전에서 만나뵙겠습니다!", TextStyle())
             ],
           ),
         ));

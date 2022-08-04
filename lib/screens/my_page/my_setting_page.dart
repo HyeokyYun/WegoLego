@@ -24,6 +24,7 @@ class mySettingPage extends StatefulWidget {
 
 class _mySettingPageState extends State<mySettingPage> {
   bool ifChangeName = false;
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   late String userName;

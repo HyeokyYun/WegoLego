@@ -15,6 +15,8 @@ import 'package:livq/screens/my_page/sub_pages/friends_add.dart';
 import 'package:livq/screens/my_page/sub_pages/guide_page.dart';
 import 'package:livq/screens/my_page/sub_pages/individual_information.dart';
 import 'package:livq/screens/my_page/sub_pages/instruction_manual.dart';
+import 'package:livq/screens/my_page/sub_pages/logout_page.dart';
+import 'package:livq/screens/my_page/sub_pages/notification_setting/notification_setting.dart';
 import 'package:livq/screens/my_page/sub_pages/ranking.dart';
 import 'package:livq/screens/my_page/sub_pages/review.dart';
 import 'package:livq/screens/my_page/sub_pages/thanks_letters.dart';
@@ -103,7 +105,7 @@ Widget listTileWidget(String title) {
               colorText: Colors.white);
         } else if (title == '1:1 문의') {
           Get.to(() => Question());
-        } else if (title == '사용 설명서') {
+        } else if (title == '사용설명서') {
           Get.to(() => const guidePage());
         } else if (title == '리뷰 쓰러가기') {
           Timer(const Duration(seconds: 2), () {
@@ -127,6 +129,18 @@ Widget listTileWidget(String title) {
           https: //wegolego.tistory.com/1
           if (!await launch("https://wegolego.tistory.com/2"))
             throw 'Could not launch the website';
+        } else if(title == '알림 설정'){
+          Get.to(() => NotificationSetting());
+        } else if(title == '카테고리 설정'){
+// Get.to(() => appSettingPage());
+          Get.snackbar("카테고리 준비중입니다.", "더 나은 질문과 해결을 위해 준비중입니다.",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.primaryColor,
+              colorText: Colors.white);
+        } else if(title == '차단, 신고하기'){
+          Get.to(() => CallHistory());
+        } else if(title == '기타'){
+          Get.to(() => logoutPage());
         }
       },
     );

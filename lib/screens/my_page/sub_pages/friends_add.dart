@@ -1,18 +1,13 @@
-import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:livq/controllers/auth_controller.dart';
 import 'package:livq/models/User.dart';
-import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
-import 'package:livq/theme/colors.dart';
-import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/SearchScaffold.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:firestore_search/firestore_search.dart';
+import 'package:livq/widgets/common_widget.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
+
 
 class FriendAddPage extends StatefulWidget {
   @override
@@ -20,16 +15,11 @@ class FriendAddPage extends StatefulWidget {
 }
 
 class _FriendState extends State<FriendAddPage> {
-  FirebaseAuth auth = FirebaseAuth.instance;
 
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
-
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
   final _channelController = TextEditingController();
-
-  final TextEditingController _categoryController = TextEditingController();
   late int askCount;
+
   @override
   void dispose() {
     _channelController.dispose();
@@ -69,7 +59,6 @@ class _FriendState extends State<FriendAddPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -83,9 +72,7 @@ class _FriendState extends State<FriendAddPage> {
                                   fit: BoxFit.fill,
                                 ),
                               ),
-                              SizedBox(
-                                width: 5.w,
-                              ),
+                              sizedBoxWidget(5, 0),
                               Text(
                                 '${data.name}',
                                 style: TextStyle(
@@ -99,7 +86,7 @@ class _FriendState extends State<FriendAddPage> {
                           ElevatedButton(onPressed: (){
                             FirebaseFirestore.instance
                                 .collection("users")
-                                .doc(firebaseUser!.uid)
+                                .doc(_auth.uid)
                                 .update({
                               "frienduid":
                               FieldValue.arrayUnion([data.uid]),
@@ -110,13 +97,10 @@ class _FriendState extends State<FriendAddPage> {
                                 .doc(data.uid)
                                 .update({
                               "frienduid":
-                              FieldValue.arrayUnion([firebaseUser!.uid]),
+                              FieldValue.arrayUnion([_auth.uid]),
                             });
                           },
-                            child: Text(
-                              "추가하기",
-                              style: TextStyle(fontSize: 11.sp, color: Colors.white),
-                            ),
+                            child: textWidget( "추가하기", TextStyle(fontSize: 11.sp, color: Colors.white)),
                             style: ElevatedButton.styleFrom(
                               //  padding: EdgeInsets.all(10.sp),
                               elevation: 0,

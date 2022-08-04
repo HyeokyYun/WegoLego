@@ -1,7 +1,7 @@
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore: constant_identifier_names
+
 const KEY = 'FIRST_TIME_OPEN';
 
 class RatingService {

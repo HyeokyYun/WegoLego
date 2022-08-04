@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:livq/screens/my_page/app_setting_page.dart';
-import 'package:livq/screens/my_page/sub_pages/review.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:livq/widgets/common_widget.dart';
@@ -17,9 +16,6 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  final RatingService _ratingService = RatingService();
-
-  AuthClass _auth = AuthClass();
 
   @override
   initState() {
@@ -59,7 +55,8 @@ class _MyPageState extends State<MyPage> {
                     120,
                     120,
                     UserStreamBuilder(
-                        data: 'photoURL', textStyle: TextStyle())),
+                        data: 'photoURL', textStyle: TextStyle())
+                ),
                 sizedBoxWidget(0, 13),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

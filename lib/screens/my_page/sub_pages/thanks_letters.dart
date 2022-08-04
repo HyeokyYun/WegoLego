@@ -1,14 +1,9 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/common_widget.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
-
-import '/screens/home/agora/pages/call_helper.dart';
-import 'package:livq/screens/home/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -123,17 +118,10 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                  Text(
-                                                    data['name'] + "님의 감사편지",
-                                                    style: AppTextStyle.koBody2,
+                                                  textWidget(data['name'] + "님의 감사편지",AppTextStyle.koBody2,
                                                   ),
                                                   Container(
-                                                      child: Text(
-                                                    data['thankLetter'],
-                                                    style: AppTextStyle.koBody1,
+                                                      child: textWidget(data['thankLetter'],AppTextStyle.koBody1,
                                                   )),
                                                 ],
                                               ),
