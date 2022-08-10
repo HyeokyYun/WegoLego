@@ -96,7 +96,11 @@ class _FriendState extends State<FriendAddPage> {
                               ),
                             ],
                           ),
-                          ElevatedButton(onPressed: (){
+
+                          ElevatedButton(
+                            onPressed: (){
+                              showAlertDialog(context,'${data.name}');
+
                             FirebaseFirestore.instance
                                 .collection("users")
                                 .doc(firebaseUser!.uid)
@@ -113,6 +117,7 @@ class _FriendState extends State<FriendAddPage> {
                               FieldValue.arrayUnion([firebaseUser!.uid]),
                             });
                           },
+
                             child: Text(
                               "추가하기",
                               style: TextStyle(fontSize: 11.sp, color: Colors.white),
@@ -151,4 +156,29 @@ class _FriendState extends State<FriendAddPage> {
   }
 
 
+}
+
+showAlertDialog(BuildContext context, String name) {
+
+  // Widget okButton = TextButton(
+  //   child: Text("OK"),
+  //   onPressed: () { Navigator.pop(context)},
+  // );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("친구 추가"),
+    content: Text("$name 님과 친구 추가 되었습니다."),
+    // actions: [
+    //   okButton,
+    // ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
