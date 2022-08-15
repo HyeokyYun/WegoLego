@@ -98,22 +98,23 @@ class _FriendEditState extends State<FriendEditPage> {
                         trailing: ElevatedButton(
                           onPressed: () {
                               showAlertDialog(context);
-                  //삭제 기능 추
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(firebaseUser!.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayRemove([data.uid]),
-                            });
-
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(data.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayRemove([firebaseUser!.uid]),
-                            });
+                  //삭제 기능 추가
+                  //
+                  //           FirebaseFirestore.instance
+                  //               .collection("users")
+                  //               .doc(firebaseUser!.uid)
+                  //               .update({
+                  //             "frienduid":
+                  //             FieldValue.arrayRemove([data.uid]),
+                  //           });
+                  //
+                  //           FirebaseFirestore.instance
+                  //               .collection("users")
+                  //               .doc(data.uid)
+                  //               .update({
+                  //             "frienduid":
+                  //             FieldValue.arrayRemove([firebaseUser!.uid]),
+                  //           });
 
                           },
 
@@ -180,7 +181,7 @@ showAlertDialog(BuildContext context) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text("친구 추가"),
-    content: Text("친구삭제완"),
+    content: Text("친구 삭제 완료"),
     // actions: [
     //   okButton,
     // ],
