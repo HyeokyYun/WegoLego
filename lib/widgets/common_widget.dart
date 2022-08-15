@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:livq/theme/colors.dart';
 
-
-
-
 Widget textWidget(String string, TextStyle style) {
   return Text(
     string,
@@ -40,3 +37,7 @@ Widget dividerWidget(double thickness){
     );
   }
 }
+
+
+
+

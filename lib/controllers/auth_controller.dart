@@ -9,8 +9,6 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthController extends GetxController {
@@ -18,7 +16,6 @@ class AuthController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
   var googleAcc = Rx<GoogleSignInAccount?>(null);
-  // var isSignedIn = false.obs;
   var isFirstSignIn = false.obs;
   var isEmailSignIn = true.obs;
 
@@ -31,8 +28,6 @@ class AuthController extends GetxController {
 
   @override
   void onInit() {
-    // print("AUTH: ${isSignedIn}");
-    // displayName = userProfile != null ? userProfile!.displayName! : '';
     messaging = FirebaseMessaging.instance;
     messaging.getToken().then((value) {
       _token = value;
@@ -52,7 +47,6 @@ class AuthController extends GetxController {
 
       //firestore에 저장
       var firebaseUser = FirebaseAuth.instance.currentUser;
-      //.then((currentUser)  => FirebaseFirestore.instance
       FirebaseFirestore.instance
           .collection("users")
           .doc(firebaseUser!.uid)
@@ -84,9 +78,7 @@ class AuthController extends GetxController {
       });
       isFirstSignIn.value = true;
       update();
-      // print("token: $_token");
 
-      //   await FirebaseFirestore.instance.collection('count').doc('counter').update({"count": FieldValue.increment(1)});
       Get.offAll(() => Root());
     } on FirebaseAuthException catch (e) {
       String title = e.code.replaceAll(RegExp('-'), ' ').capitalize!;
@@ -233,7 +225,6 @@ class AuthController extends GetxController {
           FirebaseFirestore.instance.collection('users').doc(user.uid).update({
             'token': _token,
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
-            // 'firstTime': true,
           });
           isFirstSignIn.value = false;
           currentUser = user;
@@ -246,11 +237,9 @@ class AuthController extends GetxController {
           .get()
           .then((DocumentSnapshot documentSnapshot) {
         displayName = documentSnapshot.get('name');
-        // isSignedIn.value = true; // <-- 로그인 완료 후, main으로 넘기기
         isEmailSignIn.value = false;
         update(); // <-- without this the is Signedin value is not updated.
       });
-      //  await FirebaseFirestore.instance.collection('count').doc('counter').update({"count": FieldValue.increment(1)});
 
     } catch (e) {
       Get.snackbar('Error occurred!', e.toString(),
@@ -308,7 +297,6 @@ class AuthController extends GetxController {
             "ask": 0,
             "help": 0,
             "getHeart": 0,
-            // "firstTime": false,
             "feedback": false,
             "notificationOn": true,
           });
@@ -326,7 +314,6 @@ class AuthController extends GetxController {
           FirebaseFirestore.instance.collection('users').doc(user.uid).update({
             'token': _token,
             'timeRegister': DateTime.now().millisecondsSinceEpoch.toString(),
-            // 'firstTime': true,
           });
         }
         currentUser = user;
@@ -389,10 +376,7 @@ class AuthController extends GetxController {
       await auth.signOut();
       await _googleSignIn.signOut();
 
-      // await FirebaseFirestore.instance.collection('users').doc(userProfile!.uid).update(
-      //        {'token' : FieldValue.delete()});
       displayName = '';
-      // isSignedIn.value = false;
       update();
       Get.offAll(() => Root());
     } catch (e) {
@@ -411,7 +395,6 @@ class AuthController extends GetxController {
           .update({'first time': false});
       signout();
       displayName = '';
-      // isSignedIn.value = false;
       update();
       Get.offAll(() => Root());
     } catch (e) {
@@ -436,7 +419,6 @@ class AuthController extends GetxController {
           .delete();
       await FirebaseAuth.instance.currentUser!.delete();
       displayName = '';
-      // isSignedIn.value = false;
       update();
       Get.offAll(() => Root());
     } on FirebaseAuthException catch (e) {

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +12,6 @@ import 'package:livq/screens/my_page/sub_pages/1:1_question.dart';
 import 'package:livq/screens/my_page/sub_pages/call_history.dart';
 import 'package:livq/screens/my_page/sub_pages/friends_add.dart';
 import 'package:livq/screens/my_page/sub_pages/guide_page.dart';
-import 'package:livq/screens/my_page/sub_pages/individual_information.dart';
 import 'package:livq/screens/my_page/sub_pages/instruction_manual.dart';
 import 'package:livq/screens/my_page/sub_pages/logout_page.dart';
 import 'package:livq/screens/my_page/sub_pages/notification_setting/notification_setting.dart';
@@ -24,7 +22,6 @@ import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/common_widget.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../theme/colors.dart';
 
 Widget listTileWidget(String title) {
@@ -112,7 +109,6 @@ Widget listTileWidget(String title) {
             _ratingService.isSecondTimeOpen().then((secondOpen) {
               if (!secondOpen) {
                 _ratingService.showRating();
-                // print("$secondOpen");
               }
             });
           });
@@ -120,26 +116,22 @@ Widget listTileWidget(String title) {
           Get.to(() => Instruction());
         } else if (title == '앱 설정') {
           Get.to(() => appSettingPage());
-        }
-        else if (title == '개인정보 처리방침'){
-          Get.to(() => Information());
-        } else if (title == '이용 약관'){
-          //웹페이지로 넘어갈 수 있도록 변경
-          // Get.to(() => Terms());
-          https: //wegolego.tistory.com/1
+        } else if (title == '개인정보 처리방침') {
+          if (!await launch("https://wegolego.tistory.com/1"))
+            throw 'Could not launch the website';
+        } else if (title == '이용 약관') {
           if (!await launch("https://wegolego.tistory.com/2"))
             throw 'Could not launch the website';
-        } else if(title == '알림 설정'){
+        } else if (title == '알림 설정') {
           Get.to(() => NotificationSetting());
-        } else if(title == '카테고리 설정'){
-// Get.to(() => appSettingPage());
+        } else if (title == '카테고리 설정') {
           Get.snackbar("카테고리 준비중입니다.", "더 나은 질문과 해결을 위해 준비중입니다.",
               snackPosition: SnackPosition.BOTTOM,
               backgroundColor: AppColors.primaryColor,
               colorText: Colors.white);
-        } else if(title == '차단, 신고하기'){
+        } else if (title == '차단, 신고하기') {
           Get.to(() => CallHistory());
-        } else if(title == '기타'){
+        } else if (title == '기타') {
           Get.to(() => logoutPage());
         }
       },
