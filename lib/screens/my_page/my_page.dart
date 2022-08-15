@@ -228,6 +228,9 @@ class _MyPageState extends State<MyPage> {
                     listTileWidget(
                       '친구 추가하기',),
                     dividerWidget(0),
+                    listTileWidget(
+                      '친구 관리하기',),
+                    dividerWidget(0),
                     listTileWidget('회원정보 수정'),
                     dividerWidget(5),
                     listTileWidget('통화기록'),

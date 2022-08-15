@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'colors.dart';
 
 class AppTextStyle {
@@ -122,7 +123,17 @@ class AppTextStyle {
     height: 9 / 9,
     wordSpacing: 0.4,
   );
+  static TextStyle unselectedLabelStyle = TextStyle(
+      color: Colors.white.withOpacity(0.5),
+      fontWeight: FontWeight.w500,
+      fontSize: 12.sp);
+
+  static TextStyle selectedLabelStyle = TextStyle(
+      color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12.sp);
+
+
 }
+
 
 
 // //appbar text livq text
