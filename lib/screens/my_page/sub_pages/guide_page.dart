@@ -62,6 +62,7 @@ Widget _swiperWidget(){
     ),
   );
 }
+
 Widget _step1() {
   return Column(children: [
     sizedBoxWithChild(205, 218,  Image.asset("assets/home/icons.png", ),),

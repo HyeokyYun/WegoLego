@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:livq/theme/colors.dart';
 
-Widget textWidget(String string, TextStyle style) {
-  return Text(
-    string,
-    style: style,
-  );
-}
-
 Widget sizedBoxWidget(int width, int height) {
   return SizedBox(
     width: width.w,
@@ -21,6 +14,13 @@ Widget sizedBoxWithChild(int width, int height, Widget child) {
     width: width.w,
     height: height.h,
     child: child,
+  );
+}
+
+Widget textWidget(String string, TextStyle style) {
+  return Text(
+    string,
+    style: style,
   );
 }
 

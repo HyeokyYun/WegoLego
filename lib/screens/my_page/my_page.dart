@@ -49,7 +49,7 @@ class _MyPageState extends State<MyPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _orangeCicle(),
+                    _orangeCircle(),
                     sizedBoxWidget(4, 0),
                     UserFutureBuilder(data: 'name',
                       textStyle: TextStyle(color: AppColors.secondaryColor[800], fontSize: 18.sp, fontWeight: FontWeight.w500,),)
@@ -92,7 +92,7 @@ class _MyPageState extends State<MyPage> {
   }
 }
 
-Widget _orangeCicle() {
+Widget _orangeCircle() {
   return Container(
     width: 8.w,
     height: 8.h,
@@ -213,10 +213,7 @@ Widget _pointWidget() {
                   sizedBoxWidget(2, 0),
                   Column(
                     children: [
-                      UserStreamBuilder( data: 'ask', textStyle: TextStyle(
-                          fontSize: 9.sp,
-                          color: AppColors.primaryColor),
-                      ),
+                      UserStreamBuilder(data: 'ask', textStyle: TextStyle(fontSize: 9.sp, color: AppColors.primaryColor),),
                       sizedBoxWidget(0, 5),
                     ],
                   ),
