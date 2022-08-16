@@ -74,20 +74,15 @@ class _FriendEditState extends State<FriendEditPage> {
           if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
             var data = snapshot.data.data();
-
-            //final UserModel data = dataList[index];
-
             var friend = data['frienduid'];
             return ListView.builder(
                 itemExtent: 80,
-                //itemCount: snapshot.data.docs.length,
                 itemCount: friend.length,
                 itemBuilder: (context, index) {
                   //final UserModel data2 = dataList![index];
                   return Column(
                     children: [
                       ListTile(
-                        //Icon(Icons.person,color: Colors.black54,),
                         title: Row(
                           children: [
                             friendPhotoWidget(friend[index].toString()),
@@ -99,15 +94,14 @@ class _FriendEditState extends State<FriendEditPage> {
                           onPressed: () {
                               showAlertDialog(context);
                   //삭제 기능 추가
-                  //
-                  //           FirebaseFirestore.instance
-                  //               .collection("users")
-                  //               .doc(firebaseUser!.uid)
-                  //               .update({
-                  //             "frienduid":
-                  //             FieldValue.arrayRemove([data.uid]),
-                  //           });
-                  //
+                            FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(firebaseUser!.uid)
+                                .update({
+                              "frienduid":
+                              FieldValue.arrayRemove([String]),
+                            });
+
                   //           FirebaseFirestore.instance
                   //               .collection("users")
                   //               .doc(data.uid)

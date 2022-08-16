@@ -131,6 +131,17 @@ class AppTextStyle {
   static TextStyle selectedLabelStyle = TextStyle(
       color: Colors.white, fontWeight: FontWeight.w500, fontSize: 12.sp);
 
+  static TextStyle appLogoPurpleStyle =TextStyle(
+      fontSize: ScreenUtil().setSp(18),
+      color: Color(0xFF5B21B6));
+
+  static TextStyle appLogoOrangeStyle = TextStyle(
+      fontSize: ScreenUtil().setSp(18),
+      color: Color(0xFFffaa00));
+
+ static TextStyle appContentGreyStyle = TextStyle(
+  fontSize: ScreenUtil().setSp(12),
+  color: Color(0xFF979797));
 
 }
 

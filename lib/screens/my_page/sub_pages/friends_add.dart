@@ -97,6 +97,8 @@ class _FriendState extends State<FriendAddPage> {
                           ),
 
                           ElevatedButton(onPressed: (){
+                            showAlertDialog(context);
+
                             FirebaseFirestore.instance
                                 .collection("users")
                                 .doc(firebaseUser!.uid)
@@ -147,4 +149,28 @@ class _FriendState extends State<FriendAddPage> {
       },
     );
   }
+}
+showAlertDialog(BuildContext context) {
+
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () { Navigator.pop(context);},
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("친구 추가"),
+    content: Text("친구 추가 완료"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
