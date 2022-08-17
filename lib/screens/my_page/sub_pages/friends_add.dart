@@ -1,13 +1,18 @@
+import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:livq/models/user_model.dart';
+import 'package:livq/controllers/auth_controller.dart';
+import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
+import 'package:livq/theme/colors.dart';
+import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/SearchScaffold.dart';
-import 'package:livq/widgets/common_widget.dart';
-import 'package:livq/widgets/firebaseAuth.dart';
-
+import 'package:permission_handler/permission_handler.dart';
+import 'package:firestore_search/firestore_search.dart';
 
 class FriendAddPage extends StatefulWidget {
   @override
@@ -15,9 +20,15 @@ class FriendAddPage extends StatefulWidget {
 }
 
 class _FriendState extends State<FriendAddPage> {
+  FirebaseAuth auth = FirebaseAuth.instance;
 
-  AuthClass _auth = AuthClass();
+  User? get userProfile => auth.currentUser;
+  User? currentUser;
+
+  var firebaseUser = FirebaseAuth.instance.currentUser;
   final _channelController = TextEditingController();
+
+  final TextEditingController _categoryController = TextEditingController();
   late int askCount;
 
   @override
@@ -28,10 +39,7 @@ class _FriendState extends State<FriendAddPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     Get.put(ButtonController());
-
     return SearchScaffold(
       firestoreCollectionName: 'users',
       searchBy: 'name',
@@ -72,35 +80,41 @@ class _FriendState extends State<FriendAddPage> {
                                   fit: BoxFit.fill,
                                 ),
                               ),
-                              sizedBoxWidget(5, 0),
+                              SizedBox(
+                                width: 5.w,
+                              ),
                               Text(
                                 '${data.name}',
                                 style: TextStyle(
                                     fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold
-                                ),
-
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
-                          ElevatedButton(onPressed: (){
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(_auth.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayUnion([data.uid]),
-                            });
+                          ElevatedButton(
+                            onPressed: () {
+                              showAlertDialog(context);
 
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(data.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayUnion([_auth.uid]),
-                            });
-                          },
-                            child: textWidget( "추가하기", TextStyle(fontSize: 11.sp, color: Colors.white)),
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(firebaseUser!.uid)
+                                  .update({
+                                "frienduid": FieldValue.arrayUnion([data.uid]),
+                              });
+
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(data.uid)
+                                  .update({
+                                "frienduid":
+                                    FieldValue.arrayUnion([firebaseUser!.uid]),
+                              });
+                            },
+                            child: Text(
+                              "추가하기",
+                              style: TextStyle(
+                                  fontSize: 11.sp, color: Colors.white),
+                            ),
                             style: ElevatedButton.styleFrom(
                               //  padding: EdgeInsets.all(10.sp),
                               elevation: 0,
@@ -109,7 +123,8 @@ class _FriendState extends State<FriendAddPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
-                            ),)
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -130,9 +145,31 @@ class _FriendState extends State<FriendAddPage> {
         );
       },
     );
-
-
   }
+}
 
+showAlertDialog(BuildContext context) {
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
 
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("친구 추가"),
+    content: Text("친구 추가 완료"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

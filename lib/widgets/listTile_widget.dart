@@ -22,6 +22,7 @@ import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/common_widget.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../screens/my_page/sub_pages/friends_edit.dart';
 import '../theme/colors.dart';
 
 Widget listTileWidget(String title) {
@@ -86,6 +87,11 @@ Widget listTileWidget(String title) {
       onTap: () async {
         if (title == '친구 추가하기') {
           Get.to(FriendAddPage());
+        } else if (title == '친구 관리하기') {
+          Get.to(
+            FriendEditPage(),
+            transition: Transition.rightToLeft,
+          );
         } else if (title == '통화기록') {
           Get.to(
             CallHistory(),

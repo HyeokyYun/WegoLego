@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:livq/controllers/auth_controller.dart';
 import 'package:livq/screens/reset_password/reset_password.dart';
@@ -14,6 +13,8 @@ import '../../config.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:livq/theme/text_style.dart';
+import '../../widgets/common_widget.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -39,83 +40,36 @@ class _SignInState extends State<SignIn> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(height: Config.screenHeight! * 0.15),
-                //Text("Log In",style: TextStyle(fontSize: Config.screenWidth! * 0.08),),
-                Container(
-                  height: ScreenUtil().setHeight(115),
-                  width: ScreenUtil().setWidth(86),
-                  child: SvgPicture.asset(
-                    'assets/liveQ_logo.svg',
-                  ),
-                ),
-                SizedBox(height: Config.screenHeight! * 0.02),
+                sizedBoxWidget(0, 80),
+                _logoContentWidget(115,86),
+                sizedBoxWidget(0, 20),
                 Column(children: [
                   Platform.isIOS
-                      ? SizedBox(
-                          height: 30.h,
-                        )
+                      ? sizedBoxWidget(0, 30)
                       : Container(),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(
-                      '도움',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          color: Color(0xFFffaa00)),
-                    ),
-                    Text(
-                      '과',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          color: Color(0xFF5B21B6)),
-                    ),
-                    Text(
-                      '소통',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          color: Color(0xFFffaa00)),
-                    ),
-                    Text(
-                      '의 제한 없는 공간',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          color: Color(0xFF5B21B6)),
-                    ),
+                    textWidget('도움', AppTextStyle.appLogoOrangeStyle),
+                    textWidget('과', AppTextStyle.appLogoPurpleStyle),
+                    textWidget('소통', AppTextStyle.appLogoOrangeStyle),
+                    textWidget( '의 제한 없는 공간',  AppTextStyle.appLogoPurpleStyle),
                   ]),
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Platform.isIOS
-                        ? SizedBox(
-                            height: 50.h,
-                          )
+                        ? sizedBoxWidget(0, 50)
                         : Container(),
-                    Text(
-                      '라이큐',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(22),
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF5B21B6)),
-                    ),
+                    textWidget( '라이트큐',  TextStyle(
+                        fontSize: ScreenUtil().setSp(22),
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF5B21B6))),
                     Platform.isIOS
-                        ? SizedBox(
-                            height: 50.h,
-                          )
+                        ? sizedBoxWidget(0, 50)
                         : Container(),
                   ]),
-                  //SizedBox(height: ScreenUtil().setHeight(9)),
-                  Text(
-                    '세상의 모든 어려움의',
-                    style: TextStyle(
-                        fontSize: ScreenUtil().setSp(12),
-                        color: Color(0xFF979797)),
-                  ),
-                  Text(
-                    '장벽을 허물어주는 어플',
-                    style: TextStyle(
-                        fontSize: ScreenUtil().setSp(12),
-                        color: Color(0xFF979797)),
-                  ),
+                  sizedBoxWidget(0, 10),
+                  textWidget( '세상의 모든 어려움의', AppTextStyle.appContentGreyStyle ),
+                  textWidget( '장벽을 허물어주는 어플', AppTextStyle.appContentGreyStyle ),
                 ]),
-                SizedBox(height: Config.screenHeight! * 0.04),
-
+                sizedBoxWidget(0, 40),
                 Platform.isIOS
                     ? Container()
                     : Column(
@@ -126,27 +80,11 @@ class _SignInState extends State<SignIn> {
                             // EdgeInsets.symmetric(vertical: Config.screenHeight! * 0.005),
                             child: Align(
                               alignment: Alignment(0.8, 0.0),
-                              child: TextButton(
-                                child: Text(
-                                  '비밀번호 찾기',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(14),
-                                    color: Colors.grey,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                                onPressed: () =>
-                                    Get.to(() => const ResetPassword()),
-                                style: ButtonStyle(
-                                  overlayColor: MaterialStateColor.resolveWith(
-                                      (states) => Colors.transparent),
-                                ),
-                              ),
+                              child: _textFindPasswordButton('비밀번호 찾기')
                             ),
                           ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
+                          sizedBoxWidget(0, 15),
+
                           RoundedElevatedButton(
                             title: '로그인 ',
                             onPressed: () async {
@@ -169,9 +107,7 @@ class _SignInState extends State<SignIn> {
                         onPressed: () => _authController.signInWithGoogle(),
                       ),
                 Platform.isIOS
-                    ? SizedBox(
-                        height: 10.h,
-                      )
+                    ?  sizedBoxWidget(0, 10)
                     : Container(),
                 Platform.isIOS
                     ? SignInButton(
@@ -180,9 +116,7 @@ class _SignInState extends State<SignIn> {
                       )
                     : Container(),
                 Platform.isIOS
-                    ? SizedBox(
-                        height: 30.h,
-                      )
+                    ?  sizedBoxWidget(0, 30)
                     : Container(),
 
                 Platform.isIOS
@@ -190,14 +124,11 @@ class _SignInState extends State<SignIn> {
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('라이큐 회원이 아니신가요? '),
+                          textWidget( '라이트큐 회원이 아니신가요? ',TextStyle()),
                           TextButton(
-                            child: const Text(
-                              '회원가입',
-                              style: TextStyle(
-                                color: Color(0xffFFAA00),
-                              ),
-                            ),
+                             child:  textWidget( '회원가입', TextStyle(
+                               color: Color(0xffFFAA00),
+                             ) ),
                             onPressed: () => Get.to(() => const SignUp()),
                           ),
                         ],
@@ -216,46 +147,41 @@ class _SignInState extends State<SignIn> {
         RoundedTextFormField(
           controller: _emailController,
           hintText: '이메일',
-          // validator: (value) {
-          //   bool _isEmailValid = RegExp(
-          //       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-          //       .hasMatch(value!);
-          //   if (!_isEmailValid) {
-          //     return '유효하지 않은 이메일입니다.';
-          //   }
-          //   return null;
-          // },
         ),
-        // Container(
-        //   height: ScreenUtil().setHeight(43),
-        //   width: ScreenUtil().setWidth(287),
-        //   child: TextFormField(
-        //     decoration: InputDecoration(
-        //       hintText: '아이디',
-        //       contentPadding: EdgeInsets.all(15.0),
-        //       border: const OutlineInputBorder(
-        //         borderRadius: BorderRadius.all(Radius.circular(33.0)),
-        //         borderSide: BorderSide.none,
-        //       ),
-        //       filled: true,
-        //       fillColor: Colors.grey[200],
-        //     ),
-        //   ),
-        // ),
 
         SizedBox(height: Config.screenHeight! * 0.01),
         RoundedTextFormField(
           controller: _passwordController,
           hintText: '비밀번호 ',
           obsecureText: true,
-          // validator: (value) {
-          //   if (value.toString().length < 6) {
-          //     return '6자리 이상';
-          //   }
-          //   return null;
-          // },
         ),
       ],
     );
   }
+}
+
+
+Widget _logoContentWidget(int height, int width){
+  return Container(
+    height: ScreenUtil().setHeight(height),
+    width: ScreenUtil().setWidth(width),
+    child: SvgPicture.asset(
+      'assets/liveQ_logo.svg',
+    ),
+  );
+}
+Widget _textFindPasswordButton(String text){
+  return TextButton(
+    child:  textWidget( text, TextStyle(
+      fontSize: ScreenUtil().setSp(14),
+      color: Colors.grey,
+      decoration: TextDecoration.underline,
+    ), ),
+    onPressed: () =>
+        Get.to(() => const ResetPassword()),
+    style: ButtonStyle(
+      overlayColor: MaterialStateColor.resolveWith(
+              (states) => Colors.transparent),
+    ),
+  );
 }
