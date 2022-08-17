@@ -50,9 +50,14 @@ class _FriendEditState extends State<FriendEditPage> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
-            child: Column(children: [
-          sizedBoxWithChild(329, 336, _friendsEditWidget()),
-        ])));
+
+        child: Column(
+          children:[
+            sizedBoxWithChild(329, 600, _friendsEditWidget()),
+          ]
+        )
+        )
+    );
   }
 
   Widget _friendsEditWidget() {
@@ -81,22 +86,23 @@ class _FriendEditState extends State<FriendEditPage> {
                         ),
                         trailing: ElevatedButton(
                           onPressed: () {
-                            showAlertDialog(context);
-                            //삭제 기능 추가
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(firebaseUser!.uid)
-                                .update({
-                              "frienduid": FieldValue.arrayRemove([String]),
-                            });
+                              showAlertDialog(context);
+                  //삭제 기능 추가
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(firebaseUser!.uid)
+                                  .update({"frienduid" : FieldValue.arrayRemove([friend[index].toString()])});
 
-                            //           FirebaseFirestore.instance
-                            //               .collection("users")
-                            //               .doc(data.uid)
-                            //               .update({
-                            //             "frienduid":
-                            //             FieldValue.arrayRemove([firebaseUser!.uid]),
-                            //           });
+                              //상대방껏도 지워야하나?
+                  //           FirebaseFirestore.instance
+                  //               .collection("users")
+                  //               .doc(friend[index].toString())
+                  //               .update({
+                  //             "frienduid":
+                  //             FieldValue.arrayRemove([firebaseUser!.uid]),
+                  //           });
+
+
                           },
                           child: textWidget("삭제하기",
                               TextStyle(fontSize: 20.sp, color: Colors.white)),
@@ -151,21 +157,23 @@ class _FriendEditState extends State<FriendEditPage> {
   }
 }
 
-showAlertDialog(BuildContext context) {
-  // Widget okButton = TextButton(
-  //   child: Text("OK"),
-  //   onPressed: () { Navigator.pop(context)},
-  // );
+showAlertDialog(BuildContext context) 
+
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () { Navigator.pop(context);},
+  );
+
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: Text("친구 추가"),
+    title: Text("친구 삭"),
     content: Text("친구 삭제 완료"),
-    // actions: [
-    //   okButton,
-    // ],
+    actions: [
+      okButton
+    ],
   );
-
+제
   // show the dialog
   showDialog(
     context: context,
