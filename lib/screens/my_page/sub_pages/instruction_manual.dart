@@ -40,24 +40,15 @@ class _InstructionState extends State<Instruction> {
       builder: (context, player) {
         return Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-              title: textWidget(
-                '무물 사용 설명서', TextStyle(),
-              ),
+              leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.black), onPressed: () {Get.back();},),
+              title: textWidget('무물 사용 설명서', TextStyle(),),
               backgroundColor: Colors.white,
             ),
             body: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 player,
-                textWidget(
-                  'wegolego Introduction Video',TextStyle())
+                textWidget('wegolego Introduction Video',TextStyle())
               ],
             )));
       },

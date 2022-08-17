@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:livq/models/user_model.dart';
 import 'package:livq/controllers/auth_controller.dart';
-import 'package:livq/models/User.dart';
 import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/theme/colors.dart';
@@ -30,7 +30,6 @@ class _FriendState extends State<FriendAddPage> {
 
   final TextEditingController _categoryController = TextEditingController();
   late int askCount;
-
 
   @override
   void dispose() {
@@ -68,7 +67,6 @@ class _FriendState extends State<FriendAddPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -89,35 +87,33 @@ class _FriendState extends State<FriendAddPage> {
                                 '${data.name}',
                                 style: TextStyle(
                                     fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold
-                                ),
-
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
+                          ElevatedButton(
+                            onPressed: () {
+                              showAlertDialog(context);
 
-                          ElevatedButton(onPressed: (){
-                            showAlertDialog(context);
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(firebaseUser!.uid)
+                                  .update({
+                                "frienduid": FieldValue.arrayUnion([data.uid]),
+                              });
 
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(firebaseUser!.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayUnion([data.uid]),
-                            });
-
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(data.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayUnion([firebaseUser!.uid]),
-                            });
-                          },
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(data.uid)
+                                  .update({
+                                "frienduid":
+                                    FieldValue.arrayUnion([firebaseUser!.uid]),
+                              });
+                            },
                             child: Text(
                               "추가하기",
-                              style: TextStyle(fontSize: 11.sp, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 11.sp, color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
                               //  padding: EdgeInsets.all(10.sp),
@@ -127,7 +123,8 @@ class _FriendState extends State<FriendAddPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
-                            ),)
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -150,11 +147,13 @@ class _FriendState extends State<FriendAddPage> {
     );
   }
 }
-showAlertDialog(BuildContext context) {
 
+showAlertDialog(BuildContext context) {
   Widget okButton = TextButton(
     child: Text("OK"),
-    onPressed: () { Navigator.pop(context);},
+    onPressed: () {
+      Navigator.pop(context);
+    },
   );
 
   // set up the AlertDialog

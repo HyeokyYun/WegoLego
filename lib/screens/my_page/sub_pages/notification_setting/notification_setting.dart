@@ -31,7 +31,6 @@ class _NotificationSetting extends State<NotificationSetting> {
     messaging.getToken().then((value) {
       _token = value;
     });
-    // _getUser();
     FirebaseFirestore.instance
         .collection("users")
         .doc(_auth.uid)
@@ -52,9 +51,7 @@ class _NotificationSetting extends State<NotificationSetting> {
         leading: IconButton(
           color: AppColors.grey,
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () {Get.back();},
         ),
         title: textWidget("알림 설정", TextStyle(color: Colors.black)),
         elevation: 0.0,

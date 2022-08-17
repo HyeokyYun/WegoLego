@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:livq/widgets/common_widget.dart';
 
 
-
 class Question extends StatelessWidget {
 
   @override
@@ -11,9 +10,7 @@ class Question extends StatelessWidget {
     return Scaffold(
         appBar:  AppBar(
           leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black), onPressed: () { Get.back(); },),
-          title: Text(
-            '1:1 문의',
-          ),
+          title: textWidget('1:1 문의',TextStyle()),
           backgroundColor: Colors.white,
         ),
         body: Center(

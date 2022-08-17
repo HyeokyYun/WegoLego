@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:livq/push_notification/push_notification.dart';
 import 'package:livq/screens/home/agora/pages/call_taker.dart';
@@ -10,9 +11,8 @@ import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:livq/widgets/common_widget.dart';
-import 'package:livq/widgets/image_widget.dart';
-
 import 'package:permission_handler/permission_handler.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -20,6 +20,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   AuthClass _auth = AuthClass();
   final _channelController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
@@ -35,7 +36,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Get.put(ButtonController());
 
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     sizedBoxWidget(0, 20),
-                    liveQLogo(),
+                    SvgPicture.asset("assets/liveQ_logo.svg", width: 30.w, height: 39.h,),
                     sizedBoxWidget(0, 17),
                     Stack(
                       children: [
@@ -58,31 +58,22 @@ class _HomeState extends State<Home> {
                             _highlight(64, 8, 0.3),
                           ],
                         ),
-                        textWidget(
-                            "안녕하세요 큐님 \n궁금증 해결이 필요한 상태군요!",
-                            TextStyle(
-                                fontSize: 13.sp, color: Color(0xff4D4D4D))),
+                        textWidget("안녕하세요 큐님 \n궁금증 해결이 필요한 상태군요!", TextStyle(fontSize: 13.sp, color: Color(0xff4D4D4D))),
                       ],
                     ),
                     sizedBoxWidget(0, 28),
-                    textWidget("해결할 곳 없을 때,\n바로바로 물어보세요",
-                        TextStyle(fontSize: 23.sp, color: Colors.black)),
+                    textWidget("해결할 곳 없을 때,\n바로바로 물어보세요", TextStyle(fontSize: 23.sp, color: Colors.black)),
                     sizedBoxWidget(0, 16),
                     _countFriends(),
                     Center(
                       child: Column(
                         children: [
                           sizedBoxWithChild(329, 336, _friendsWidget()),
-                          // _friendsWidget(),
                           sizedBoxWidget(0, 17),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              textWidget(
-                                  "친구들에게 연결이 안되는 상황이라면?",
-                                  TextStyle(
-                                      fontSize: 12.sp,
-                                      color: Color(0xffFFA300))),
+                              textWidget("친구들에게 연결이 안되는 상황이라면?", TextStyle(fontSize: 12.sp, color: Color(0xffFFA300)))
                             ],
                           ),
                           sizedBoxWidget(0, 8),
@@ -97,26 +88,12 @@ class _HomeState extends State<Home> {
                                     height: 15.h,
                                     width: 15.w,
                                     alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffFFFDE7),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  sizedBoxWithChild(
-                                    15,
-                                    15,
-                                    Image.asset(
-                                      "assets/home/speaker.png",
-                                    ),
-                                  )
+                                    decoration: BoxDecoration( color: Color(0xffFFFDE7), shape: BoxShape.circle)),
+                                   sizedBoxWithChild(15, 15, Image.asset("assets/home/speaker.png"))
                                 ],
                               ),
                               sizedBoxWidget(2, 0),
-                              textWidget(
-                                  "일주일 동안 무료로 전문가에게 질문해 보세요!",
-                                  TextStyle(
-                                      fontSize: 12.sp,
-                                      color: Color(0xff4D4D4D))),
+                              textWidget("일주일 동안 무료로 전문가에게 질문해 보세요!", TextStyle(fontSize: 12.sp, color: Color(0xff4D4D4D))),
                             ],
                           ),
                         ],
@@ -158,9 +135,7 @@ class _HomeState extends State<Home> {
             //
             content: Container(
               height: 100.h,
-              //88
               width: 400.w,
-              //254
               padding: EdgeInsets.fromLTRB(15.w, 10.h, 15.w, 10.h),
               decoration: BoxDecoration(
                 color: Color(0xffC4C4C4),
@@ -170,11 +145,8 @@ class _HomeState extends State<Home> {
                 controller: _categoryController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
-                // obscureText: obsecureText!,
                 autofocus: false,
-
                 decoration: InputDecoration(
-                  //        hintText: "구체적인 도움을 적어주세요:)",
                   hintStyle: AppTextStyle.koBody2,
                   fillColor: Colors.black,
                   focusedBorder: InputBorder.none,
@@ -182,7 +154,6 @@ class _HomeState extends State<Home> {
                   errorBorder: InputBorder.none,
                   focusedErrorBorder: InputBorder.none,
                 ),
-                // validator: validator,
               ),
             ),
             actions: <Widget>[
@@ -203,7 +174,6 @@ class _HomeState extends State<Home> {
                           "subcategory": _categoryController.text
                         });
 
-                        //monitoring
                         FirebaseFirestore.instance
                             .collection("monitoring")
                             .doc("category")
@@ -219,32 +189,21 @@ class _HomeState extends State<Home> {
 
                         await NotificationService.sendNotification(
                           "${_auth.name} Need Your Help!",
-                          // _categoryController.text == ""
-                          //     ? ""
-                          //     :
                           "${_categoryController.text}",
                           friendUid,
                         );
                         await _handleCameraAndMic(Permission.camera);
                         await _handleCameraAndMic(Permission.microphone);
-                        // push video page with given channel name
                         String channel = FirebaseAuth.instance.currentUser!.uid;
                         await Get.offAll(() => CallPage_taker(
                               channelName: channel,
-                              // getTitle: widget.getTitle,
                             ));
                       },
-                      child: textWidget(
-                        "연결",
-                        AppTextStyle.koBody2.copyWith(color: AppColors.grey),
-                      ),
+                      child: textWidget("연결", AppTextStyle.koBody2.copyWith(color: AppColors.grey),),
                       style: ElevatedButton.styleFrom(
-                        //  padding: EdgeInsets.all(10.sp),
                         primary: Colors.white,
                         fixedSize: Size(120.w, 43.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                       ),
                     ),
                     sizedBoxWidget(0, 15),
@@ -293,8 +252,7 @@ class _HomeState extends State<Home> {
 
   Widget _friendsWidget() {
     return FutureBuilder(
-        future:
-            FirebaseFirestore.instance.collection('users').doc(_auth.uid).get(),
+        future: FirebaseFirestore.instance.collection('users').doc(_auth.uid).get(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
@@ -302,13 +260,11 @@ class _HomeState extends State<Home> {
             var friend = data['frienduid'];
             return ListView.builder(
                 itemExtent: 80,
-                //itemCount: snapshot.data.docs.length,
                 itemCount: friend.length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
                       ListTile(
-                        //Icon(Icons.person,color: Colors.black54,),
                         title: Row(
                           children: [
                             friendPhotoWidget(friend[index].toString()),
@@ -347,14 +303,11 @@ class _HomeState extends State<Home> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          textWidget("전문가 도움요청하기",TextStyle(fontSize: 18.sp),
-          ),
+          textWidget("전문가 도움요청하기",TextStyle(fontSize: 18.sp)),
           Icon(Icons.arrow_forward_ios),
         ],
       ),
-      onPressed: () {
-        FlutterDialog("");
-      },
+      onPressed: () {FlutterDialog("");},
       style: ElevatedButton.styleFrom(
         primary: Color(0xffFFA300),
         shape: RoundedRectangleBorder(
@@ -366,11 +319,9 @@ class _HomeState extends State<Home> {
 
   Widget _countFriends() {
     return FutureBuilder(
-      future:
-          FirebaseFirestore.instance.collection('users').doc(_auth.uid).get(),
+      future: FirebaseFirestore.instance.collection('users').doc(_auth.uid).get(),
       builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData &&
-            snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
           var data = snapshot.data.data();
           var friend = data['frienduid'];
           return textWidget("친구 ${friend.length.toString()}명",

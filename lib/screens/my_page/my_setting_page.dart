@@ -43,17 +43,10 @@ class _mySettingPageState extends State<mySettingPage> {
   @override
   Widget build(BuildContext context) {
     _nameController.text = userName;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          color: AppColors.grey,
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
-        ),
+        leading: IconButton(color: AppColors.grey, icon: Icon(Icons.arrow_back), onPressed: () {Get.back();}),
         title: textWidget("계정 / 정보 관리",TextStyle(color: Colors.black)),
         elevation: 0.0,
         backgroundColor: Colors.white,
@@ -75,8 +68,6 @@ class _mySettingPageState extends State<mySettingPage> {
                   listTileWidget('이용 약관'),
                 ],
               ),
-
-
         ),
       ),
     );
@@ -91,40 +82,21 @@ class _mySettingPageState extends State<mySettingPage> {
           Stack(
             children: [
               _image == null
-                  ? UserStreamBuilder(data: 'photoURL', textStyle: TextStyle())
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(57),
-                      child: Image.file(
-                        File(_image!.path),
-                        height: 114.h,
-                        width: 114.w,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-              Positioned(
-                bottom: 1.h,
-                right: 1.w,
-                child: _editImage(),
-              )
+                  ? sizedBoxWithChild(120, 120, UserFutureBuilder(data: 'photoURL',textStyle: TextStyle()))
+                  : ClipRRect(borderRadius: BorderRadius.circular(57),
+                      child: Image.file(File(_image!.path), height: 114.h, width: 114.w, fit: BoxFit.fill,),),
+              Positioned(bottom: 1.h, right: 1.w, child: _editImage(),)
             ],
           ),
           ifChangeName
               ? ListTile(
-                  title: textWidget(
-                    '이름 변경', AppTextStyle.koBody2.copyWith(
-                      color: AppColors.grey,
-                    ),
-                  ),
+                  title: textWidget('이름 변경', AppTextStyle.koBody2.copyWith(color: AppColors.grey,),),
                   subtitle: TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         onPressed: _nameController.clear,
-                        icon: Icon(
-                          Icons.cancel,
-                          color: AppColors.grey[300],
-                        ),
-                      ),
+                        icon: Icon(Icons.cancel, color: AppColors.grey[300],),),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColors.grey[300]!),
                       ),
@@ -150,93 +122,36 @@ class _mySettingPageState extends State<mySettingPage> {
                             .collection('users')
                             .doc(_auth.uid)
                             .update({'name': _nameController.text});
-
                         setState(() {
                           setState(() {
                             _authController.displayName = _nameController.text;
                             _auth.firebaseUser
                                 ?.updateDisplayName(_nameController.text);
                             userName = _nameController.text;
-
                             ifChangeName = false;
                           });
                         });
                       }
                     },
-                    icon: Icon(
-                      Icons.check,
-                      color: AppColors.grey[500],
-                    ),
+                    icon: Icon(Icons.check, color: AppColors.grey[500],),
                   ))
               : ListTile(
-                  title: textWidget(
-                    '이름', AppTextStyle.koBody2.copyWith(
-                      color: AppColors.grey,
-                    ),
-                  ),
-                  subtitle: Text(
-                    userName,
-                  ),
-                  trailing: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        ifChangeName = true;
-                      });
-                    },
-                    child: textWidget("변경",AppTextStyle.koBody2.copyWith(color: Color(0xffFF5B5B)),),
-                  ),
+                  title: textWidget('이름', AppTextStyle.koBody2.copyWith(color: AppColors.grey,),),
+                  subtitle: textWidget(userName,TextStyle()),
+                  trailing: TextButton( onPressed: () {setState(() {ifChangeName = true;});},
+                    child: textWidget("변경",AppTextStyle.koBody2.copyWith(color: Color(0xffFF5B5B))),),
                 ),
           ListTile(
             title: textWidget('이메일', AppTextStyle.koBody2.copyWith(color: AppColors.grey)),
-            subtitle: Text(
-              widget.getEmail,
-            ),
+            subtitle: textWidget(widget.getEmail,TextStyle()),
           ),
         ],
       ),
     );
   }
 
-  Widget bottomSheet() {
-    return Container(
-        height: 100.h,
-        width: MediaQuery.of(context).size.width,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 20.h,
-        ),
-        child: Column(
-          children: [
-            textWidget('Choose profile photo', TextStyle(fontSize: 18.sp)),
-            sizedBoxWidget(0, 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FloatingActionButton.extended(
-                  backgroundColor: AppColors.grey[300],
-                  onPressed: getImageFromCam,
-                  icon: Icon(
-                    Icons.add_a_photo,
-                    color: Colors.black,
-                  ),
-                  label: textWidget("사진 찍기", TextStyle(color: Colors.black),),
-                ),
-                FloatingActionButton.extended(
-                  backgroundColor: AppColors.grey[300],
-                  onPressed: getImageFromGallery,
-                  icon: Icon(
-                    Icons.wallpaper,
-                    color: Colors.black,
-                  ),
-                  label: textWidget("앨범에서 선택", TextStyle(color: Colors.black),),
-                )
-              ],
-            )
-          ],
-        ));
-  }
 
-  Future getImageFromCam() async {
+  Future _getImageFromCam() async {
     String? uploadURL;
     PickedFile? image =
         await ImagePicker.platform.pickImage(source: ImageSource.camera);
@@ -257,10 +172,9 @@ class _mySettingPageState extends State<mySettingPage> {
         .update({'photoURL': uploadURL});
   }
 
-  Future getImageFromGallery() async {
+  Future _getImageFromGallery() async {
     String? uploadURL;
-    PickedFile? image =
-        await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    PickedFile? image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
 
     setState(() {
       _image = image;
@@ -297,27 +211,13 @@ class _mySettingPageState extends State<mySettingPage> {
                   child: Wrap(
                     children: [
                       ListTile(
-                        onTap: getImageFromCam,
-                        dense: true,
-                        visualDensity:
-                            VisualDensity(horizontal: 0, vertical: -2),
-                        title: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              textWidget('사진 찍기',TextStyle(fontSize: 14.sp),)
-                            ]),
+                        onTap: _getImageFromCam, dense: true, visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                        title: Center(child: textWidget('사진 찍기',TextStyle(fontSize: 14.sp))),
                       ),
                       dividerWidget(1),
                       ListTile(
-                        onTap: getImageFromGallery,
-                        dense: true,
-                        visualDensity:
-                            VisualDensity(horizontal: 0, vertical: -2),
-                        title: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              textWidget('앨범에서 사진 선택',TextStyle(fontSize: 14.sp))
-                            ]),
+                        onTap: _getImageFromGallery, dense: true, visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                        title: Center(child: textWidget('앨범에서 사진 선택',TextStyle(fontSize: 14.sp))),
                       ),
                     ],
                   ),
@@ -325,22 +225,13 @@ class _mySettingPageState extends State<mySettingPage> {
                 Card(
                   color: AppColors.grey[100],
                   margin: EdgeInsets.fromLTRB(10.0.w, 7.0.w, 10.0.w, 15.0.w),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   child: Wrap(
                     children: [
                       ListTile(
-                        onTap: () {
-                          Get.back();
-                        },
-                        dense: true,
-                        visualDensity:
-                            VisualDensity(horizontal: 0, vertical: -2),
-                        title: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              textWidget('닫기',TextStyle(fontSize: 14.sp))
-                            ]),
+                        onTap: () {Get.back();},
+                        dense: true, visualDensity: VisualDensity(horizontal: 0, vertical: -2),
+                        title: Center(child: textWidget('닫기',TextStyle(fontSize: 14.sp))),
                       ),
                     ],
                   ),

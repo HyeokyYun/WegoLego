@@ -18,8 +18,6 @@ class _CallHistoryState extends State<CallHistory> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -30,13 +28,10 @@ class _CallHistoryState extends State<CallHistory> {
         leading: IconButton(
           color: AppColors.grey,
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () {Get.back();},
         ),
       ),
       body: _showHistory(),
-
     );
   }
 
@@ -50,7 +45,6 @@ class _CallHistoryState extends State<CallHistory> {
             if (snapshot.hasError) {
               return const Text('Something went wrong');
             }
-
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: Column(
@@ -107,8 +101,7 @@ class _CallHistoryState extends State<CallHistory> {
                                                       children: [
                                                         Row(
                                                           children: [
-                                                            textWidget(data['isHelper']? "도와 받은 사람 : ": "도와준 사람 : "
-                                                              ,AppTextStyle.koBody1),
+                                                            textWidget(data['isHelper']? "도와 받은 사람 : ": "도와준 사람 : ",AppTextStyle.koBody1),
                                                             textWidget(data['name'],AppTextStyle.koBody1,),
                                                           ],
                                                         ),
@@ -127,11 +120,9 @@ class _CallHistoryState extends State<CallHistory> {
                                                   Container(
                                                     width: 60.w,
                                                     child: TextButton(
-                                                      child: textWidget(data['report'] ? "신고함" : "신고하기",
-                                                        AppTextStyle.koButton.copyWith(color: AppColors.grey[50],),),
+                                                      child: textWidget(data['report'] ? "신고함" : "신고하기", AppTextStyle.koButton.copyWith(color: AppColors.grey[50],),),
                                                       style: TextButton.styleFrom(
-                                                        backgroundColor:
-                                                        data['report'] ? AppColors.grey[500] : Colors.red,
+                                                        backgroundColor: data['report'] ? AppColors.grey[500] : Colors.red,
                                                         shape: new RoundedRectangleBorder(borderRadius: BorderRadius.circular(22.0)),),
                                                       onPressed: () {
                                                         data['report'] ? Get.snackbar("이미 신고되었습니다.", "유저의 일정이상 신고가 반복되면 신고된 유저는 차단됩니다.",
@@ -143,28 +134,18 @@ class _CallHistoryState extends State<CallHistory> {
                                                             barrierDismissible: true,
                                                             builder: (BuildContextcontext) {
                                                               return AlertDialog(
-                                                                // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
                                                                 shape: RoundedRectangleBorder(
                                                                     borderRadius: BorderRadius.circular(10.0)),
                                                                 backgroundColor: AppColors.grey[800],
-                                                                //Dialog Main Title
                                                                 title: Column(
                                                                   children: <Widget>[
                                                                     textWidget("신고 하고 싶은 내용을 적어주세요",
                                                                      AppTextStyle.koBody1.copyWith(color: Colors.white,)),
                                                                   ],
                                                                 ),
-                                                                //
-                                                                content:
-                                                                Container(
-                                                                  height: 100.h,
-                                                                  width: 300.w,
-                                                                  padding: EdgeInsets.fromLTRB(15.w, 10.h, 15.w, 10.h),
-                                                                  decoration:
-                                                                  BoxDecoration(
-                                                                    color: Color(0xffC4C4C4),
-                                                                    borderRadius: BorderRadius.circular(22),
-                                                                  ),
+
+                                                                content: Container(height: 100.h, width: 300.w, padding: EdgeInsets.fromLTRB(15.w, 10.h, 15.w, 10.h), decoration:
+                                                                  BoxDecoration(color: Color(0xffC4C4C4), borderRadius: BorderRadius.circular(22),),
                                                                   child: TextFormField(
                                                                     controller:_reportController,
                                                                     keyboardType: TextInputType.multiline,
@@ -189,11 +170,7 @@ class _CallHistoryState extends State<CallHistory> {
                                                                         ElevatedButton(
                                                                           onPressed:
                                                                               () async {
-                                                                            //report false로 바꾸고
-                                                                            FirebaseFirestore.instance.collection('users').doc(_auth.uid)
-                                                                                .collection("callHistory").doc(docId)
-                                                                                .update({"report": true,});
-
+                                                                            FirebaseFirestore.instance.collection('users').doc(_auth.uid).collection("callHistory").doc(docId).update({"report": true,});
                                                                             //모니터링에 신고 내용 작성
                                                                             //새로운 collection에 랜덤으로 생성
                                                                             FirebaseFirestore.instance
@@ -205,23 +182,15 @@ class _CallHistoryState extends State<CallHistory> {
                                                                               "reportedUserUid": data["uid"],
                                                                             });
 
-                                                                            Get.offAll(
-                                                                                BottomNavigation());
-                                                                            Get.snackbar(
-                                                                              "신고되었습니다.",
-                                                                              "유저의 일정이상 신고가 반복되면 신고된 유저는 차단됩니다.",
+                                                                            Get.offAll(BottomNavigation());
+                                                                            Get.snackbar("신고되었습니다.", "유저의 일정이상 신고가 반복되면 신고된 유저는 차단됩니다.",
                                                                               snackPosition: SnackPosition.BOTTOM,
                                                                               backgroundColor: AppColors.primaryColor,
                                                                               colorText: Colors.white,
                                                                             );
                                                                           },
-                                                                          child:
-                                                                          textWidget("신고하기",AppTextStyle.koBody2.copyWith (color: AppColors.grey),),
-                                                                          style:
-                                                                          ElevatedButton.styleFrom(
-                                                                            primary: Colors.white,
-                                                                            fixedSize: Size(120.w, 43.h),
-                                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),),
+                                                                          child: textWidget("신고하기",AppTextStyle.koBody2.copyWith (color: AppColors.grey),),
+                                                                          style: ElevatedButton.styleFrom(primary: Colors.white, fixedSize: Size(120.w, 43.h), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15),),),
                                                                         ),
                                                                         sizedBoxWidget(0, 15)
                                                                       ],
@@ -252,6 +221,5 @@ class _CallHistoryState extends State<CallHistory> {
               );
             }
           } );
-
   }
 }

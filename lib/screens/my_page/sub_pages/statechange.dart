@@ -8,15 +8,8 @@ class StateChange extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          title: Text(
-            '활동상태 설정',
-            //   style: appbartitlestyle(),
-          ),
+            icon: Icon(Icons.arrow_back, color: Colors.black), onPressed: () {Get.back();},),
+          title: Text('활동상태 설정',),
           backgroundColor: Colors.white,
         ),
         body: Center(
@@ -30,9 +23,7 @@ class StateChange extends StatelessWidget {
                   shape: BoxShape.circle,
                   image: new DecorationImage(
                     fit: BoxFit.fill,
-                    image: new NetworkImage(
-                      "https://drive.google.com/uc?export=view&id=1YZyTxIshyloO3YvQhMH5g4fSiIXOfM4m",
-                    ),
+                    image: new NetworkImage("https://drive.google.com/uc?export=view&id=1YZyTxIshyloO3YvQhMH5g4fSiIXOfM4m",),
                   ),
                 ),
               ),

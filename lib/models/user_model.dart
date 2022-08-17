@@ -13,45 +13,37 @@ class UserModel {
   String? token;
   String? uid;
 
-  UserModel({
-    this.ask,
-    this.email,
-    this.feedback,
-    this.getHeart,
-    this.help,
-    this.name,
-    this.notificationOn,
-    this.photoURL,
-    this.timeRegister,
-    this.token,
-    this.uid
-  });
-
-
+  UserModel(
+      {this.ask,
+      this.email,
+      this.feedback,
+      this.getHeart,
+      this.help,
+      this.name,
+      this.notificationOn,
+      this.photoURL,
+      this.timeRegister,
+      this.token,
+      this.uid});
 
   List<UserModel> dataListFromSnapshot(QuerySnapshot querySnapshot) {
     return querySnapshot.docs.map((snapshot) {
-      final Map<String, dynamic> dataMap =
-      snapshot.data() as Map<String, dynamic>;
+      final Map<String, dynamic> dataMap = snapshot.data() as Map<String, dynamic>;
 
       return UserModel(
-        ask: dataMap['ask'],
-          email:dataMap['email'],
-          feedback:dataMap['feedback'],
+          ask: dataMap['ask'],
+          email: dataMap['email'],
+          feedback: dataMap['feedback'],
           getHeart: dataMap['getHeart'],
           help: dataMap['help'],
-          name:
-          dataMap['name'],
-        notificationOn: dataMap['notificationOn'],
-        photoURL: dataMap['photoURL'],
-        timeRegister: dataMap['timeRegister'],
-        token: dataMap['token'],
-        uid: dataMap['uid']
-
-      );
+          name: dataMap['name'],
+          notificationOn: dataMap['notificationOn'],
+          photoURL: dataMap['photoURL'],
+          timeRegister: dataMap['timeRegister'],
+          token: dataMap['token'],
+          uid: dataMap['uid']);
     }).toList();
   }
-
 
   UserModel.fromSnapshot(DocumentSnapshot snapshot)
       : ask = snapshot['ask'],

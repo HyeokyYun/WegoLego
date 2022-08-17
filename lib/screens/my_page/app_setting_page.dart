@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/common_widget.dart';
@@ -19,21 +18,15 @@ class _appSettingPageState extends State<appSettingPage> {
         leading: IconButton(
           color: AppColors.grey,
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () {Get.back();},
         ),
-        title: Text(
-          "계정 / 정보 관리",
-          style: TextStyle(color: Colors.black),
-        ),
+        title: Text("계정 / 정보 관리", style: TextStyle(color: Colors.black),),
         elevation: 0.0,
         backgroundColor: Colors.white,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Container(
-          // padding: EdgeInsets.fromLTRB(28, 0, 28, 0),
           alignment: Alignment.topCenter,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

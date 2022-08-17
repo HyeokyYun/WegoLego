@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:livq/widgets/common_widget.dart';
-
-import '../../../models/User.dart';
 import '../../../theme/colors.dart';
 import '../../../widgets/firebaseAuth.dart';
-
-
 
 class FriendEditPage extends StatefulWidget {
   @override
@@ -19,7 +14,6 @@ class FriendEditPage extends StatefulWidget {
 }
 
 class _FriendEditState extends State<FriendEditPage> {
-
   AuthClass _auth = AuthClass();
   FirebaseAuth auth = FirebaseAuth.instance;
   User? get userProfile => auth.currentUser;
@@ -28,7 +22,6 @@ class _FriendEditState extends State<FriendEditPage> {
   var firebaseUser = FirebaseAuth.instance.currentUser;
   final _channelController = TextEditingController();
   late int askCount;
-
 
   @override
   void dispose() {
@@ -57,9 +50,10 @@ class _FriendEditState extends State<FriendEditPage> {
           centerTitle: true,
         ),
         body: SingleChildScrollView(
+
         child: Column(
           children:[
-            sizedBoxWithChild(329, 500, _friendsEditWidget()),
+            sizedBoxWithChild(329, 600, _friendsEditWidget()),
           ]
         )
         )
@@ -69,7 +63,7 @@ class _FriendEditState extends State<FriendEditPage> {
   Widget _friendsEditWidget() {
     return FutureBuilder(
         future:
-        FirebaseFirestore.instance.collection('users').doc(_auth.uid).get(),
+            FirebaseFirestore.instance.collection('users').doc(_auth.uid).get(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData &&
               snapshot.connectionState == ConnectionState.done) {
@@ -108,10 +102,10 @@ class _FriendEditState extends State<FriendEditPage> {
                   //             FieldValue.arrayRemove([firebaseUser!.uid]),
                   //           });
 
-                          },
 
-                          child:textWidget(
-                              "삭제하기", TextStyle(fontSize: 20.sp, color: Colors.white)),
+                          },
+                          child: textWidget("삭제하기",
+                              TextStyle(fontSize: 20.sp, color: Colors.white)),
                           style: ElevatedButton.styleFrom(
                             //  padding: EdgeInsets.all(10.sp),
                             elevation: 0,
@@ -131,7 +125,6 @@ class _FriendEditState extends State<FriendEditPage> {
           }
         });
   }
-
 
   Widget friendNameWidget(String uid) {
     return FutureBuilder(
@@ -161,14 +154,16 @@ class _FriendEditState extends State<FriendEditPage> {
           }
           return Text(" ");
         });
-  }}
+  }
+}
 
-showAlertDialog(BuildContext context) {
+showAlertDialog(BuildContext context) 
 
   Widget okButton = TextButton(
     child: Text("OK"),
     onPressed: () { Navigator.pop(context);},
   );
+
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(

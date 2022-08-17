@@ -89,8 +89,7 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
                                 document.data()! as Map<String, dynamic>;
                             return Card(
                               shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(10.0)),
+                                  borderRadius: new BorderRadius.circular(10.0)),
                               elevation: 10.0,
                               shadowColor: AppColors.grey[100],
                               color: AppColors.primaryColor[50],
@@ -99,29 +98,20 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 20, 10),
                                   child: Container(
-                                    // height:
-                                    //Config.screenHeight! * 0.103,
                                     width: 350.w,
-                                    //Config.screenWidth! * 0.322,
-
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Row(
                                           children: [
                                             Container(
                                               width: 260.w,
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  textWidget(data['name'] + "님의 감사편지",AppTextStyle.koBody2,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [textWidget(data['name'] + "님의 감사편지",AppTextStyle.koBody2,
                                                   ),
-                                                  Container(
-                                                      child: textWidget(data['thankLetter'],AppTextStyle.koBody1,
+                                                  Container(child: textWidget(data['thankLetter'],AppTextStyle.koBody1,
                                                   )),
                                                 ],
                                               ),

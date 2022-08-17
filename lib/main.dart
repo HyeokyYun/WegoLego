@@ -1,17 +1,9 @@
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:livq/Constants.dart';
 import 'package:livq/controllers/noti_controller.dart';
-// import 'package:livq/screens/chennels/chennel_list.dart';
-import 'package:livq/screens/home/agora/pages/thank_you.dart';
-import 'package:livq/screens/home/home.dart';
 import 'package:livq/screens/root.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/splash.dart';
-// import 'package:get/get_navigation/get_navigation.dart';
-// import 'package:google_fonts/google_fonts.dart';
 import 'controllerBindings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
@@ -52,7 +44,6 @@ class MyApp extends StatelessWidget {
                     future: c.initialize(),
                     builder: (context, AsyncSnapshot snapshot) {
                       return Root();
-                      // return BottomNavigation();
                     }),
               ),
             ));
