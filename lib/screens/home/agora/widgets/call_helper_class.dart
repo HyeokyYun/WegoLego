@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:livq/theme/colors.dart';
+import 'package:flutter/material.dart';
 
 class Call_helper_class {
   //for agora engine
@@ -12,5 +12,5 @@ class Call_helper_class {
   late String getdetails;
   late double nomalizationDx;
   late double nomalizationDy;
-  Color sendColor = AppColors.primaryColor;
+  Color sendColor = Colors.amber;
 }

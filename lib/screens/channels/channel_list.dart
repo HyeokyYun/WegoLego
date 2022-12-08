@@ -1,9 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:livq/theme/colors.dart';
-import 'package:livq/widgets/firebaseAuth.dart';
-
+import '../../firebaseAuth.dart';
 import '/screens/home/agora/pages/call_helper.dart';
 import 'package:livq/screens/home/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -50,7 +48,7 @@ class _ChannelListState extends State<ChannelList> {
             return Scaffold(
               appBar: AppBar(
                 title: Text(
-                  "라이브 대기실",
+                  "참여대기실",
                   style: TextStyle(color: Colors.black),
                 ),
                 elevation: 0.0,
@@ -70,7 +68,7 @@ class _ChannelListState extends State<ChannelList> {
           return Scaffold(
             appBar: AppBar(
               title: Text(
-                "라이브 대기실",
+                "참여 대기실",
                 style: TextStyle(color: Colors.black),
               ),
               elevation: 0.0,
@@ -97,7 +95,6 @@ class _ChannelListState extends State<ChannelList> {
                                   borderRadius:
                                       new BorderRadius.circular(10.0)),
                               elevation: 10.0,
-                              shadowColor: AppColors.grey[100],
                               color: Color(0xffF1F3F5),
                               child: Container(
                                 child: Padding(
@@ -131,20 +128,12 @@ class _ChannelListState extends State<ChannelList> {
                                                         style: TextStyle(
                                                             color: data['count'] ==
                                                                     1
-                                                                ? AppColors
-                                                                        .primaryColor[
-                                                                    900]
-                                                                : AppColors
-                                                                    .grey[500],
+                                                                ? Color(
+                                                                    0xff0101ff)
+                                                                : Color(
+                                                                    0xff505050),
                                                             fontSize: 11.sp),
                                                       ),
-                                                      Container(
-                                                          child: Text(
-                                                        data['subcategory'],
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 12.sp),
-                                                      )),
                                                     ],
                                                   ),
                                                 ),
@@ -253,8 +242,8 @@ class _ChannelListState extends State<ChannelList> {
                                                                         SnackPosition
                                                                             .TOP,
                                                                     backgroundColor:
-                                                                        AppColors
-                                                                            .primaryColor,
+                                                                        Color(
+                                                                            0xff0101ff),
                                                                     colorText:
                                                                         Colors
                                                                             .white);
@@ -273,18 +262,17 @@ class _ChannelListState extends State<ChannelList> {
                                                                   SnackPosition
                                                                       .TOP,
                                                               backgroundColor:
-                                                                  AppColors
-                                                                      .primaryColor,
+                                                                  Color(
+                                                                      0xff0101ff),
                                                               colorText:
                                                                   Colors.white);
                                                     },
                                                     style: TextButton.styleFrom(
-                                                      backgroundColor:
-                                                          data['count'] == 1
-                                                              ? AppColors
-                                                                  .primaryColor
-                                                              : AppColors
-                                                                  .grey[500],
+                                                      backgroundColor: data[
+                                                                  'count'] ==
+                                                              1
+                                                          ? Color(0xff0101ff)
+                                                          : Color(0xff505050),
                                                       shape: new RoundedRectangleBorder(
                                                           borderRadius:
                                                               new BorderRadius

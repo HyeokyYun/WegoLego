@@ -4,18 +4,13 @@ import 'dart:ui';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:livq/screens/home/agora/pages/thank_you.dart';
 import 'package:livq/screens/home/agora/utils/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:livq/screens/home/agora/widgets/call_common.dart';
-import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
-import 'package:livq/screens/navigation/bottom_navigation.dart';
-import 'package:livq/theme/colors.dart';
-import 'package:livq/widgets/firebaseAuth.dart';
 import '../../../../config.dart';
-import '../widgets/pie_chart.dart';
-import '../widgets/heart.dart';
+import '../../../../firebaseAuth.dart';
+import '../../home.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
@@ -47,7 +42,7 @@ class _CallPageState extends State<CallPage_taker> {
   int _duration = 90;
   int getTime = 90;
 
-  Color sendColor = AppColors.primaryColor;
+  Color sendColor = Color(0xff0101ff);
 
   @override
   void dispose() {
@@ -159,7 +154,7 @@ class _CallPageState extends State<CallPage_taker> {
         late double d2;
 
         if (String.fromCharCodes(_coordinates).compareTo('end') == 0) {
-          Get.offAll(() => ThankYouPage());
+          Get.offAll(() => Home());
         }
       },
       streamMessageError: (_, __, error, ___, ____) {
@@ -298,12 +293,12 @@ class _CallPageState extends State<CallPage_taker> {
             onPressed: _onSwitchCamera,
             child: Icon(
               _common.videoOnOff ? Icons.videocam_off : Icons.videocam,
-              color: _common.videoOnOff ? Colors.white : AppColors.primaryColor,
+              color: _common.videoOnOff ? Colors.white : Color(0xff0101ff),
               size: 45.h,
             ),
             shape: const CircleBorder(),
             elevation: 4.0,
-            fillColor: _common.videoOnOff ? AppColors.grey[700] : Colors.white,
+            fillColor: _common.videoOnOff ? Colors.grey : Colors.white,
             padding: const EdgeInsets.all(12.0),
           ),
           SizedBox(
@@ -328,12 +323,12 @@ class _CallPageState extends State<CallPage_taker> {
             onPressed: _onToggleMute,
             child: Icon(
               _common.muted ? Icons.mic_off : Icons.mic,
-              color: _common.muted ? Colors.white : AppColors.primaryColor,
+              color: _common.muted ? Colors.white : Color(0xff0101ff),
               size: 45.h,
             ),
             shape: const CircleBorder(),
             elevation: 4.0,
-            fillColor: _common.muted ? AppColors.grey[700] : Colors.white,
+            fillColor: _common.muted ? Colors.grey : Colors.white,
             padding: const EdgeInsets.all(12.0),
           ),
         ],
@@ -344,7 +339,7 @@ class _CallPageState extends State<CallPage_taker> {
   void _onCallEnd(BuildContext context) {
     _common.engine.sendStreamMessage(
         _common.streamId!, Uint8List.fromList("end".codeUnits));
-    Get.offAll(() => ThankYouPage());
+    Get.offAll(() => Home());
   }
 
   void _onToggleMute() {
@@ -360,23 +355,6 @@ class _CallPageState extends State<CallPage_taker> {
     setState(() {
       _common.videoOnOff = !_common.videoOnOff;
     });
-  }
-
-  Widget circleDrawing(BuildContext context) {
-    // location = Offset(MediaQuery.of(context).size.width / 2,
-    //     MediaQuery.of(context).size.height / 2);
-    return Stack(
-      children: [
-        CustomPaint(
-          size: Size(Config.screenWidth! * 0.2, Config.screenWidth! * 0.2),
-          painter: PieChart(
-            percentage: _common.value,
-            location: _common.change,
-            getcolor: sendColor,
-          ),
-        ),
-      ],
-    );
   }
 
   Widget voiceOff(BuildContext context) {
@@ -408,239 +386,34 @@ class _CallPageState extends State<CallPage_taker> {
     );
   }
 
-  Widget waitingHelper(BuildContext context) {
-    return Scaffold(
-        body: Center(
-      child: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                children: [
-                  SizedBox(width: ScreenUtil().setWidth(20)),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '남은 매칭시간',
-                        style: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Color(0xFFF9A825)),
-                      ),
-                      SizedBox(
-                        height: 20.h,
-                      ),
-                      CircularCountDownTimer(
-                        // Countdown duration in Seconds.
-                        duration: _duration,
-
-                        // Countdown initial elapsed Duration in Seconds.
-                        initialDuration: 0,
-
-                        // Controls (i.e Start, Pause, Resume, Restart) the Countdown Timer.
-                        controller: _controller,
-
-                        // Width of the Countdown Widget.
-                        width: 50.w,
-
-                        // Height of the Countdown Widget.
-                        height: 50.w,
-
-                        // Ring Color for Countdown Widget.
-                        ringColor: AppColors.primaryColor[200]!, //200
-
-                        // Ring Gradient for Countdown Widget.
-                        ringGradient: null,
-
-                        // Filling Color for Countdown Widget.
-                        fillColor: AppColors.primaryColor[600]!, //600
-
-                        // Filling Gradient for Countdown Widget.
-                        fillGradient: null,
-
-                        // Background Color for Countdown Widget.
-                        backgroundColor: AppColors.primaryColor, //primary
-
-                        // Background Gradient for Countdown Widget.
-                        backgroundGradient: null,
-
-                        // Border Thickness of the Countdown Ring.
-                        strokeWidth: 20.0,
-
-                        // Begin and end contours with a flat edge and no extension.
-                        strokeCap: StrokeCap.round,
-
-                        // Text Style for Countdown Text.
-                        textStyle: TextStyle(
-                            fontSize: 15.0,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-
-                        // Format for the Countdown Text.
-                        textFormat: CountdownTextFormat.S,
-
-                        // Handles Countdown Timer (true for Reverse Countdown (max to 0), false for Forward Countdown (0 to max)).
-                        isReverse: true,
-
-                        // Handles Animation Direction (true for Reverse Animation, false for Forward Animation).
-                        isReverseAnimation: true,
-
-                        // Handles visibility of the Countdown Text.
-                        isTimerTextShown: true,
-
-                        // Handles the timer start.
-                        autoStart: false,
-
-                        // This Callback will execute when the Countdown Ends.
-                        onComplete: () {
-                          // Here, do whatever you want
-                          Get.snackbar("다시 연결하세요!", "다른이가 도와줄 거에요!",
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: AppColors.primaryColor,
-                              colorText: Colors.white);
-                          Get.find<ButtonController>().changetrue();
-                          Get.offAll(BottomNavigation());
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: ScreenUtil().setWidth(173)),
-                  // Column(
-                  //   children: [
-                  //     Icon(Icons.directions_bus,
-                  //         size: 32, color: Color(0xffADB5BD)),
-                  //     Text(
-                  //       '버스',
-                  //       style: TextStyle(
-                  //           fontSize: ScreenUtil().setSp(12),
-                  //           color: Color(0xFF868E96)),
-                  //     ),
-                  //   ],
-                  // )
-                ],
-              ),
-              SizedBox(height: ScreenUtil().setHeight(140)),
-              Container(
-                height: ScreenUtil().setHeight(91.04),
-                width: ScreenUtil().setWidth(63),
-                child: SvgPicture.asset(
-                  'assets/liveQ_logo.svg',
-                ),
-              ),
-              SizedBox(height: ScreenUtil().setHeight(30)),
-              Icon(Icons.circle,
-                  size: ScreenUtil().setHeight(8),
-                  color: getTime % 3 == 0
-                      ? AppColors.primaryColor[400]!
-                      : Colors.blueAccent),
-              SizedBox(height: ScreenUtil().setHeight(16)),
-              Icon(Icons.circle,
-                  size: ScreenUtil().setHeight(8),
-                  color: AppColors.primaryColor[600]!),
-              SizedBox(height: ScreenUtil().setHeight(16)),
-              Icon(Icons.circle,
-                  size: ScreenUtil().setHeight(8),
-                  color: AppColors.primaryColor),
-              Column(
-                children: [
-                  Column(children: [
-                    SizedBox(height: ScreenUtil().setHeight(18)),
-                    Text(
-                      '답변자 매칭 중이에요',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(18),
-                          color: Color(0xFF212529)),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(16)),
-                    Text(
-                      '매칭이 완료되면 실시간 화면',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(14),
-                          color: Color(0xFF212529)),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(1.3)),
-                    Text(
-                      '공유를 통해 질문을 할 수 있어요',
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(14),
-                          color: Color(0xFF212529)),
-                    ),
-                  ]),
-
-                  SizedBox(height: ScreenUtil().setHeight(144)),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(49),
-                    width: ScreenUtil().setHeight(287),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _controller.resume();
-                        FirebaseFirestore.instance
-                            .collection('videoCall')
-                            .doc(_auth.firebaseUser!.uid)
-                            .delete();
-                        Get.find<ButtonController>().changetrue();
-                        Get.offAll(BottomNavigation());
-                      },
-                      child: Text(
-                        '매칭 취소하기',
-                        style: TextStyle(
-                            fontSize: ScreenUtil().setSp(14),
-                            color: Colors.black),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: const Color(0xffE9ECEF),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(33),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  //SizedBox(height: ScreenUtil().setHeight(50)),
-                ],
-              ),
-            ]),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: _common.videoOnOff
-          ? Center(
-              child: Stack(
-                children: <Widget>[
-                  _turnoffcamera(),
-                  // if (heart == true) heartPop(),
-                  // _panel(),
-                  _common.muted ? voiceOff(context) : Container(),
-                  _toolbar(),
-                ],
-              ),
-            )
-          : _helperIn
-              ? Center(
-                  child: Stack(
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width / 3 * 4,
-                          child: _viewRows(),
-                        ),
+        backgroundColor: Colors.black,
+        body: _common.videoOnOff
+            ? Center(
+                child: Stack(
+                  children: <Widget>[
+                    _turnoffcamera(),
+                    _common.muted ? voiceOff(context) : Container(),
+                    _toolbar(),
+                  ],
+                ),
+              )
+            : Center(
+                child: Stack(
+                  children: <Widget>[
+                    Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width / 3 * 4,
+                        child: _viewRows(),
                       ),
-                      // if (heart == true) heartPop(),
-                      // _panel(),
-                      _common.muted ? voiceOff(context) : Container(),
-                      circleDrawing(context),
-                      _toolbar(),
-                    ],
-                  ),
-                )
-              : waitingHelper(context),
-    );
+                    ),
+                    _common.muted ? voiceOff(context) : Container(),
+                    _toolbar(),
+                  ],
+                ),
+              ));
   }
 }

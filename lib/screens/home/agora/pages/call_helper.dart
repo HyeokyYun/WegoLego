@@ -5,13 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:livq/screens/home/agora/utils/settings.dart';
 import 'package:livq/screens/home/agora/widgets/call_common.dart';
-import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
-import 'package:livq/screens/navigation/bottom_navigation.dart';
-import 'package:livq/theme/colors.dart';
-import 'package:livq/widgets/firebaseAuth.dart';
 import '../../../../config.dart';
-import '../widgets/pie_chart.dart';
-import '../widgets/heart.dart';
+import '../../../../firebaseAuth.dart';
+import '../../home.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
@@ -43,7 +39,7 @@ class _CallPageState extends State<CallPage_helper> {
   late String getdetails;
   late double nomalizationDx;
   late double nomalizationDy;
-  Color sendColor = AppColors.primaryColor;
+  Color sendColor = Color(0xff0101ff);
 
   @override
   void dispose() {
@@ -249,10 +245,10 @@ class _CallPageState extends State<CallPage_helper> {
   //       ),
   //       SpeedDialChild(
   //         child: Container(),
-  //         backgroundColor: AppColors.primaryColor,
+  //         backgroundColor: Color(0xff0101ff),
   //         onTap: () {
   //           setState(() {
-  //             sendColor = AppColors.primaryColor;
+  //             sendColor = Color(0xff0101ff);
   //           });
   //           _common.engine.sendStreamMessage(_common.streamId!, "primary");
   //         },
@@ -316,12 +312,12 @@ class _CallPageState extends State<CallPage_helper> {
             onPressed: _onToggleMute,
             child: Icon(
               _common.muted ? Icons.mic_off : Icons.mic,
-              color: _common.muted ? Colors.white : AppColors.primaryColor,
+              color: _common.muted ? Colors.white : Colors.amber,
               size: 45.h,
             ),
             shape: const CircleBorder(),
             elevation: 4.0,
-            fillColor: _common.muted ? AppColors.grey[700] : Colors.white,
+            fillColor: _common.muted ? Colors.grey : Colors.white,
             padding: const EdgeInsets.all(12.0),
           ),
         ],
@@ -336,7 +332,7 @@ class _CallPageState extends State<CallPage_helper> {
         .collection('users')
         .doc(_auth.uid)
         .update({'help': FieldValue.increment(1)});
-    Get.offAll(() => BottomNavigation());
+    Get.offAll(() => Home());
     //Navigator.pop(context);
   }
 
@@ -394,56 +390,6 @@ class _CallPageState extends State<CallPage_helper> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget circleDrawing(BuildContext context) {
-    return Stack(
-      children: [
-        Center(
-          child: GestureDetector(
-            onTapDown: (TapDownDetails details) {
-              setState(() {
-                location = details.localPosition;
-              });
-              _common.value = 0;
-              _common.timer =
-                  Timer.periodic(const Duration(milliseconds: 2), (t) {
-                setState(() {
-                  if (_common.value < 100) {
-                    _common.value++;
-                  } else {
-                    _common.subtract = (MediaQuery.of(context).size.height -
-                            (MediaQuery.of(context).size.width / 3 * 4)) /
-                        2;
-                    _common.timer.cancel();
-                    nomalizationDx = details.localPosition.dx /
-                        MediaQuery.of(context).size.width;
-                    nomalizationDy =
-                        (details.localPosition.dy - _common.subtract) /
-                            (MediaQuery.of(context).size.width / 3 * 4);
-                    getdetails = nomalizationDx.toString() +
-                        " " +
-                        nomalizationDy.toString() +
-                        "a";
-                    // _common.engine
-                    //     .sendStreamMessage(_common.streamId!, getdetails);
-                  }
-                });
-                //print('value $value');
-              });
-            },
-          ),
-        ),
-        CustomPaint(
-          size: Size(Config.screenWidth! * 0.2, Config.screenWidth! * 0.2),
-          painter: PieChart(
-            percentage: _common.value,
-            location: location,
-            getcolor: sendColor,
-          ),
-        ),
-      ],
     );
   }
 
@@ -505,7 +451,7 @@ class _CallPageState extends State<CallPage_helper> {
                     // if (heart == true) heartPop(),
                     // _panel(),
                     _common.muted ? voiceOff(context) : Container(),
-                    circleDrawing(context),
+
                     _toolbar(),
                   ],
                 ),
