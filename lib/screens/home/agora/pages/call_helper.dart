@@ -142,28 +142,28 @@ class _CallPageState extends State<CallPage_helper> {
           _common.infoStrings.add(info);
         });
       },
-      streamMessage: (_, __, coordinates) {
-        if (coordinates.compareTo('end') == 0) {
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(_auth.uid)
-              .update({'help': FieldValue.increment(1)});
-          Get.offAll(() => BottomNavigation());
-          // Navigator.pop(context);
-        } else if (coordinates.compareTo('onoffVideo') == 0) {
-          setState(() {
-            _common.videoOnOff = !_common.videoOnOff;
-          });
-        } else if (coordinates.compareTo('heart') == 0) {
-          // popUp();
-        } else if (coordinates.compareTo(uid_check) == 0) {
-          if (pass_check) {
-            Get.offAll(() => BottomNavigation());
+      // streamMessage: (_, __, coordinates) {
+      //   if (coordinates.compareTo('end') == 0) {
+      //     FirebaseFirestore.instance
+      //         .collection('users')
+      //         .doc(_auth.uid)
+      //         .update({'help': FieldValue.increment(1)});
+      //     Get.offAll(() => BottomNavigation());
+      //     // Navigator.pop(context);
+      //   } else if (coordinates.compareTo('onoffVideo') == 0) {
+      //     setState(() {
+      //       _common.videoOnOff = !_common.videoOnOff;
+      //     });
+      //   } else if (coordinates.compareTo('heart') == 0) {
+      //     // popUp();
+      //   } else if (coordinates.compareTo(uid_check) == 0) {
+      //     if (pass_check) {
+      //       Get.offAll(() => BottomNavigation());
 
-            //Navigator.pop(context);
-          }
-        }
-      },
+      //       //Navigator.pop(context);
+      //     }
+      //   }
+      // },
       streamMessageError: (_, __, error, ___, ____) {
         final String info = "here is the error $error";
         print(info);
@@ -177,7 +177,7 @@ class _CallPageState extends State<CallPage_helper> {
     //if (widget.role == ClientRole.Broadcaster) {}
     for (var uid in _common.users) {
       list.add(RtcRemoteView.SurfaceView(
-          uid: uid, renderMode: VideoRenderMode.FILL));
+          channelId: "test", uid: uid, renderMode: VideoRenderMode.FILL));
     }
     list.add(RtcLocalView.SurfaceView(renderMode: VideoRenderMode.FILL));
     return list;
@@ -221,68 +221,68 @@ class _CallPageState extends State<CallPage_helper> {
     return Container();
   }
 
-  Widget _changeCholor() {
-    return SpeedDial(
-      icon: Icons.color_lens,
-      activeIcon: Icons.color_lens_outlined,
-      foregroundColor: sendColor,
-      backgroundColor: AppColors.grey,
-      activeForegroundColor: sendColor,
-      activeBackgroundColor: AppColors.grey,
-      spacing: 3,
-      spaceBetweenChildren: 4,
-      buttonSize: Size(73.h, 73.h),
-      childrenButtonSize: Size(37.w, 37.h),
-      renderOverlay: false,
-      elevation: 0.0,
-      children: [
-        SpeedDialChild(
-          child: Container(),
-          backgroundColor: AppColors.grey[50],
-          onTap: () {
-            setState(() {
-              sendColor = AppColors.grey[50]!;
-            });
-            _common.engine.sendStreamMessage(_common.streamId!, "grey");
-          },
-          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-        ),
-        SpeedDialChild(
-          child: Container(),
-          backgroundColor: AppColors.primaryColor,
-          onTap: () {
-            setState(() {
-              sendColor = AppColors.primaryColor;
-            });
-            _common.engine.sendStreamMessage(_common.streamId!, "primary");
-          },
-          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-        ),
-        SpeedDialChild(
-          child: Container(),
-          backgroundColor: AppColors.secondaryColor,
-          onTap: () {
-            setState(() {
-              sendColor = AppColors.secondaryColor;
-            });
-            _common.engine.sendStreamMessage(_common.streamId!, "secondary");
-          },
-          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-        ),
-        SpeedDialChild(
-          child: Container(),
-          backgroundColor: Colors.red,
-          onTap: () {
-            setState(() {
-              sendColor = Colors.red;
-            });
-            _common.engine.sendStreamMessage(_common.streamId!, "red");
-          },
-          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-        ),
-      ],
-    );
-  }
+  // Widget _changeCholor() {
+  //   return SpeedDial(
+  //     icon: Icons.color_lens,
+  //     activeIcon: Icons.color_lens_outlined,
+  //     foregroundColor: sendColor,
+  //     backgroundColor: AppColors.grey,
+  //     activeForegroundColor: sendColor,
+  //     activeBackgroundColor: AppColors.grey,
+  //     spacing: 3,
+  //     spaceBetweenChildren: 4,
+  //     buttonSize: Size(73.h, 73.h),
+  //     childrenButtonSize: Size(37.w, 37.h),
+  //     renderOverlay: false,
+  //     elevation: 0.0,
+  //     children: [
+  //       SpeedDialChild(
+  //         child: Container(),
+  //         backgroundColor: AppColors.grey[50],
+  //         onTap: () {
+  //           setState(() {
+  //             sendColor = AppColors.grey[50]!;
+  //           });
+  //           _common.engine.sendStreamMessage(_common.streamId!, "grey");
+  //         },
+  //         // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+  //       ),
+  //       SpeedDialChild(
+  //         child: Container(),
+  //         backgroundColor: AppColors.primaryColor,
+  //         onTap: () {
+  //           setState(() {
+  //             sendColor = AppColors.primaryColor;
+  //           });
+  //           _common.engine.sendStreamMessage(_common.streamId!, "primary");
+  //         },
+  //         // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+  //       ),
+  //       SpeedDialChild(
+  //         child: Container(),
+  //         backgroundColor: AppColors.secondaryColor,
+  //         onTap: () {
+  //           setState(() {
+  //             sendColor = AppColors.secondaryColor;
+  //           });
+  //           _common.engine.sendStreamMessage(_common.streamId!, "secondary");
+  //         },
+  //         // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+  //       ),
+  //       SpeedDialChild(
+  //         child: Container(),
+  //         backgroundColor: Colors.red,
+  //         onTap: () {
+  //           setState(() {
+  //             sendColor = Colors.red;
+  //           });
+  //           _common.engine.sendStreamMessage(_common.streamId!, "red");
+  //         },
+  //         // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   /// Toolbar layout
   Widget _toolbar() {
@@ -293,7 +293,7 @@ class _CallPageState extends State<CallPage_helper> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _changeCholor(),
+          // _changeCholor(),
           SizedBox(
             width: 33.w,
           ),
@@ -330,7 +330,7 @@ class _CallPageState extends State<CallPage_helper> {
   }
 
   void _onCallEnd(BuildContext context) {
-    _common.engine.sendStreamMessage(_common.streamId!, "end");
+    // _common.engine.sendStreamMessage(_common.streamId!, "end");
     // Get.back();
     FirebaseFirestore.instance
         .collection('users')
@@ -426,8 +426,8 @@ class _CallPageState extends State<CallPage_helper> {
                         " " +
                         nomalizationDy.toString() +
                         "a";
-                    _common.engine
-                        .sendStreamMessage(_common.streamId!, getdetails);
+                    // _common.engine
+                    //     .sendStreamMessage(_common.streamId!, getdetails);
                   }
                 });
                 //print('value $value');
@@ -511,118 +511,4 @@ class _CallPageState extends State<CallPage_helper> {
                 ),
               ));
   }
-
-  /*
-  사용하지 않는 것
-
-  //bool heart = false;
-  final _random = math.Random();
-  late Timer _timer;
-  double height = 0.0;
-  final int _numConfetti = 10;
-  var len;
-  bool accepted = false;
-  bool stop = false;
-
-  void popUp() async {
-    setState(() {
-      heart = true;
-    });
-
-    _timer = Timer.periodic(const Duration(milliseconds: 125), (Timer t) {
-      setState(() {
-        height += _random.nextInt(20);
-      });
-    });
-
-    Timer(
-        const Duration(seconds: 4),
-        () => {
-              _timer.cancel(),
-              setState(() {
-                heart = false;
-              })
-            });
-  }
-
-  Widget heartPop() {
-    final size = MediaQuery.of(context).size;
-    final confetti = <Widget>[];
-    for (var i = 0; i < _numConfetti; i++) {
-      final height = _random.nextInt(size.height.floor());
-      final width = 0;
-      confetti.add(HeartAnim(
-        height % 300.0,
-        //width.toDouble(),
-        1,
-      ));
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: SizedBox(
-          //height: 0,
-          width: (MediaQuery.of(context).size.width / 2),
-          child: Stack(
-            children: confetti,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Info panel to show logs
-  Widget _panel() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      alignment: Alignment.bottomCenter,
-      child: FractionallySizedBox(
-        heightFactor: 0.5,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 48),
-          child: ListView.builder(
-            reverse: true,
-            itemCount: _infoStrings.length,
-            itemBuilder: (BuildContext context, int index) {
-              if (_infoStrings.isEmpty) {
-                return const Text(
-                    "null"); // return type can't be null, a widget was required
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 3,
-                  horizontal: 10,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 2,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.yellowAccent,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          _infoStrings[index],
-                          style: const TextStyle(color: Colors.blueGrey),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-   */
 }

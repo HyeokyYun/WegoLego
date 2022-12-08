@@ -120,69 +120,6 @@ class _HomeState extends State<Home> {
                         return Container();
                       },
                     ),
-
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Row(
-                    //       children: [
-                    //         Column(
-                    //           children: [
-                    //             _textWidget( "참여 중인 답변자", AppTextStyle.koBody2
-                    //                 .copyWith(color: Colors.black)),
-                    //             StreamBuilder<QuerySnapshot>(
-                    //               stream: _usersStream,
-                    //               builder: (context, snapshot) {
-                    //                 if (snapshot.hasData) {
-                    //                   return Text(
-                    //                     "${snapshot.data?.docs.length}명",
-                    //                     style: TextStyle(
-                    //                       fontSize: 22.sp,
-                    //                       // fontWeight: FontWeight.bold,
-                    //                       color: Color(0xffF57F17),
-                    //                     ),
-                    //                   );
-                    //                 } else {
-                    //                   return Container();
-                    //                 }
-                    //               },
-                    //             )
-                    //           ],
-                    //         ),
-                    //
-                    //         Column(
-                    //           children: [
-                    //             Text(
-                    //               "진행 중인 질의응답",
-                    //               style: AppTextStyle.koBody2
-                    //                   .copyWith(color: Colors.black),
-                    //             ),
-                    //             StreamBuilder<DocumentSnapshot>(
-                    //               stream: _askCountStream,
-                    //               builder: (context,
-                    //                   AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    //                 final getdata = snapshot.data;
-                    //                 if (snapshot.hasData) {
-                    //                   return Text(
-                    //                     '${getdata?["count"]}건',
-                    //                     style: TextStyle(
-                    //                       fontSize: 22.sp,
-                    //                       // fontWeight: FontWeight.bold,
-                    //                       color: AppColors.secondaryColor[500],
-                    //                     ),
-                    //                   );
-                    //                 } else {
-                    //                   return Container();
-                    //                 }
-                    //               },
-                    //             )
-                    //           ],
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
-
                     Center(
                       child: Column(
                         children: [

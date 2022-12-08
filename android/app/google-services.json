@@ -1,145 +1,34 @@
 {
   "project_info": {
-    "project_number": "414758807086",
-    "project_id": "wegolego-bf94b",
-    "storage_bucket": "wegolego-bf94b.appspot.com"
+    "project_number": "19232164854",
+    "project_id": "wegolegoexport",
+    "storage_bucket": "wegolegoexport.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:414758807086:android:d3b5ceffc8a9c76a7661bf",
-        "android_client_info": {
-          "package_name": "com.anew.flutter_final_livq"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "414758807086-fk302i9q7as5289dt8enpukuqrakjlpi.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.anew.flutter_final_livq",
-            "certificate_hash": "9b699f2381d48bc89e9057f8a020c69622753216"
-          }
-        },
-        {
-          "client_id": "414758807086-c8s31q2hub0e29ou7sm231ba6p6dfql0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAzciMPCX_G_NashU81Cv-FnwuBYuckk2Y"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "414758807086-c8s31q2hub0e29ou7sm231ba6p6dfql0.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "414758807086-se5cnq2p8rc497bqgi0sjjpkh0fj7c9n.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.wegolego.moomool5"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:414758807086:android:a504d53dc8e285d27661bf",
+        "mobilesdk_app_id": "1:19232164854:android:c19a3b23c73bfa2b2895d7",
         "android_client_info": {
           "package_name": "com.apple.wegolego"
         }
       },
       "oauth_client": [
         {
-          "client_id": "414758807086-m9ot8sv66ug6ipe8pchhaiadsgqq278i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.apple.wegolego",
-            "certificate_hash": "1f70f9551eb0f841811f29f889a65d6d723e6ece"
-          }
-        },
-        {
-          "client_id": "414758807086-u9fd86kp9m4clu90s5gtaflsal7ggv3p.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.apple.wegolego",
-            "certificate_hash": "22ff23a087e8b81220f7ef283c9760da57139abb"
-          }
-        },
-        {
-          "client_id": "414758807086-c8s31q2hub0e29ou7sm231ba6p6dfql0.apps.googleusercontent.com",
+          "client_id": "19232164854-fqr8pcborcj641eimn9fpnr6b0gopj2s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAzciMPCX_G_NashU81Cv-FnwuBYuckk2Y"
+          "current_key": "AIzaSyCEnTwiNWrdSpCM5I7B1q74Qtjuz_L7Sn0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "414758807086-c8s31q2hub0e29ou7sm231ba6p6dfql0.apps.googleusercontent.com",
+              "client_id": "19232164854-fqr8pcborcj641eimn9fpnr6b0gopj2s.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "414758807086-se5cnq2p8rc497bqgi0sjjpkh0fj7c9n.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.wegolego.moomool5"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:414758807086:android:4de1ac23958039027661bf",
-        "android_client_info": {
-          "package_name": "com.example.wegolego_v015"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "414758807086-40punf30rdbg1pfm3qr5h5bf5aealcrf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.wegolego_v015",
-            "certificate_hash": "b8872c5126c1102646f42af91d982682251e7e51"
-          }
-        },
-        {
-          "client_id": "414758807086-c8s31q2hub0e29ou7sm231ba6p6dfql0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAzciMPCX_G_NashU81Cv-FnwuBYuckk2Y"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "414758807086-c8s31q2hub0e29ou7sm231ba6p6dfql0.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "414758807086-se5cnq2p8rc497bqgi0sjjpkh0fj7c9n.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.wegolego.moomool5"
-              }
             }
           ]
         }

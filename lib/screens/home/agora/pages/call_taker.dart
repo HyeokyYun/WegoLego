@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -157,50 +158,8 @@ class _CallPageState extends State<CallPage_taker> {
         late double d1;
         late double d2;
 
-        if (_coordinates.compareTo('end') == 0) {
+        if (String.fromCharCodes(_coordinates).compareTo('end') == 0) {
           Get.offAll(() => ThankYouPage());
-        } else if (_coordinates.compareTo('grey') == 0) {
-          setState(() {
-            sendColor = AppColors.grey[50]!;
-          });
-        } else if (_coordinates.compareTo('primary') == 0) {
-          setState(() {
-            sendColor = AppColors.primaryColor;
-          });
-        } else if (_coordinates.compareTo('secondary') == 0) {
-          setState(() {
-            sendColor = AppColors.secondaryColor;
-          });
-        } else if (_coordinates.compareTo('red') == 0) {
-          setState(() {
-            sendColor = Colors.red;
-          });
-        } else {
-          _common.subtract = (MediaQuery.of(context).size.height -
-                  (MediaQuery.of(context).size.width / 3 * 4)) /
-              2;
-          first = _coordinates.substring(0, _coordinates.indexOf(' '));
-          second = _coordinates.substring(
-              _coordinates.indexOf(' '), _coordinates.indexOf('a'));
-          d1 = double.parse(first);
-          d2 = double.parse(second);
-          _common.change = Offset(
-              d1 * MediaQuery.of(context).size.width,
-              d2 * MediaQuery.of(context).size.width / 3 * 4 +
-                  _common.subtract);
-          setState(() {
-            _common.value = 0;
-            _common.timer =
-                Timer.periodic(const Duration(milliseconds: 3), (t) {
-              setState(() {
-                if (_common.value < 100) {
-                  _common.value++;
-                } else {
-                  _common.timer.cancel();
-                }
-              });
-            });
-          });
         }
       },
       streamMessageError: (_, __, error, ___, ____) {
@@ -219,6 +178,7 @@ class _CallPageState extends State<CallPage_taker> {
     ));
     for (var uid in _common.users) {
       list.add(RtcRemoteView.SurfaceView(
+        channelId: "test",
         uid: uid,
         renderMode: VideoRenderMode.FILL,
       ));
@@ -382,7 +342,8 @@ class _CallPageState extends State<CallPage_taker> {
   }
 
   void _onCallEnd(BuildContext context) {
-    _common.engine.sendStreamMessage(_common.streamId!, "end");
+    _common.engine.sendStreamMessage(
+        _common.streamId!, Uint8List.fromList("end".codeUnits));
     Get.offAll(() => ThankYouPage());
   }
 
@@ -394,7 +355,8 @@ class _CallPageState extends State<CallPage_taker> {
   }
 
   void _onSwitchCamera() {
-    _common.engine.sendStreamMessage(_common.streamId!, "onoffVideo");
+    _common.engine.sendStreamMessage(
+        _common.streamId!, Uint8List.fromList("onoffVideo".codeUnits));
     setState(() {
       _common.videoOnOff = !_common.videoOnOff;
     });
