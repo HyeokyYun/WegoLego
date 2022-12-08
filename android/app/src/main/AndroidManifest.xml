@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apple.wegolego">
+    package="com.wegolego.livq">
    <application
         android:label="LivQ"
         android:name="${applicationName}"

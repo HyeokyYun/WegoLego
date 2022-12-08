@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCEnTwiNWrdSpCM5I7B1q74Qtjuz_L7Sn0',
-    appId: '1:19232164854:android:c19a3b23c73bfa2b2895d7',
+    appId: '1:19232164854:android:687b25ac7f1203e72895d7',
     messagingSenderId: '19232164854',
     projectId: 'wegolegoexport',
     storageBucket: 'wegolegoexport.appspot.com',
