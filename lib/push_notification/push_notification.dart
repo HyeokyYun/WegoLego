@@ -6,12 +6,11 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
-
-class NotificationService{
+class NotificationService {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   //String? token;
   static const String serverKey =
-'AAAAYJGNJi4:APA91bEzEuA2FMkTx27heVa728NpaaKn7y51zfsT5wngt54-l8fYRuL4cf43d7baQM1lhzqwfpIpQAr8000X3qOk7EAEDtKuKeCSKMqp8l_jDmE5Ov9SxXqC2r8TPCuJp3fFnQRdNG-x' ;
+      'AAAAYJGNJi4:APA91bEzEuA2FMkTx27heVa728NpaaKn7y51zfsT5wngt54-l8fYRuL4cf43d7baQM1lhzqwfpIpQAr8000X3qOk7EAEDtKuKeCSKMqp8l_jDmE5Ov9SxXqC2r8TPCuJp3fFnQRdNG-x';
   //NotificationService.getTokenAndUpdate(currentUserId);
 
   static getTokenAndUpdate(String username) async {
@@ -19,24 +18,34 @@ class NotificationService{
     String? token = await firebaseMessaging.getToken();
     print("FirebaseMessaging token: $token");
 
-    await FirebaseFirestore.instance.collection('users').doc(username).update({'token': token});
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(username)
+        .update({'token': token});
   }
 
-  static Future sendNotification(String title, String message) async {
+  static Future sendNotification(
+      String title, String message, String friendUid) async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
     List<String> tokens = [];
     await firebaseMessaging.requestPermission(
-        sound: true,
-        badge: true,
-        alert: true,
-        provisional: false
-    );
+        sound: true, badge: true, alert: true, provisional: false);
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('users').get();
-      for (var element in querySnapshot.docs) {
-        tokens.add((element.data() as dynamic)["token"]);
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('users').get();
+
+      if (friendUid != "") {
+        for (var element in querySnapshot.docs) {
+          if (element.id == friendUid)
+            tokens.add((element.data() as dynamic)["token"]);
+        }
+      } else {
+        for (var element in querySnapshot.docs) {
+          tokens.add((element.data() as dynamic)["token"]);
+        }
       }
+
       //if (ds.data()!["token"] != null) {
       if (tokens != null) {
         //String userToken = ds.data()!["token"];

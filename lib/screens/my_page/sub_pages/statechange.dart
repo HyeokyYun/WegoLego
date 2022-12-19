@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:livq/widgets/common_widget.dart';
 
 class StateChange extends StatelessWidget {
-  // const Question({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          title: Text(
-            '활동상태 설정',
-            //   style: appbartitlestyle(),
-          ),
+            icon: Icon(Icons.arrow_back, color: Colors.black), onPressed: () {Get.back();},),
+          title: Text('활동상태 설정',),
           backgroundColor: Colors.white,
         ),
         body: Center(
@@ -31,19 +23,12 @@ class StateChange extends StatelessWidget {
                   shape: BoxShape.circle,
                   image: new DecorationImage(
                     fit: BoxFit.fill,
-                    image: new NetworkImage(
-                      "https://drive.google.com/uc?export=view&id=1YZyTxIshyloO3YvQhMH5g4fSiIXOfM4m",
-                    ),
+                    image: new NetworkImage("https://drive.google.com/uc?export=view&id=1YZyTxIshyloO3YvQhMH5g4fSiIXOfM4m",),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
-              Text(
-                "준비중입니다!! 다음 버전에서 만나뵙겠습니다!",
-                //   style: body14Style(),
-              )
+              sizedBoxWidget(0, 10),
+              textWidget("준비중입니다!! 다음 버전에서 만나뵙겠습니다!", TextStyle())
             ],
           ),
         ));
