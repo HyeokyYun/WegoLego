@@ -9,6 +9,7 @@ import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 
 class ThankYouPage extends StatefulWidget {
   const ThankYouPage({Key? key}) : super(key: key);
@@ -22,11 +23,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
   bool ifGoBack = false;
   TextEditingController _thankController = TextEditingController();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
-
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
 
   Widget ifGetHelp(BuildContext context) {
     return Center(
@@ -215,7 +212,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
                       setState(() {
                         FirebaseFirestore.instance
                             .collection('videoCall')
-                            .doc(firebaseUser!.uid)
+                            .doc(_auth.name)
                             .delete();
                         Get.offAll(BottomNavigation());
                       });
@@ -246,13 +243,13 @@ class _ThankYouPageState extends State<ThankYouPage> {
                       String? helperUid;
                       FirebaseFirestore.instance
                           .collection('videoCall')
-                          .doc(firebaseUser!.uid)
+                          .doc(_auth.uid)
                           .get()
                           .then((DocumentSnapshot documentSnapshot) {
                         helperUid = documentSnapshot.get('helper');
                         FirebaseFirestore.instance
                             .collection('users')
-                            .doc(firebaseUser!.uid)
+                            .doc(_auth.uid)
                             .update({'ask': FieldValue.increment(1)});
                         FirebaseFirestore.instance
                             .collection('users')
@@ -264,13 +261,13 @@ class _ThankYouPageState extends State<ThankYouPage> {
                             .collection('thankLetter')
                             .add({
                           'thankLetter': _thankController.text,
-                          'name': firebaseUser!.displayName,
+                          'name': _auth.name,
                           "timeRegister":
                               DateTime.now().millisecondsSinceEpoch.toString(),
                         }).then((value) {
                           FirebaseFirestore.instance
                               .collection('videoCall')
-                              .doc(firebaseUser!.uid)
+                              .doc(_auth.uid)
                               .delete();
                           Get.find<ButtonController>().changetrue();
                           Get.offAll(BottomNavigation());
@@ -338,7 +335,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
                 Get.find<ButtonController>().changetrue();
                 FirebaseFirestore.instance
                     .collection('videoCall')
-                    .doc(firebaseUser!.uid)
+                    .doc(_auth.uid)
                     .delete();
                 Get.offAll(BottomNavigation());
               },

@@ -1,13 +1,9 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
-
-import '/screens/home/agora/pages/call_helper.dart';
-import 'package:livq/screens/home/home.dart';
+import 'package:livq/widgets/common_widget.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
@@ -20,15 +16,13 @@ class ThankyouLetters extends StatefulWidget {
 }
 
 class _ThankyouLettersState extends State<ThankyouLetters> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
 
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseUser!.uid)
+        .doc(_auth.uid)
         .collection('thankLetter')
         .orderBy("timeRegister", descending: true)
         .snapshots();
@@ -95,8 +89,7 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
                                 document.data()! as Map<String, dynamic>;
                             return Card(
                               shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(10.0)),
+                                  borderRadius: new BorderRadius.circular(10.0)),
                               elevation: 10.0,
                               shadowColor: AppColors.grey[100],
                               color: AppColors.primaryColor[50],
@@ -105,36 +98,20 @@ class _ThankyouLettersState extends State<ThankyouLetters> {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 20, 10),
                                   child: Container(
-                                    // height:
-                                    //Config.screenHeight! * 0.103,
                                     width: 350.w,
-                                    //Config.screenWidth! * 0.322,
-
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Row(
                                           children: [
                                             Container(
                                               width: 260.w,
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 10.h,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [textWidget(data['name'] + "님의 감사편지",AppTextStyle.koBody2,
                                                   ),
-                                                  Text(
-                                                    data['name'] + "님의 감사편지",
-                                                    style: AppTextStyle.koBody2,
-                                                  ),
-                                                  Container(
-                                                      child: Text(
-                                                    data['thankLetter'],
-                                                    style: AppTextStyle.koBody1,
+                                                  Container(child: textWidget(data['thankLetter'],AppTextStyle.koBody1,
                                                   )),
                                                 ],
                                               ),

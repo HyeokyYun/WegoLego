@@ -38,13 +38,8 @@ class _SignUpState extends State<SignUp> {
     return (GetBuilder<AuthController>(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          // title: const Text('Sign Up',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(color: Colors.black),
-          // ),
           elevation: 0.0,
           backgroundColor: Colors.white,
-
           leading: _.isEmailSignIn.value
               ? IconButton(
                   icon: Icon(Icons.arrow_back),

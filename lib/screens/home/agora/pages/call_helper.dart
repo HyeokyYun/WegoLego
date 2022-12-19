@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:livq/screens/home/agora/utils/settings.dart';
+import 'package:livq/screens/home/agora/widgets/pie_chart.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
 import '../../../../config.dart';
-import 'pie_chart.dart';
-import 'heart.dart';
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
@@ -252,7 +252,6 @@ class _CallPageState extends State<CallPage_helper> {
     }
     return Container();
   }
-
   */
 
   /// Toolbar layout
@@ -555,7 +554,6 @@ class _CallPageState extends State<CallPage_helper> {
 
   /*
   사용하지 않는 것
-
   //bool heart = false;
   final _random = math.Random();
   late Timer _timer;
@@ -564,18 +562,15 @@ class _CallPageState extends State<CallPage_helper> {
   var len;
   bool accepted = false;
   bool stop = false;
-
   void popUp() async {
     setState(() {
       heart = true;
     });
-
     _timer = Timer.periodic(const Duration(milliseconds: 125), (Timer t) {
       setState(() {
         height += _random.nextInt(20);
       });
     });
-
     Timer(
         const Duration(seconds: 4),
         () => {
@@ -585,7 +580,6 @@ class _CallPageState extends State<CallPage_helper> {
               })
             });
   }
-
   Widget heartPop() {
     final size = MediaQuery.of(context).size;
     final confetti = <Widget>[];
@@ -598,7 +592,6 @@ class _CallPageState extends State<CallPage_helper> {
         1,
       ));
     }
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Align(
@@ -613,7 +606,6 @@ class _CallPageState extends State<CallPage_helper> {
       ),
     );
   }
-
   /// Info panel to show logs
   Widget _panel() {
     return Container(
@@ -664,6 +656,5 @@ class _CallPageState extends State<CallPage_helper> {
       ),
     );
   }
-
    */
 }

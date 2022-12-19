@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.apple.wegolego">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="LivQ"
         android:name="${applicationName}"
