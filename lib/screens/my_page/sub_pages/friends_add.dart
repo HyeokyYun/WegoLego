@@ -12,7 +12,6 @@ import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'package:livq/widgets/SearchScaffold.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:firestore_search/firestore_search.dart';
 
 class FriendAddPage extends StatefulWidget {
   @override
@@ -38,8 +37,6 @@ class _FriendState extends State<FriendAddPage> {
 
   @override
   Widget build(BuildContext context) {
-
-
     Get.put(ButtonController());
 
     return SearchScaffold(
@@ -69,7 +66,6 @@ class _FriendState extends State<FriendAddPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -90,32 +86,31 @@ class _FriendState extends State<FriendAddPage> {
                                 '${data.name}',
                                 style: TextStyle(
                                     fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold
-                                ),
-
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
-                          ElevatedButton(onPressed: (){
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(firebaseUser!.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayUnion([data.uid]),
-                            });
+                          ElevatedButton(
+                            onPressed: () {
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(firebaseUser!.uid)
+                                  .update({
+                                "frienduid": FieldValue.arrayUnion([data.uid]),
+                              });
 
-                            FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(data.uid)
-                                .update({
-                              "frienduid":
-                              FieldValue.arrayUnion([firebaseUser!.uid]),
-                            });
-                          },
+                              FirebaseFirestore.instance
+                                  .collection("users")
+                                  .doc(data.uid)
+                                  .update({
+                                "frienduid":
+                                    FieldValue.arrayUnion([firebaseUser!.uid]),
+                              });
+                            },
                             child: Text(
                               "추가하기",
-                              style: TextStyle(fontSize: 11.sp, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 11.sp, color: Colors.white),
                             ),
                             style: ElevatedButton.styleFrom(
                               //  padding: EdgeInsets.all(10.sp),
@@ -125,7 +120,8 @@ class _FriendState extends State<FriendAddPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
-                            ),)
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -146,9 +142,5 @@ class _FriendState extends State<FriendAddPage> {
         );
       },
     );
-
-
   }
-
-
 }
