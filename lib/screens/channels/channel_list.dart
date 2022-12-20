@@ -2,6 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:livq/theme/colors.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 
 import '/screens/home/agora/pages/call_helper.dart';
 import 'package:livq/screens/home/home.dart';
@@ -20,9 +21,7 @@ class ChannelList extends StatefulWidget {
 }
 
 class _ChannelListState extends State<ChannelList> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
 
   final List<IconData> _iconTypes = [
     Icons.directions_bus,
@@ -194,8 +193,7 @@ class _ChannelListState extends State<ChannelList> {
                                                                     .update({
                                                                   'count': 2,
                                                                   'helper':
-                                                                      firebaseUser!
-                                                                          .uid,
+                                                                      _auth.uid,
                                                                 });
                                                                 //taker의 리스트에 저장
                                                                 FirebaseFirestore
@@ -209,11 +207,10 @@ class _ChannelListState extends State<ChannelList> {
                                                                     .add({
                                                                   "isHelper":
                                                                       false,
-                                                                  "name": firebaseUser!
-                                                                      .displayName,
+                                                                  "name": _auth
+                                                                      .name,
                                                                   "uid":
-                                                                      firebaseUser!
-                                                                          .uid,
+                                                                      _auth.uid,
                                                                   "question": data[
                                                                       'subcategory'],
                                                                   "timeRegister": DateTime
@@ -229,8 +226,7 @@ class _ChannelListState extends State<ChannelList> {
                                                                     .collection(
                                                                         'users')
                                                                     .doc(
-                                                                      firebaseUser!
-                                                                          .uid,
+                                                                      _auth.uid,
                                                                     )
                                                                     .collection(
                                                                         'callHistory')
