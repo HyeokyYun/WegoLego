@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
         designSize: Size(376, 812),
-        builder: (_, child) => GetMaterialApp(
+        builder: () => GetMaterialApp(
               initialBinding: ControllerBindings(),
               debugShowCheckedModeBanner: false,
               home: AnimatedSplashScreen(

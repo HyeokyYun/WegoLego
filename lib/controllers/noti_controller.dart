@@ -49,13 +49,12 @@ class NotiController extends GetxController {
 
     // FlutterLocalNotificationsPlugin 초기화. 이 부분은 notification icon 부분에서 다시 다룬다.
     await flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-          iOS: DarwinInitializationSettings()),
-      // onSelectNotification: (String? payload) async {
-      //   Get.to(() => const ChannelList());
-      // }
-    );
+        const InitializationSettings(
+            android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+            iOS: IOSInitializationSettings()),
+        onSelectNotification: (String? payload) async {
+      Get.to(() => const ChannelList());
+    });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage rm) {
       message.value = rm;
