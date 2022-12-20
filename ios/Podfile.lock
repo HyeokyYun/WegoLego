@@ -338,7 +338,7 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
-  - agora_rtc_engine (4.2.0):
+  - agora_rtc_engine (4.2.2):
     - AgoraRtcEngine_iOS (= 3.5.2)
     - Flutter
   - AgoraRtcEngine_iOS (3.5.2)
@@ -602,7 +602,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
-  agora_rtc_engine: 15f0ee1b38dda52b237f66674aac1285f3ea16ae
+  agora_rtc_engine: 8f2143405d2d444529a22a313eb0f4a213f1813e
   AgoraRtcEngine_iOS: 3d13806d67e401298558c9a6fb09340a4299afa2
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879

@@ -9,6 +9,7 @@ import 'package:livq/screens/my_page/sub_pages/individual_information.dart';
 import 'package:livq/screens/my_page/sub_pages/terms_and_conditions.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -30,12 +31,7 @@ class _mySettingPageState extends State<mySettingPage> {
   final TextEditingController _nameController = TextEditingController();
   late String userName;
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
-
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
 
   PickedFile? _image;
 
@@ -58,7 +54,7 @@ class _mySettingPageState extends State<mySettingPage> {
     String title = "";
     FirebaseFirestore.instance
         .collection("users")
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .get()
         .then((DocumentSnapshot ds) {
       photoURL = ds["photoURL"];
@@ -67,7 +63,7 @@ class _mySettingPageState extends State<mySettingPage> {
 
     Stream<DocumentSnapshot> _photoURLStream = FirebaseFirestore.instance
         .collection('users')
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .snapshots();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -307,7 +303,7 @@ class _mySettingPageState extends State<mySettingPage> {
                                     if (_formKey.currentState!.validate()) {
                                       FirebaseFirestore.instance
                                           .collection('users')
-                                          .doc(userProfile!.uid)
+                                          .doc(_auth.uid)
                                           .update(
                                               {'name': _nameController.text});
 
@@ -315,10 +311,10 @@ class _mySettingPageState extends State<mySettingPage> {
                                         setState(() {
                                           _authController.displayName =
                                               _nameController.text;
-                                          firebaseUser?.updateDisplayName(
+                                          _auth.firebaseUser?.updateDisplayName(
                                               _nameController.text);
                                           userName = _nameController.text;
-                                          print(userName);
+
                                           ifChangeName = false;
                                         });
                                       });
@@ -479,16 +475,16 @@ class _mySettingPageState extends State<mySettingPage> {
       _image = image;
     });
     await firebase_storage.FirebaseStorage.instance
-        .ref("profile/${userProfile!.uid}")
+        .ref("profile/${_auth.uid}")
         .putFile(File(_image!.path));
     downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref("profile/${userProfile!.uid}")
+        .ref("profile/${_auth.uid}")
         .getDownloadURL();
     uploadURL = downloadURL;
 
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .update({'photoURL': uploadURL});
   }
 
@@ -502,16 +498,16 @@ class _mySettingPageState extends State<mySettingPage> {
     });
 
     await firebase_storage.FirebaseStorage.instance
-        .ref("profile/${userProfile!.uid}")
+        .ref("profile/${_auth.uid}")
         .putFile(File(_image!.path));
     downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref("profile/${userProfile!.uid}")
+        .ref("profile/${_auth.uid}")
         .getDownloadURL();
     uploadURL = downloadURL;
 
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .update({'photoURL': uploadURL});
   }
 }
