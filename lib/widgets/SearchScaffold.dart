@@ -5,15 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/search_field.dart';
-import 'package:firestore_search/firestore_search.dart';
 
-import 'firestore_service.dart';
-export 'package:firestore_search/src/mvc/controllers/firestore_search_controller.dart'
-    hide FirestoreSearchController;
-export 'package:firestore_search/src/mvc/views/search_bar.dart'
-    show FirestoreSearchBar;
-export 'package:firestore_search/src/mvc/views/search_results.dart'
-    show FirestoreSearchResults;
+import 'firestore_search/src/mvc/services/firestore_service.dart';
 
 class SearchScaffold extends StatefulWidget {
   final Widget scaffoldBody;
