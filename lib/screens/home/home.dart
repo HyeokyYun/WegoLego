@@ -219,10 +219,53 @@ class _HomeState extends State<Home> {
                                 ],
                               ),
                               onPressed: () {
-                                FlutterDialog("");
+                                Get.dialog(
+                                  AlertDialog(
+                                    title: const Text("추후 업데이트 될 예정입니다."),
+                                    content: Column(
+                                      children: [
+                                        const Text(
+                                            "관심있는 분야의 전문가를 적어주시면 컨텍에 도움이 됩니다!"),
+                                        TextFormField(
+                                          controller: _categoryController,
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: null,
+                                          // obscureText: obsecureText!,
+                                          decoration: InputDecoration(
+                                            hintText: "구체적인 도움을 적어주세요:)",
+                                            hintStyle: AppTextStyle.koBody2,
+                                            fillColor:
+                                                AppColors.primaryColor[50],
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
+                                            focusedErrorBorder:
+                                                InputBorder.none,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            TextEditingController
+                                                _categoryController =
+                                                TextEditingController();
+
+                                            Get.back();
+                                          },
+                                          child: const Text("YES")),
+                                      TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: const Text("NO"))
+                                    ],
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Color(0xffFFA300),
+                                backgroundColor: Color(0xffFFA300),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5),
                                 ),
