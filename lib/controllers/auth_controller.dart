@@ -71,6 +71,7 @@ class AuthController extends GetxController {
         //email 로그인에 한하여 이 데이터가 필요하다.
         "firstTime": true,
         "notificationOn": true,
+        "frienduid": [],
       });
       FirebaseFirestore.instance
           .collection('users')
@@ -215,6 +216,7 @@ class AuthController extends GetxController {
             // "firstTime": false,
             "feedback": false,
             "notificationOn": true,
+            "frienduid": [],
           });
           FirebaseFirestore.instance
               .collection('users')
