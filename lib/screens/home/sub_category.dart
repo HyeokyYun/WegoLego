@@ -176,7 +176,8 @@ class _SubCategoryState extends State<SubCategory> {
                         // _categoryController.text == ""
                         //     ? ""
                         //     :
-                        "${_categoryController.text}");
+                        "${_categoryController.text}",
+                        "");
                     await _handleCameraAndMic(Permission.camera);
                     await _handleCameraAndMic(Permission.microphone);
                     // push video page with given channel name

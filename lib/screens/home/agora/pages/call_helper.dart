@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:livq/screens/home/agora/utils/settings.dart';
+import 'package:livq/screens/home/agora/widgets/call_common.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
+import 'package:livq/widgets/firebaseAuth.dart';
 import '../../../../config.dart';
-import 'pie_chart.dart';
-import 'heart.dart';
+import '../widgets/pie_chart.dart';
+import '../widgets/heart.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
@@ -28,40 +31,30 @@ class CallPage_helper extends StatefulWidget {
 }
 
 class _CallPageState extends State<CallPage_helper> {
-  final _users = <int>[];
-  final _infoStrings = <String>[];
-  bool muted = false;
-  bool videoOnOff = false;
-  late RtcEngine _engine;
-  int? streamId;
-  late Offset change;
-  bool heart = false;
+  Call_common _common = Call_common();
+  AuthClass _auth = AuthClass();
+
   int helper_one = 0;
   late String uid_check;
   int count = 1;
   bool get_uid = true;
   bool pass_check = true;
 
-  //원 그리기 변수
-  late Timer timer;
-  bool _isPlaying = false;
-  var value = 0;
   Offset? location;
   late String getdetails;
   late double nomalizationDx;
   late double nomalizationDy;
-  late double subtract;
   Color sendColor = AppColors.primaryColor;
 
   @override
   void dispose() {
     // clear users
-    _users.clear();
+    _common.users.clear();
     // destroy sdk
-    _engine.leaveChannel();
-    _engine.destroy();
+    _common.engine.leaveChannel();
+    _common.engine.destroy();
 //원 그리기 변수
-    timer.cancel();
+    _common.timer.cancel();
     super.dispose();
   }
 
@@ -75,66 +68,61 @@ class _CallPageState extends State<CallPage_helper> {
   Future<void> initialize() async {
     if (APP_ID.isEmpty) {
       setState(() {
-        _infoStrings.add(
+        _common.infoStrings.add(
           'APP_ID missing, please provide your APP_ID in settings.dart',
         );
-        _infoStrings.add('Agora Engine is not starting');
+        _common.infoStrings.add('Agora Engine is not starting');
       });
       return;
     }
 
     await _initAgoraRtcEngine();
 
-    streamId = await _engine.createDataStream(false, false);
+    _common.streamId = await _common.engine.createDataStream(false, false);
 
     _addAgoraEventHandlers();
-    await _engine.enableWebSdkInteroperability(true);
+    await _common.engine.enableWebSdkInteroperability(true);
     VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
     //configuration.dimensions = VideoDimensions(1920, 1080);
-    await _engine.setVideoEncoderConfiguration(configuration);
-    await _engine.joinChannel(null, widget.channelName!, null, 0);
+    await _common.engine.setVideoEncoderConfiguration(configuration);
+    await _common.engine.joinChannel(null, widget.channelName!, null, 0);
   }
 
   /// Create agora sdk instance and initialize
   Future<void> _initAgoraRtcEngine() async {
-    _engine = await RtcEngine.create(APP_ID);
-    await _engine.enableVideo();
-    await _engine.setChannelProfile(ChannelProfile.Communication);
+    _common.engine = await RtcEngine.create(APP_ID);
+    await _common.engine.enableVideo();
+    await _common.engine.setChannelProfile(ChannelProfile.Communication);
     //만약에 1to1으로 만들려면 LiveBroadcasting이거 대신에 Communication으로 넣으면 일대일이 가능해짐
     //await _engine.setClientRole(ClientRole.Broadcaster);
   }
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? get userProfile => auth.currentUser;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
-
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
-    _engine.setEventHandler(RtcEngineEventHandler(
+    _common.engine.setEventHandler(RtcEngineEventHandler(
       error: (code) {
         setState(() {
           final info = 'onError: $code';
-          _infoStrings.add(info);
+          _common.infoStrings.add(info);
         });
       },
       joinChannelSuccess: (channel, uid, elapsed) {
         setState(() {
           final info = 'onJoinChannel: $channel, uid: $uid';
-          _infoStrings.add(info);
+          _common.infoStrings.add(info);
         });
       },
       leaveChannel: (stats) {
         setState(() {
-          _infoStrings.add('onLeaveChannel');
-          _users.clear();
+          _common.infoStrings.add('onLeaveChannel');
+          _common.users.clear();
         });
       },
       userJoined: (uid, elapsed) {
         setState(() {
           final info = 'userJoined: $uid';
-          _infoStrings.add(info);
-          _users.add(uid);
+          _common.infoStrings.add(info);
+          _common.users.add(uid);
         });
         if (get_uid) {
           uid_check = uid.toString();
@@ -144,28 +132,29 @@ class _CallPageState extends State<CallPage_helper> {
       userOffline: (uid, elapsed) {
         setState(() {
           final info = 'userOffline: $uid';
-          _infoStrings.add(info);
-          _users.remove(uid);
+          _common.infoStrings.add(info);
+          _common.users.remove(uid);
         });
       },
       firstRemoteVideoFrame: (uid, width, height, elapsed) {
         pass_check = false;
         setState(() {
           final info = 'firstRemoteVideo: $uid ${width}x $height';
-          _infoStrings.add(info);
+          _common.infoStrings.add(info);
         });
       },
-      streamMessage: (_, __, coordinates) {
+      streamMessage: (_, __, getCoordinates) {
+        String coordinates = String.fromCharCodes(getCoordinates);
         if (coordinates.compareTo('end') == 0) {
           FirebaseFirestore.instance
               .collection('users')
-              .doc(firebaseUser!.uid)
+              .doc(_auth.uid)
               .update({'help': FieldValue.increment(1)});
           Get.offAll(() => BottomNavigation());
           // Navigator.pop(context);
         } else if (coordinates.compareTo('onoffVideo') == 0) {
           setState(() {
-            videoOnOff = !videoOnOff;
+            _common.videoOnOff = !_common.videoOnOff;
           });
         } else if (coordinates.compareTo('heart') == 0) {
           // popUp();
@@ -188,9 +177,12 @@ class _CallPageState extends State<CallPage_helper> {
   List<Widget> _getRenderViews() {
     final List<StatefulWidget> list = [];
     //if (widget.role == ClientRole.Broadcaster) {}
-    for (var uid in _users) {
+    for (var uid in _common.users) {
       list.add(RtcRemoteView.SurfaceView(
-          uid: uid, renderMode: VideoRenderMode.FILL));
+        uid: uid,
+        renderMode: VideoRenderMode.FILL,
+        channelId: uid.toString(),
+      ));
     }
     list.add(RtcLocalView.SurfaceView(renderMode: VideoRenderMode.FILL));
     return list;
@@ -234,26 +226,72 @@ class _CallPageState extends State<CallPage_helper> {
     return Container();
   }
 
-  /*
-// Video layout wrapper
-  Widget _viewRows() {
-    final views = _getRenderViews();
-    switch (views.length) {
-      case 1:
-        return Container();
-      case 2:
-        const CircularProgressIndicator();
-        return Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-          ],
-        );
-      default:
-    }
-    return Container();
+  Widget _changeCholor() {
+    return SpeedDial(
+      icon: Icons.color_lens,
+      activeIcon: Icons.color_lens_outlined,
+      foregroundColor: sendColor,
+      backgroundColor: AppColors.grey,
+      activeForegroundColor: sendColor,
+      activeBackgroundColor: AppColors.grey,
+      spacing: 3,
+      spaceBetweenChildren: 4,
+      buttonSize: Size(73.h, 73.h),
+      childrenButtonSize: Size(37.w, 37.h),
+      renderOverlay: false,
+      elevation: 0.0,
+      children: [
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: AppColors.grey[50],
+          onTap: () {
+            setState(() {
+              sendColor = AppColors.grey[50]!;
+            });
+            _common.engine.sendStreamMessage(
+                _common.streamId!, Uint8List.fromList("grey".codeUnits));
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: AppColors.primaryColor,
+          onTap: () {
+            setState(() {
+              sendColor = AppColors.primaryColor;
+            });
+            _common.engine.sendStreamMessage(
+                _common.streamId!, Uint8List.fromList("primary".codeUnits));
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: AppColors.secondaryColor,
+          onTap: () {
+            setState(() {
+              sendColor = AppColors.secondaryColor;
+            });
+            _common.engine.sendStreamMessage(
+                _common.streamId!, Uint8List.fromList("secondary".codeUnits));
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+        SpeedDialChild(
+          child: Container(),
+          backgroundColor: Colors.red,
+          onTap: () {
+            setState(() {
+              sendColor = Colors.red;
+            });
+            _common.engine.sendStreamMessage(
+                _common.streamId!, Uint8List.fromList("red".codeUnits));
+          },
+          // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
+        ),
+      ],
+    );
   }
-
-  */
 
   /// Toolbar layout
   Widget _toolbar() {
@@ -263,80 +301,8 @@ class _CallPageState extends State<CallPage_helper> {
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          // RawMaterialButton(
-          //     onPressed: _onSwitchCamera,
-          //     child: Icon(
-          //       videoOnOff ? Icons.videocam_off : Icons.videocam,
-          //       color: videoOnOff ? Colors.white : AppColors.primaryColor,
-          //       size: 45.h,
-          //     ),
-          //     shape: const CircleBorder(),
-          //     elevation: 4.0,
-          //     fillColor: videoOnOff ? AppColors.grey[700] : Colors.white,
-          //     padding: const EdgeInsets.all(12.0),
-          //   ),
-
-          SpeedDial(
-            icon: Icons.color_lens,
-            activeIcon: Icons.color_lens_outlined,
-            foregroundColor: sendColor,
-            backgroundColor: AppColors.grey,
-            activeForegroundColor: sendColor,
-            activeBackgroundColor: AppColors.grey,
-            spacing: 3,
-            spaceBetweenChildren: 4,
-            buttonSize: Size(73.h, 73.h),
-            childrenButtonSize: Size(37.w, 37.h),
-            renderOverlay: false,
-            elevation: 0.0,
-            children: [
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: AppColors.grey[50],
-                onTap: () {
-                  setState(() {
-                    sendColor = AppColors.grey[50]!;
-                  });
-                  _engine.sendStreamMessage(streamId!, "grey");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: AppColors.primaryColor,
-                onTap: () {
-                  setState(() {
-                    sendColor = AppColors.primaryColor;
-                  });
-                  _engine.sendStreamMessage(streamId!, "primary");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: AppColors.secondaryColor,
-                onTap: () {
-                  setState(() {
-                    sendColor = AppColors.secondaryColor;
-                  });
-                  _engine.sendStreamMessage(streamId!, "secondary");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-              SpeedDialChild(
-                child: Container(),
-                backgroundColor: Colors.red,
-                onTap: () {
-                  setState(() {
-                    sendColor = Colors.red;
-                  });
-                  _engine.sendStreamMessage(streamId!, "red");
-                },
-                // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
-              ),
-            ],
-          ),
+        children: [
+          _changeCholor(),
           SizedBox(
             width: 33.w,
           ),
@@ -358,13 +324,13 @@ class _CallPageState extends State<CallPage_helper> {
           RawMaterialButton(
             onPressed: _onToggleMute,
             child: Icon(
-              muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : AppColors.primaryColor,
+              _common.muted ? Icons.mic_off : Icons.mic,
+              color: _common.muted ? Colors.white : AppColors.primaryColor,
               size: 45.h,
             ),
             shape: const CircleBorder(),
             elevation: 4.0,
-            fillColor: muted ? AppColors.grey[700] : Colors.white,
+            fillColor: _common.muted ? AppColors.grey[700] : Colors.white,
             padding: const EdgeInsets.all(12.0),
           ),
         ],
@@ -373,11 +339,12 @@ class _CallPageState extends State<CallPage_helper> {
   }
 
   void _onCallEnd(BuildContext context) {
-    _engine.sendStreamMessage(streamId!, "end");
+    _common.engine.sendStreamMessage(
+        _common.streamId!, Uint8List.fromList("end".codeUnits));
     // Get.back();
     FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseUser!.uid)
+        .doc(_auth.uid)
         .update({'help': FieldValue.increment(1)});
     Get.offAll(() => BottomNavigation());
     //Navigator.pop(context);
@@ -385,10 +352,9 @@ class _CallPageState extends State<CallPage_helper> {
 
   void _onToggleMute() {
     setState(() {
-      muted = !muted;
-      print(muted);
+      _common.muted = !_common.muted;
     });
-    _engine.muteLocalAudioStream(muted);
+    _common.engine.muteLocalAudioStream(_common.muted);
   }
 
   Widget _turnoffcamera() {
@@ -450,25 +416,28 @@ class _CallPageState extends State<CallPage_helper> {
               setState(() {
                 location = details.localPosition;
               });
-              value = 0;
-              timer = Timer.periodic(const Duration(milliseconds: 2), (t) {
+              _common.value = 0;
+              _common.timer =
+                  Timer.periodic(const Duration(milliseconds: 2), (t) {
                 setState(() {
-                  if (value < 100) {
-                    value++;
+                  if (_common.value < 100) {
+                    _common.value++;
                   } else {
-                    subtract = (MediaQuery.of(context).size.height -
+                    _common.subtract = (MediaQuery.of(context).size.height -
                             (MediaQuery.of(context).size.width / 3 * 4)) /
                         2;
-                    timer.cancel();
+                    _common.timer.cancel();
                     nomalizationDx = details.localPosition.dx /
                         MediaQuery.of(context).size.width;
-                    nomalizationDy = (details.localPosition.dy - subtract) /
-                        (MediaQuery.of(context).size.width / 3 * 4);
+                    nomalizationDy =
+                        (details.localPosition.dy - _common.subtract) /
+                            (MediaQuery.of(context).size.width / 3 * 4);
                     getdetails = nomalizationDx.toString() +
                         " " +
                         nomalizationDy.toString() +
                         "a";
-                    _engine.sendStreamMessage(streamId!, getdetails);
+                    _common.engine.sendStreamMessage(_common.streamId!,
+                        Uint8List.fromList(getdetails.codeUnits));
                   }
                 });
                 //print('value $value');
@@ -479,7 +448,7 @@ class _CallPageState extends State<CallPage_helper> {
         CustomPaint(
           size: Size(Config.screenWidth! * 0.2, Config.screenWidth! * 0.2),
           painter: PieChart(
-            percentage: value,
+            percentage: _common.value,
             location: location,
             getcolor: sendColor,
           ),
@@ -521,14 +490,14 @@ class _CallPageState extends State<CallPage_helper> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.black,
-        body: videoOnOff
+        body: _common.videoOnOff
             ? Center(
                 child: Stack(
                   children: <Widget>[
                     _turnoffcamera(),
                     // if (heart == true) heartPop(),
                     // _panel(),
-                    muted ? voiceOff(context) : Container(),
+                    _common.muted ? voiceOff(context) : Container(),
                     _toolbar(),
                   ],
                 ),
@@ -545,13 +514,19 @@ class _CallPageState extends State<CallPage_helper> {
                     ),
                     // if (heart == true) heartPop(),
                     // _panel(),
-                    muted ? voiceOff(context) : Container(),
+                    _common.muted ? voiceOff(context) : Container(),
                     circleDrawing(context),
                     _toolbar(),
                   ],
                 ),
               ));
   }
+}
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Container();
+  // }
 
   /*
   사용하지 않는 것
@@ -666,4 +641,3 @@ class _CallPageState extends State<CallPage_helper> {
   }
 
    */
-}

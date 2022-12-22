@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:livq/screens/my_page/sub_pages/friends_add.dart';
 import 'package:livq/screens/my_page/sub_pages/guide_page.dart';
 import 'package:livq/screens/my_page/app_setting_page.dart';
 import 'package:livq/screens/my_page/my_setting_page.dart';
@@ -21,6 +22,8 @@ import 'package:livq/theme/colors.dart';
 import 'package:livq/theme/text_style.dart';
 import 'dart:async';
 
+import 'package:livq/widgets/firebaseAuth.dart';
+
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
@@ -29,13 +32,10 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  User? currentUser;
-  var firebaseUser = FirebaseAuth.instance.currentUser;
+  AuthClass _auth = AuthClass();
 
   final TextEditingController _feedbackController = TextEditingController();
   final RatingService _ratingService = RatingService();
-  User? get userProfile => auth.currentUser;
 
   @override
   initState() {
@@ -46,7 +46,7 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
         .collection('users')
-        .doc(userProfile!.uid)
+        .doc(_auth.uid)
         .snapshots();
 
     return Scaffold(
@@ -78,34 +78,35 @@ class _MyPageState extends State<MyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 50.h,
-                ),
-                SizedBox(
-                  height: 120.h,
-                  width: 120.w,
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: _userStream,
-                    builder:
-                        (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      final getdata = snapshot.data;
-                      if (snapshot.hasData) {
-                        print("my_page for test ${getdata?["photoURL"]}");
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(57),
-                          child: Image.network(
-                            getdata?["photoURL"],
-                            height: 114.h,
-                            width: 114.w,
-                            fit: BoxFit.fill,
-                          ),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ),
+                // SizedBox(
+                //   height: 50.h,
+                // ),
+                // SizedBox(
+                //   height: 120.h,
+                //   width: 120.w,
+                //   child: StreamBuilder<DocumentSnapshot>(
+                //     stream: _userStream,
+                //     builder:
+                //         (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                //       final getdata = snapshot.data;
+                //       if (snapshot.hasData) {
+                //         print("my_page for test ${getdata?["photoURL"]}");
+                //         // return ClipRRect(
+                //         //   borderRadius: BorderRadius.circular(57),
+                //         //   child: Image.network(
+                //         //     getdata?["photoURL"],
+                //         //     height: 114.h,
+                //         //     width: 114.w,
+                //         //     fit: BoxFit.fill,
+                //         //   ),
+                //         // );
+                //         return Container();
+                //       } else {
+                //         return Container();
+                //       }
+                //     },
+                //   ),
+                // ),
                 SizedBox(
                   height: 13.h,
                 ),
@@ -350,6 +351,25 @@ class _MyPageState extends State<MyPage> {
                     SizedBox(
                       height: 5.h,
                     ),
+                    ListTile(
+                      title: Text(
+                        '친구 추가하기 ',
+                        style: AppTextStyle.koBody2.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18.sp,
+                        color: AppColors.grey[500],
+                      ),
+                      onTap: () {
+                        Get.to(FriendAddPage());
+                      },
+                    ),
+                    Divider(
+                      color: AppColors.grey[400],
+                    ),
                     StreamBuilder<DocumentSnapshot>(
                       stream: _userStream,
                       builder:
@@ -392,6 +412,7 @@ class _MyPageState extends State<MyPage> {
                         );
                       },
                     ),
+
                     Divider(
                       thickness: 5,
                       color: AppColors.grey[200],
