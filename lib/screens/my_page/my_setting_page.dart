@@ -109,40 +109,40 @@ class _mySettingPageState extends State<mySettingPage> {
                       children: [
                         Stack(
                           children: [
-                            _image == null
-                                ? StreamBuilder<DocumentSnapshot>(
-                                    stream: _photoURLStream,
-                                    builder: (context,
-                                        AsyncSnapshot<DocumentSnapshot>
-                                            snapshot) {
-                                      final getdata = snapshot.data;
-                                      if (snapshot.hasData) {
-                                        print(
-                                            "for test ${getdata?["photoURL"]}");
-                                        return ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(57),
-                                          child: Image.network(
-                                            getdata?["photoURL"],
-                                            height: 114.h,
-                                            width: 114.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        );
-                                      } else {
-                                        return CircularProgressIndicator();
-                                      }
-                                    },
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(57),
-                                    child: Image.file(
-                                      File(_image!.path),
-                                      height: 114.h,
-                                      width: 114.w,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                            // _image == null
+                            //     ? <DocumentSnapshot>(
+                            //         stream: _photoURLStream,
+                            //         builder: (context,
+                            //             AsyncSnapshot<DocumentSnapshot>
+                            //                 snapshot) {
+                            //           final getdata = snapshot.data;
+                            //           if (snapshot.hasData) {
+                            //             print(
+                            //                 "for test ${getdata?["photoURL"]}");
+                            //             return ClipRRect(
+                            //               borderRadius:
+                            //                   BorderRadius.circular(57),
+                            //               child: Image.network(
+                            //                 getdata?["photoURL"],
+                            //                 height: 114.h,
+                            //                 width: 114.w,
+                            //                 fit: BoxFit.fill,
+                            //               ),
+                            //             );
+                            //           } else {
+                            //             return CircularProgressIndicator();
+                            //           }
+                            //         },
+                            //       )
+                            //     : ClipRRect(
+                            //         borderRadius: BorderRadius.circular(57),
+                            //         child: Image.file(
+                            //           File(_image!.path),
+                            //           height: 114.h,
+                            //           width: 114.w,
+                            //           fit: BoxFit.fill,
+                            //         ),
+                            //       ),
                             Positioned(
                                 bottom: 1.h,
                                 right: 1.w,

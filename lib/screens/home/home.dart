@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import 'package:livq/push_notification/push_notification.dart';
+
 import 'package:livq/screens/home/agora/pages/call_taker.dart';
 import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/theme/colors.dart';
@@ -14,6 +15,8 @@ import 'package:livq/widgets/firebaseAuth.dart';
 import 'package:livq/widgets/rounded_elevated_button.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+
+import 'agora/pages/callpage_common.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -411,12 +414,17 @@ class _HomeState extends State<Home> {
                           "${_categoryController.text}",
                           friendUid,
                         );
-                        await _handleCameraAndMic(Permission.camera);
-                        await _handleCameraAndMic(Permission.microphone);
-                        // push video page with given channel name
+
                         String channel = FirebaseAuth.instance.currentUser!.uid;
-                        await Get.offAll(() => CallPage_taker(
+                        // await Get.offAll(() => CallPage_taker(
+                        //       channelName: channel,
+                        //       // getTitle: widget.getTitle,
+                        //     ));
+                        await [Permission.microphone, Permission.camera]
+                            .request();
+                        await Get.offAll(() => CallPage_common(
                               channelName: channel,
+                              uid: 2,
                               // getTitle: widget.getTitle,
                             ));
                       },
@@ -515,7 +523,7 @@ class _HomeState extends State<Home> {
                           style: ElevatedButton.styleFrom(
                             //  padding: EdgeInsets.all(10.sp),
                             elevation: 0,
-                            primary: Color(0xffFFA300),
+                            backgroundColor: Color(0xffFFA300),
                             fixedSize: Size(80.w, 27.h),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),

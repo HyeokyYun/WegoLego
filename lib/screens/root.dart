@@ -10,6 +10,8 @@ import '../config.dart';
 import 'home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'sign_up/update.dart';
+
 class Root extends StatefulWidget {
   const Root({Key? key}) : super(key: key);
 
@@ -25,12 +27,24 @@ class _RootState extends State<Root> {
 
   User? get userProfile => auth.currentUser;
 
+  bool available = false;
+
   @override
   void initState() {
+    //새로운 버전 수정 전 반드시 수정 필요
+    String version = "1.1.1";
+    FirebaseFirestore.instance.collection("versions").doc(version).get().then(
+      (DocumentSnapshot ds) {
+        setState(() {
+          available = ds["available"];
+        });
+      },
+    );
     super.initState();
     FirebaseAuth.instance
         .authStateChanges()
         .listen((event) => updateUserState(event));
+    // FirebaseFirestore.instance.collection("versions").
     isSign = false;
   }
 
@@ -47,14 +61,17 @@ class _RootState extends State<Root> {
   Widget build(BuildContext context) {
     Config().init(context);
 
+    print("available $available");
     return GetBuilder<AuthController>(
       builder: (_) {
         return isSign
-            ? _.isFirstSignIn.value
-                ? _.isEmailSignIn.value
-                    ? WelcomePage()
-                    : SignUp()
-                : BottomNavigation()
+            ? available
+                ? _.isFirstSignIn.value
+                    ? _.isEmailSignIn.value
+                        ? WelcomePage()
+                        : SignUp()
+                    : BottomNavigation()
+                : UpdateWidget()
             : Scaffold(
                 body: SafeArea(
                   child: Padding(

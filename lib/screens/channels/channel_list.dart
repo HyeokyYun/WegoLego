@@ -1,8 +1,10 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:livq/screens/home/agora/pages/callpage_common.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '/screens/home/agora/pages/call_helper.dart';
 import 'package:livq/screens/home/home.dart';
@@ -170,9 +172,9 @@ class _ChannelListState extends State<ChannelList> {
                                                           fontSize: 10.sp,
                                                           color: Colors.white),
                                                     ),
-                                                    onPressed: () {
+                                                    onPressed: () async {
                                                       data['count'] == 1
-                                                          ? FirebaseFirestore
+                                                          ? await FirebaseFirestore
                                                               .instance
                                                               .collection(
                                                                   'videoCall')
@@ -258,11 +260,24 @@ class _ChannelListState extends State<ChannelList> {
                                                                     colorText:
                                                                         Colors
                                                                             .white);
+                                                                // Get.offAll(() =>
+                                                                //     CallPage_helper(
+                                                                //       channelName:
+                                                                //           data[
+                                                                //               'uid'],
+                                                                //     ));
+                                                                [
+                                                                  Permission
+                                                                      .microphone,
+                                                                  Permission
+                                                                      .camera
+                                                                ].request();
                                                                 Get.offAll(() =>
-                                                                    CallPage_helper(
+                                                                    CallPage_common(
                                                                       channelName:
                                                                           data[
                                                                               'uid'],
+                                                                      uid: 3,
                                                                     ));
                                                               }
                                                             })

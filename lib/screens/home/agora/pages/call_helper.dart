@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,16 +11,18 @@ import 'package:livq/screens/home/buttons/animated_radial_menu.dart';
 import 'package:livq/screens/navigation/bottom_navigation.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/firebaseAuth.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../../config.dart';
 import '../widgets/pie_chart.dart';
 import '../widgets/heart.dart';
-import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
-import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:math' as math;
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:http/http.dart' as http;
+
+const String appId = '3314a275f7114db58caaadebfab9679d';
 
 class CallPage_helper extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -47,183 +50,145 @@ class _CallPageState extends State<CallPage_helper> {
   Color sendColor = AppColors.primaryColor;
 
   @override
-  void dispose() {
-    // clear users
-    _common.users.clear();
-    // destroy sdk
-    _common.engine.leaveChannel();
-    _common.engine.destroy();
-//원 그리기 변수
-    _common.timer.cancel();
+  void dispose() async {
+    await _common.agoraEngine.leaveChannel();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    // initialize agora sdk
-    initialize();
+    _common.uid = 2;
+
+    // Set up an instance of Agora engine
+    setupVideoSDKEngine();
   }
 
-  Future<void> initialize() async {
-    if (APP_ID.isEmpty) {
-      setState(() {
-        _common.infoStrings.add(
-          'APP_ID missing, please provide your APP_ID in settings.dart',
-        );
-        _common.infoStrings.add('Agora Engine is not starting');
-      });
-      return;
-    }
+  Future<void> setupVideoSDKEngine() async {
+    await [Permission.microphone, Permission.camera].request();
 
-    await _initAgoraRtcEngine();
+    //create an instance of the Agora engine
+    _common.agoraEngine = createAgoraRtcEngine();
+    await _common.agoraEngine.initialize(const RtcEngineContext(appId: appId));
 
-    _common.streamId = await _common.engine.createDataStream(false, false);
+    await _common.agoraEngine.enableVideo();
+    await _common.agoraEngine.startPreview();
 
-    _addAgoraEventHandlers();
-    await _common.engine.enableWebSdkInteroperability(true);
-    VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
-    //configuration.dimensions = VideoDimensions(1920, 1080);
-    await _common.engine.setVideoEncoderConfiguration(configuration);
-    await _common.engine.joinChannel(null, widget.channelName!, null, 0);
-  }
+    await fetchToken(_common.uid, widget.channelName!, _common.tokenRole);
 
-  /// Create agora sdk instance and initialize
-  Future<void> _initAgoraRtcEngine() async {
-    _common.engine = await RtcEngine.create(APP_ID);
-    await _common.engine.enableVideo();
-    await _common.engine.setChannelProfile(ChannelProfile.Communication);
-    //만약에 1to1으로 만들려면 LiveBroadcasting이거 대신에 Communication으로 넣으면 일대일이 가능해짐
-    //await _engine.setClientRole(ClientRole.Broadcaster);
-  }
-
-  /// Add agora event handlers
-  void _addAgoraEventHandlers() {
-    _common.engine.setEventHandler(RtcEngineEventHandler(
-      error: (code) {
-        setState(() {
-          final info = 'onError: $code';
-          _common.infoStrings.add(info);
-        });
-      },
-      joinChannelSuccess: (channel, uid, elapsed) {
-        setState(() {
-          final info = 'onJoinChannel: $channel, uid: $uid';
-          _common.infoStrings.add(info);
-        });
-      },
-      leaveChannel: (stats) {
-        setState(() {
-          _common.infoStrings.add('onLeaveChannel');
-          _common.users.clear();
-        });
-      },
-      userJoined: (uid, elapsed) {
-        setState(() {
-          final info = 'userJoined: $uid';
-          _common.infoStrings.add(info);
-          _common.users.add(uid);
-        });
-        if (get_uid) {
-          uid_check = uid.toString();
-          get_uid = false;
-        }
-      },
-      userOffline: (uid, elapsed) {
-        setState(() {
-          final info = 'userOffline: $uid';
-          _common.infoStrings.add(info);
-          _common.users.remove(uid);
-        });
-      },
-      firstRemoteVideoFrame: (uid, width, height, elapsed) {
-        pass_check = false;
-        setState(() {
-          final info = 'firstRemoteVideo: $uid ${width}x $height';
-          _common.infoStrings.add(info);
-        });
-      },
-      streamMessage: (_, __, getCoordinates) {
-        String coordinates = String.fromCharCodes(getCoordinates);
-        if (coordinates.compareTo('end') == 0) {
+    DataStreamConfig config =
+        await DataStreamConfig(ordered: false, syncWithAudio: false);
+    _common.streamId = await _common.agoraEngine.createDataStream(config);
+    // Register the event handler
+    _common.agoraEngine.registerEventHandler(
+      RtcEngineEventHandler(
+        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+          Get.snackbar(
+              "Local user uid:${connection.localUid} joined the channel",
+              "onJoinChannelSuccess");
+          setState(() {
+            _common.isJoined = true;
+          });
+        },
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          Get.snackbar(
+              "Remote user uid:$remoteUid joined the channel", "remote joined");
+          setState(() {
+            _common.isJoined = false;
+            _common.remoteUid = null;
+          });
+          // Get.back();
           FirebaseFirestore.instance
               .collection('users')
               .doc(_auth.uid)
               .update({'help': FieldValue.increment(1)});
           Get.offAll(() => BottomNavigation());
-          // Navigator.pop(context);
-        } else if (coordinates.compareTo('onoffVideo') == 0) {
+        },
+        onUserOffline: (RtcConnection connection, int remoteUid,
+            UserOfflineReasonType reason) {
+          //여기에 자동으로 나갈 수 있게 하기
+          Get.snackbar(
+              "Remote user uid:$remoteUid left the channel", "offline");
           setState(() {
-            _common.videoOnOff = !_common.videoOnOff;
+            _common.remoteUid = null;
           });
-        } else if (coordinates.compareTo('heart') == 0) {
-          // popUp();
-        } else if (coordinates.compareTo(uid_check) == 0) {
-          if (pass_check) {
-            Get.offAll(() => BottomNavigation());
+        },
+        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+          // showMessage('Token expiring');
+          _common.isTokenExpiring = true;
+          setState(() {
+            // fetch a new token when the current token is about to expire
+            fetchToken(_common.uid, widget.channelName!, _common.tokenRole);
+          });
+        },
+        onStreamMessage:
+            (connection, remoteUid, streamId, data, length, sentTs) {
+          String coordinates = String.fromCharCodes(data);
+          if (coordinates.compareTo('onoffVideo') == 0) {
+            setState(() {
+              _common.videoOnOff = !_common.videoOnOff;
+            });
+          } else if (coordinates.compareTo('heart') == 0) {
+            // popUp();
+          } else if (coordinates.compareTo(uid_check) == 0) {
+            if (pass_check) {
+              Get.offAll(() => BottomNavigation());
 
-            //Navigator.pop(context);
+              //Navigator.pop(context);
+            }
           }
-        }
-      },
-      streamMessageError: (_, __, error, ___, ____) {
-        final String info = "here is the error $error";
-        print(info);
-      },
-    ));
-  }
-
-  // Helper function to get list of native views
-  List<Widget> _getRenderViews() {
-    final List<StatefulWidget> list = [];
-    //if (widget.role == ClientRole.Broadcaster) {}
-    for (var uid in _common.users) {
-      list.add(RtcRemoteView.SurfaceView(
-        uid: uid,
-        renderMode: VideoRenderMode.FILL,
-        channelId: uid.toString(),
-      ));
-    }
-    list.add(RtcLocalView.SurfaceView(renderMode: VideoRenderMode.FILL));
-    return list;
-  }
-
-  /// Video view wrapper
-  Widget _videoView(view) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width / 3 * 4,
-        child: view);
-  }
-
-  /// Video view row wrapper
-  Widget _expandedVideoRow(List<Widget> views) {
-    final wrappedViews = views.map<Widget>(_videoView).toList();
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.width / 3 * 4,
-      child: Row(
-        children: wrappedViews,
+        },
       ),
     );
   }
 
-  // Video layout wrapper
-  Widget _viewRows() {
-    final views = _getRenderViews();
-    switch (views.length) {
-      case 1:
-        return Container();
-      case 2:
-        const CircularProgressIndicator();
-        return Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-          ],
-        );
-      default:
+  Future<void> fetchToken(int uid, String channelName, int tokenRole) async {
+    // Prepare the Url
+    String url =
+        '$serverUrl/rtc/$channelName/${tokenRole.toString()}/uid/${uid.toString()}?expiry=${_common.tokenExpireTime.toString()}';
+
+    // Send the request
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // If the server returns an OK response, then parse the JSON.
+      Map<String, dynamic> json = jsonDecode(response.body);
+      String newToken = json['rtcToken'];
+      debugPrint('Token Received: $newToken');
+      // Use the token to join a channel or renew an expiring token
+      // print("newtoken : $newToken");
+      setToken(newToken, channelName);
+    } else {
+      // If the server did not return an OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to fetch a token. Make sure that your server URL is valid');
     }
-    return Container();
+  }
+
+  void setToken(String newToken, String channelName) async {
+    _common.token = newToken;
+
+    if (_common.isTokenExpiring) {
+      // Renew the token
+      _common.agoraEngine.renewToken(_common.token);
+      _common.isTokenExpiring = false;
+      // showMessage("Token renewed");
+    } else {
+      // Join a channel.
+      // showMessage("Token received, joining a channel...");
+
+      ChannelMediaOptions options = const ChannelMediaOptions(
+        clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        channelProfile: ChannelProfileType.channelProfileCommunication,
+      );
+
+      await _common.agoraEngine.joinChannel(
+        token: _common.token,
+        channelId: channelName,
+        options: options,
+        uid: _common.uid,
+      );
+    }
   }
 
   Widget _changeCholor() {
@@ -248,8 +213,10 @@ class _CallPageState extends State<CallPage_helper> {
             setState(() {
               sendColor = AppColors.grey[50]!;
             });
-            _common.engine.sendStreamMessage(
-                _common.streamId!, Uint8List.fromList("grey".codeUnits));
+            _common.agoraEngine.sendStreamMessage(
+                streamId: _common.streamId!,
+                data: Uint8List.fromList("grey".codeUnits),
+                length: Uint8List.fromList("grey".codeUnits).length);
           },
           // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
         ),
@@ -260,8 +227,10 @@ class _CallPageState extends State<CallPage_helper> {
             setState(() {
               sendColor = AppColors.primaryColor;
             });
-            _common.engine.sendStreamMessage(
-                _common.streamId!, Uint8List.fromList("primary".codeUnits));
+            _common.agoraEngine.sendStreamMessage(
+                streamId: _common.streamId!,
+                data: Uint8List.fromList("primary".codeUnits),
+                length: Uint8List.fromList("primary".codeUnits).length);
           },
           // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
         ),
@@ -272,8 +241,10 @@ class _CallPageState extends State<CallPage_helper> {
             setState(() {
               sendColor = AppColors.secondaryColor;
             });
-            _common.engine.sendStreamMessage(
-                _common.streamId!, Uint8List.fromList("secondary".codeUnits));
+            _common.agoraEngine.sendStreamMessage(
+                streamId: _common.streamId!,
+                data: Uint8List.fromList("secondary".codeUnits),
+                length: Uint8List.fromList("secondary".codeUnits).length);
           },
           // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
         ),
@@ -284,8 +255,10 @@ class _CallPageState extends State<CallPage_helper> {
             setState(() {
               sendColor = Colors.red;
             });
-            _common.engine.sendStreamMessage(
-                _common.streamId!, Uint8List.fromList("red".codeUnits));
+            _common.agoraEngine.sendStreamMessage(
+                streamId: _common.streamId!,
+                data: Uint8List.fromList("red".codeUnits),
+                length: Uint8List.fromList("red".codeUnits).length);
           },
           // onLongPress: () => debugPrint('FIRST CHILD LONG PRESS'),
         ),
@@ -339,8 +312,6 @@ class _CallPageState extends State<CallPage_helper> {
   }
 
   void _onCallEnd(BuildContext context) {
-    _common.engine.sendStreamMessage(
-        _common.streamId!, Uint8List.fromList("end".codeUnits));
     // Get.back();
     FirebaseFirestore.instance
         .collection('users')
@@ -354,7 +325,7 @@ class _CallPageState extends State<CallPage_helper> {
     setState(() {
       _common.muted = !_common.muted;
     });
-    _common.engine.muteLocalAudioStream(_common.muted);
+    _common.agoraEngine.muteLocalAudioStream(_common.muted);
   }
 
   Widget _turnoffcamera() {
@@ -436,8 +407,11 @@ class _CallPageState extends State<CallPage_helper> {
                         " " +
                         nomalizationDy.toString() +
                         "a";
-                    _common.engine.sendStreamMessage(_common.streamId!,
-                        Uint8List.fromList(getdetails.codeUnits));
+                    _common.agoraEngine.sendStreamMessage(
+                        streamId: _common.streamId!,
+                        data: Uint8List.fromList(getdetails.codeUnits),
+                        length:
+                            Uint8List.fromList(getdetails.codeUnits).length);
                   }
                 });
                 //print('value $value');
@@ -520,6 +494,56 @@ class _CallPageState extends State<CallPage_helper> {
                   ],
                 ),
               ));
+  }
+
+  Widget _viewRows() {
+    return Center(
+      child: Container(
+        height: MediaQuery.of(context).size.width / 3 * 4,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(border: Border.all()),
+        child: Center(child: _remoteVideo()),
+      ),
+    );
+  }
+
+// Display local video preview
+  Widget _localPreview() {
+    if (_common.isJoined) {
+      //uid가 0으로 되어야만 자기 자신이 나타난다.
+      _common.agoraEngine.switchCamera();
+      return AgoraVideoView(
+        controller: VideoViewController(
+          rtcEngine: _common.agoraEngine,
+          canvas: VideoCanvas(uid: 0),
+        ),
+      );
+    } else {
+      return const Text(
+        'Join a channel',
+        textAlign: TextAlign.center,
+      );
+    }
+  }
+
+// Display remote user's video
+  Widget _remoteVideo() {
+    if (_common.remoteUid != null) {
+      return AgoraVideoView(
+        controller: VideoViewController.remote(
+          rtcEngine: _common.agoraEngine,
+          canvas: VideoCanvas(uid: _common.remoteUid),
+          connection: RtcConnection(channelId: widget.channelName),
+        ),
+      );
+    } else {
+      String msg = '';
+      if (_common.isJoined) msg = 'Waiting for a remote user to join';
+      return Text(
+        msg,
+        textAlign: TextAlign.center,
+      );
+    }
   }
 }
 

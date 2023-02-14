@@ -1,9 +1,11 @@
+# @format
+
 name: livq
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -15,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.0
+version: 1.1.1
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
@@ -34,15 +36,19 @@ dependencies:
   cloud_firestore: ^4.2.0
   firebase_messaging: ^14.0.4
   firebase_storage: ^11.0.7
-  
+
   google_sign_in: ^5.2.1
   sign_button: ^2.0.2
   get: ^4.6.1
   google_fonts: ^2.1.0
   flutter_svg: ^1.0.0
-  http:
-  agora_rtc_engine: ^5.3.1
-  permission_handler:
+  http: ^0.13.5
+  agora_rtc_engine:
+    ^6.1.0
+    # git: ^2.2.0
+    #   url: https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK.git
+    #   ref: main
+  permission_handler: ^10.2.0
   favorite_button:
   flutter_local_notifications: ^12.0.4
   shared_preferences: ^2.0.11
@@ -53,19 +59,20 @@ dependencies:
   font_awesome_flutter:
   flutter_swiper_null_safety:
   animated_bottom_navigation_bar: ^0.3.2
-  circular_countdown_timer:
-  
+  circular_countdown_timer: ^0.2.3
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   url_launcher: ^6.0.18
   image_picker: ^0.8.4+5
-  
+
   in_app_review: ^2.0.4
 
   flutter_speed_dial: ^5.0.0+1
   flutter_switch: ^0.3.2
 
+  yaml: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -83,7 +90,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

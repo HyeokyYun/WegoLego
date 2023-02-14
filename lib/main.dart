@@ -1,4 +1,5 @@
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:livq/Constants.dart';
 import 'package:livq/controllers/noti_controller.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:livq/theme/colors.dart';
 import 'package:livq/widgets/splash.dart';
+import 'package:yaml/yaml.dart';
 // import 'package:get/get_navigation/get_navigation.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'controllerBindings.dart';
@@ -18,8 +20,6 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 
-# 라우트 설정 다시 해야함
-  
 Future<void> _backMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('background message ${message.notification}');
@@ -30,6 +30,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_backMessage);
+
   runApp(MyApp());
 }
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseFirestore.instance.collection("videoCall");
     return ScreenUtilInit(
         designSize: Size(376, 812),
         builder: (_, child) => GetMaterialApp(
