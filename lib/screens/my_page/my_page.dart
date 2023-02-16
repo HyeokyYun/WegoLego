@@ -78,35 +78,6 @@ class _MyPageState extends State<MyPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // SizedBox(
-                //   height: 50.h,
-                // ),
-                // SizedBox(
-                //   height: 120.h,
-                //   width: 120.w,
-                //   child: StreamBuilder<DocumentSnapshot>(
-                //     stream: _userStream,
-                //     builder:
-                //         (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                //       final getdata = snapshot.data;
-                //       if (snapshot.hasData) {
-                //         print("my_page for test ${getdata?["photoURL"]}");
-                //         // return ClipRRect(
-                //         //   borderRadius: BorderRadius.circular(57),
-                //         //   child: Image.network(
-                //         //     getdata?["photoURL"],
-                //         //     height: 114.h,
-                //         //     width: 114.w,
-                //         //     fit: BoxFit.fill,
-                //         //   ),
-                //         // );
-                //         return Container();
-                //       } else {
-                //         return Container();
-                //       }
-                //     },
-                //   ),
-                // ),
                 SizedBox(
                   height: 13.h,
                 ),

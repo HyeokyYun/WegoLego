@@ -21,9 +21,12 @@ class AuthController extends GetxController {
   // var isSignedIn = false.obs;
   var isFirstSignIn = false.obs;
   var isEmailSignIn = true.obs;
+  var isAvailable = false.obs;
 
   User? get userProfile => auth.currentUser;
   User? currentUser;
+
+  String version = "1.1.1";
 
   // token 추가
   String? _token;
@@ -38,6 +41,11 @@ class AuthController extends GetxController {
       _token = value;
       print("token: $_token");
     });
+    FirebaseFirestore.instance.collection("versions").doc(version).get().then(
+      (DocumentSnapshot ds) {
+        isAvailable.value = ds["available"];
+      },
+    );
     super.onInit();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,8 @@ class _HomeState extends State<Home> {
   final TextEditingController _categoryController = TextEditingController();
   late int askCount;
 
+  late String userUid;
+
   @override
   void dispose() {
     _channelController.dispose();
@@ -49,14 +53,14 @@ class _HomeState extends State<Home> {
       print(askCount);
     });
 
-    Stream<QuerySnapshot> _usersStream =
-        FirebaseFirestore.instance.collection('users').snapshots();
-
     Stream<DocumentSnapshot> _askCountStream = FirebaseFirestore.instance
         .collection('askCount')
         .doc('askCount')
         .snapshots();
-
+    Stream<DocumentSnapshot> _userStream = FirebaseFirestore.instance
+        .collection('users')
+        .doc(_auth.uid)
+        .snapshots();
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -97,10 +101,28 @@ class _HomeState extends State<Home> {
                             ),
                           ],
                         ),
-                        _textWidget(
-                            "안녕하세요 큐님 \n궁금증 해결이 필요한 상태군요!",
-                            TextStyle(
-                                fontSize: 13.sp, color: Color(0xff4D4D4D))),
+                        StreamBuilder<DocumentSnapshot>(
+                          stream: _userStream,
+                          builder: (context,
+                              AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            final getdata = snapshot.data;
+                            String? tempUid;
+                            if (snapshot.hasData) {
+                              if (getdata?.id != null) {
+                                tempUid = getdata?.id;
+                                userUid = tempUid!;
+                              }
+
+                              return Text(
+                                '안녕하세요 ${getdata?["name"]}님\n궁금증 해결이 필요한 상태군요!',
+                                style: TextStyle(
+                                    fontSize: 13.sp, color: Color(0xff4D4D4D)),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          },
+                        )
                       ],
                     ),
                     _sizedBoxWidget(0, 28),
@@ -123,69 +145,6 @@ class _HomeState extends State<Home> {
                         return Container();
                       },
                     ),
-
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     Row(
-                    //       children: [
-                    //         Column(
-                    //           children: [
-                    //             _textWidget( "참여 중인 답변자", AppTextStyle.koBody2
-                    //                 .copyWith(color: Colors.black)),
-                    //             StreamBuilder<QuerySnapshot>(
-                    //               stream: _usersStream,
-                    //               builder: (context, snapshot) {
-                    //                 if (snapshot.hasData) {
-                    //                   return Text(
-                    //                     "${snapshot.data?.docs.length}명",
-                    //                     style: TextStyle(
-                    //                       fontSize: 22.sp,
-                    //                       // fontWeight: FontWeight.bold,
-                    //                       color: Color(0xffF57F17),
-                    //                     ),
-                    //                   );
-                    //                 } else {
-                    //                   return Container();
-                    //                 }
-                    //               },
-                    //             )
-                    //           ],
-                    //         ),
-                    //
-                    //         Column(
-                    //           children: [
-                    //             Text(
-                    //               "진행 중인 질의응답",
-                    //               style: AppTextStyle.koBody2
-                    //                   .copyWith(color: Colors.black),
-                    //             ),
-                    //             StreamBuilder<DocumentSnapshot>(
-                    //               stream: _askCountStream,
-                    //               builder: (context,
-                    //                   AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    //                 final getdata = snapshot.data;
-                    //                 if (snapshot.hasData) {
-                    //                   return Text(
-                    //                     '${getdata?["count"]}건',
-                    //                     style: TextStyle(
-                    //                       fontSize: 22.sp,
-                    //                       // fontWeight: FontWeight.bold,
-                    //                       color: AppColors.secondaryColor[500],
-                    //                     ),
-                    //                   );
-                    //                 } else {
-                    //                   return Container();
-                    //                 }
-                    //               },
-                    //             )
-                    //           ],
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ],
-                    // ),
-
                     Center(
                       child: Column(
                         children: [
@@ -215,57 +174,58 @@ class _HomeState extends State<Home> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "전문가 도움요청하기",
+                                    "모두에게 요청하기",
                                     style: TextStyle(fontSize: 18.sp),
                                   ),
                                   Icon(Icons.arrow_forward_ios),
                                 ],
                               ),
                               onPressed: () {
-                                Get.dialog(
-                                  AlertDialog(
-                                    title: const Text("추후 업데이트 될 예정입니다."),
-                                    content: Column(
-                                      children: [
-                                        const Text(
-                                            "관심있는 분야의 전문가를 적어주시면 컨텍에 도움이 됩니다!"),
-                                        TextFormField(
-                                          controller: _categoryController,
-                                          keyboardType: TextInputType.multiline,
-                                          maxLines: null,
-                                          // obscureText: obsecureText!,
-                                          decoration: InputDecoration(
-                                            hintText: "구체적인 도움을 적어주세요:)",
-                                            hintStyle: AppTextStyle.koBody2,
-                                            fillColor:
-                                                AppColors.primaryColor[50],
-                                            focusedBorder: InputBorder.none,
-                                            enabledBorder: InputBorder.none,
-                                            errorBorder: InputBorder.none,
-                                            focusedErrorBorder:
-                                                InputBorder.none,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            TextEditingController
-                                                _categoryController =
-                                                TextEditingController();
+                                FlutterDialog("");
+                                // Get.dialog(
+                                //   AlertDialog(
+                                //     title: const Text("추후 업데이트 될 예정입니다."),
+                                //     content: Column(
+                                //       children: [
+                                //         const Text(
+                                //             "관심있는 분야의 전문가를 적어주시면 컨텍에 도움이 됩니다!"),
+                                //         TextFormField(
+                                //           controller: _categoryController,
+                                //           keyboardType: TextInputType.multiline,
+                                //           maxLines: null,
+                                //           // obscureText: obsecureText!,
+                                //           decoration: InputDecoration(
+                                //             hintText: "구체적인 도움을 적어주세요:)",
+                                //             hintStyle: AppTextStyle.koBody2,
+                                //             fillColor:
+                                //                 AppColors.primaryColor[50],
+                                //             focusedBorder: InputBorder.none,
+                                //             enabledBorder: InputBorder.none,
+                                //             errorBorder: InputBorder.none,
+                                //             focusedErrorBorder:
+                                //                 InputBorder.none,
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //     actions: [
+                                //       TextButton(
+                                //           onPressed: () {
+                                //             TextEditingController
+                                //                 _categoryController =
+                                //                 TextEditingController();
 
-                                            Get.back();
-                                          },
-                                          child: const Text("YES")),
-                                      TextButton(
-                                          onPressed: () {
-                                            Get.back();
-                                          },
-                                          child: const Text("NO"))
-                                    ],
-                                  ),
-                                );
+                                //             Get.back();
+                                //           },
+                                //           child: const Text("YES")),
+                                //       TextButton(
+                                //           onPressed: () {
+                                //             Get.back();
+                                //           },
+                                //           child: const Text("NO"))
+                                //     ],
+                                //   ),
+                                // );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xffFFA300),
@@ -334,12 +294,19 @@ class _HomeState extends State<Home> {
             //Dialog Main Title
             title: Column(
               children: <Widget>[
-                Text(
-                  "구체적인 도움을 적어주세요:)",
-                  style: AppTextStyle.koBody1.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
+                friendUid == ""
+                    ? Text(
+                        "구체적인 도움을 적어주세요\n사용자 모두에게 알람이 전송됩니다.",
+                        style: AppTextStyle.koBody1.copyWith(
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(
+                        "구체적인 도움을 적어주세요:)",
+                        style: AppTextStyle.koBody1.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
               ],
             ),
             //
@@ -380,28 +347,19 @@ class _HomeState extends State<Home> {
                       onPressed: () async {
                         String? helperUid;
 
-                        FirebaseFirestore.instance
-                            .collection("videoCall")
-                            .doc(_auth.uid)
-                            .set({
-                          "count": 1,
-                          "timeRegister":
-                              DateTime.now().millisecondsSinceEpoch.toString(),
-                          "uid": _auth.uid,
-                          "name": _auth.name,
-                          "subcategory": _categoryController.text
-                        });
-
                         //monitoring
-                        FirebaseFirestore.instance
+
+                        final categoryData = <String, dynamic>{
+                          userUid: _categoryController.text
+                        };
+                        await FirebaseFirestore.instance
                             .collection("monitoring")
                             .doc("category")
                             .update({
-                          "category":
-                              FieldValue.arrayUnion([_categoryController.text]),
+                          "category1": FieldValue.arrayUnion([categoryData]),
                         });
 
-                        FirebaseFirestore.instance
+                        await FirebaseFirestore.instance
                             .collection("askCount")
                             .doc("askCount")
                             .update({"count": FieldValue.increment(1)});
@@ -414,17 +372,27 @@ class _HomeState extends State<Home> {
                           "${_categoryController.text}",
                           friendUid,
                         );
+                        //random
+                        // String generateRandomString(int length) {
+                        //   var r = Random();
+                        //   return String.fromCharCodes(List.generate(
+                        //       length, (index) => r.nextInt(33) + 89));
+                        // }
 
                         String channel = FirebaseAuth.instance.currentUser!.uid;
+                        //  +generateRandomString(2);
                         // await Get.offAll(() => CallPage_taker(
                         //       channelName: channel,
                         //       // getTitle: widget.getTitle,
                         //     ));
+
                         await [Permission.microphone, Permission.camera]
                             .request();
                         await Get.offAll(() => CallPage_common(
                               channelName: channel,
                               uid: 2,
+                              category: _categoryController.text,
+                              friendUid: friendUid,
                               // getTitle: widget.getTitle,
                             ));
                       },
@@ -463,7 +431,7 @@ class _HomeState extends State<Home> {
           if (snapshot.hasData) {
             return Text(snapshot.data!.data()['name']);
           }
-          return Text("return");
+          return Text("");
         });
   }
 
@@ -482,7 +450,10 @@ class _HomeState extends State<Home> {
               ),
             );
           }
-          return Text("return");
+          return Container(
+            height: 37.h,
+            width: 33.w,
+          );
         });
   }
 

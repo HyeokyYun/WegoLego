@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -18,6 +19,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../config.dart';
 import '../../../../firebaseAuth.dart';
+import '../../../../push_notification/push_notification.dart';
 import '../../../../theme/colors.dart';
 import '../../../navigation/bottom_navigation.dart';
 import '../widgets/call_common.dart';
@@ -30,8 +32,11 @@ const String appId = '3314a275f7114db58caaadebfab9679d';
 class CallPage_common extends StatefulWidget {
   final String? channelName;
   final int? uid;
+  final String? category;
+  final String? friendUid;
 
-  const CallPage_common({Key? key, this.channelName, this.uid})
+  const CallPage_common(
+      {Key? key, this.channelName, this.uid, this.category, this.friendUid})
       : super(key: key);
 
   @override
@@ -45,11 +50,10 @@ class _CallPage_commonState extends State<CallPage_common> {
 
   // late int? widget.uid; // uid of the local user
 
-  int tokenRole = 1; // use 1 for Host/Broadcaster, 2 for Subscriber/Audience
   bool _isHost =
       true; // Indicates whether the user has joined as a host or audience
 
-  int tokenExpireTime = 600; // Expire time in Seconds.
+  int tokenExpireTime = 15; // Expire time in Seconds.
   bool isTokenExpiring = false; // Set to true when the token is about to expire
 
   int? _remoteUid; // uid of the remote user
@@ -58,14 +62,13 @@ class _CallPage_commonState extends State<CallPage_common> {
   int? streamId;
   late Color sendColor;
 
+  bool sentNotification = false;
+
   Call_common _common = Call_common();
 
   Offset? location;
 
   late ChannelMediaOptions options;
-  showMessage(String message) {
-    Get.snackbar(message, message);
-  }
 
   @override
   void initState() {
@@ -83,8 +86,14 @@ class _CallPage_commonState extends State<CallPage_common> {
     super.dispose();
   }
 
-  Future<void> fetchToken(int uid, String channelName, int tokenRole) async {
+  Future<void> fetchToken(int uid, String channelName) async {
     // Prepare the Url
+    late int tokenRole;
+    widget.uid == 2
+        ? tokenRole = 1
+        : tokenRole =
+            0; // use 1 for Host/Broadcaster, 2 for Subscriber/Audience
+
     String url =
         '$serverUrl/rtc/$channelName/${tokenRole.toString()}/uid/${uid.toString()}?expiry=${tokenExpireTime.toString()}';
 
@@ -130,7 +139,7 @@ class _CallPage_commonState extends State<CallPage_common> {
         options: options,
         uid: widget.uid!,
       )
-          .then((value) {
+          .then((value) async {
         print("joinChannel is done");
       });
     }
@@ -149,11 +158,30 @@ class _CallPage_commonState extends State<CallPage_common> {
     // Register the event handler
     agoraEngine.registerEventHandler(
       RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+        // onConnectionStateChanged: (connection, state, reason) {
+        //   Get.snackbar(connection.toString(),
+        //       "${state.toString()} : ${reason.toString()}");
+        // },
+        // onError: ((err, msg) {
+        //   Get.snackbar(err.toString(), msg);
+        // }),
+        onJoinChannelSuccess: (RtcConnection connection, int elapsed) async {
           // Get.snackbar(
           //     "Local user uid:${connection.localUid} joined the channel",
           //     "onJoinChannelSuccess");
-          agoraEngine.switchCamera();
+          await agoraEngine.switchCamera();
+          if (widget.uid == 2) {
+            await FirebaseFirestore.instance
+                .collection("videoCall")
+                .doc(_auth.uid)
+                .set({
+              "count": 1,
+              "timeRegister": DateTime.now().millisecondsSinceEpoch.toString(),
+              "uid": _auth.uid,
+              "name": _auth.name,
+              "subcategory": widget.category,
+            });
+          }
           setState(() {
             _isJoined = true;
           });
@@ -181,7 +209,7 @@ class _CallPage_commonState extends State<CallPage_common> {
           isTokenExpiring = true;
           setState(() {
             // fetch a new token when the current token is about to expire
-            fetchToken(widget.uid!, widget.channelName!, tokenRole);
+            fetchToken(widget.uid!, widget.channelName!);
           });
         },
         onStreamMessage:
@@ -272,7 +300,7 @@ class _CallPage_commonState extends State<CallPage_common> {
       );
     }
 
-    await fetchToken(widget.uid!, widget.channelName!, tokenRole);
+    await fetchToken(widget.uid!, widget.channelName!);
   }
 
   // void leave() {
@@ -581,7 +609,6 @@ class _CallPage_commonState extends State<CallPage_common> {
   AuthClass _auth = AuthClass();
 
   void _onCallEnd() async {
-    await agoraEngine.leaveChannel();
     setState(() {
       _common.isJoined = false;
       _common.remoteUid = null;
@@ -592,6 +619,10 @@ class _CallPage_commonState extends State<CallPage_common> {
           .collection('videoCall')
           .doc(_auth.uid)
           .delete();
+
+    // await agoraEngine.leaveChannel().then((value) {
+    //   Get.snackbar("leaveChannel", "leaveChannel clear");
+    // });
 
     widget.uid == 2
         ? await Get.offAll(() => ThankYouPage())
