@@ -26,7 +26,7 @@ class AuthController extends GetxController {
   User? get userProfile => auth.currentUser;
   User? currentUser;
 
-  String version = "1.1.1";
+  String version = "1.1.2";
 
   // token 추가
   String? _token;
